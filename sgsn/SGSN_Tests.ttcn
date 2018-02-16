@@ -308,6 +308,7 @@ private function f_TC_attach(charstring id) runs on BSSGP_ConnHdlr {
 	GSUP.send(ts_GSUP_UL_RES(g_pars.imsi));
 
 	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?)));
+	/* FIXME: Extract P-TMSI, if any. Only send Complete if necessary */
 	BSSGP.send(ts_GMM_ATTACH_COMPL);
 	setverdict(pass);
 }
@@ -512,6 +513,35 @@ testcase TC_attach_closed() runs on test_CT {
 	vc_conn.done;
 }
 
+/* Routing Area Update from Unknown TLLI -> REJECT */
+private function f_TC_rau_unknown(charstring id) runs on BSSGP_ConnHdlr {
+	var MobileIdentityLV mi;
+	var RoutingAreaIdentificationV old_ra := f_random_RAI();
+
+	if (ispresent(g_pars.p_tmsi)) {
+		mi := valueof(ts_MI_TMSI_LV(g_pars.p_tmsi));
+	} else {
+		mi := valueof(ts_MI_IMSI_LV(g_pars.imsi));
+	}
+
+	BSSGP.send(ts_GMM_RAU_REQ(mi, GPRS_UPD_T_RA, old_ra, false, omit, omit));
+	alt {
+	[] BSSGP.receive(tr_BD_L3(tr_GMM_RAU_REJECT('0a'O))) {
+		setverdict(pass);
+		}
+	/* FIXME: Expect XID RESET? */
+	[] BSSGP.receive { repeat; }
+	}
+}
+testcase TC_rau_unknown() runs on test_CT {
+	var BSSGP_ConnHdlr vc_conn;
+	f_init();
+	f_sleep(1.0);
+	vc_conn := f_start_handler(refers(f_TC_rau_unknown), testcasename(), g_gb[0], 9);
+	vc_conn.done;
+}
+
+
 
 
 control {
@@ -522,6 +552,7 @@ control {
 	execute( TC_attach_combined() );
 	execute( TC_attach_accept_all() );
 	execute( TC_attach_closed() );
+	execute( TC_rau_unknown() );
 }
 
 
