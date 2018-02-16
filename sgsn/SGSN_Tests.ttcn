@@ -289,7 +289,7 @@ private function f_TC_attach(charstring id) runs on BSSGP_ConnHdlr {
 	GSUP.receive(tr_GSUP_ISD_RES(g_pars.imsi));
 	GSUP.send(ts_GSUP_UL_RES(g_pars.imsi));
 
-	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT(?, ?, ?)));
+	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?)));
 	BSSGP.send(ts_GMM_ATTACH_COMPL);
 	setverdict(pass);
 }
@@ -381,7 +381,7 @@ private function f_TC_attach_gsup_lu_timeout(charstring id) runs on BSSGP_ConnHd
 	[] BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_REJECT(?))) {
 		setverdict(pass);
 		}
-	[] BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT(?, ?, ?))) {
+	[] BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?))) {
 		setverdict(fail);
 		}
 	}
