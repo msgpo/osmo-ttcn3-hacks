@@ -58,11 +58,10 @@ const BIT4 c_LLC_SAPI_LL5 := '0101'B;
 const BIT4 c_LLC_SAPI_LLSMS := '0111'B;
 const BIT4 c_LLC_SAPI_TOM8 := '1000'B;
 const BIT4 c_LLC_SAPI_LL9 := '1001'B;
-const BIT4 c_LLC_SAPI_LLSM := '1010'B;
 const BIT4 c_LLC_SAPI_LL11 := '1011'B;
 
 /* LLC UI frame with SAPI for L3 payload */
-template PDU_LLC tr_LLC_UI_L3 := ( tr_LLC_UI(?, c_LLC_SAPI_LLGMM), tr_LLC_UI(?, c_LLC_SAPI_LLSM) );
+template PDU_LLC tr_LLC_UI_L3 := ( tr_LLC_UI(?, c_LLC_SAPI_LLGMM) );
 
 
 }
