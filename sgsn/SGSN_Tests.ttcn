@@ -66,6 +66,7 @@ type record BSSGP_ConnHdlrPars {
 	hexstring msisdn,
 	/* P-TMSI allocated to the simulated MS */
 	OCT4 p_tmsi optional,
+	OCT3 p_tmsi_sig optional,
 	/* TLLI of the simulated MS */
 	OCT4 tlli,
 	RoutingAreaIdentificationV ra optional,
@@ -165,6 +166,7 @@ runs on test_CT return BSSGP_ConnHdlr {
 		imsi := f_gen_imsi(imsi_suffix),
 		msisdn := f_gen_msisdn(imsi_suffix),
 		p_tmsi := omit,
+		p_tmsi_sig := omit,
 		tlli := f_gprs_tlli_random(),
 		ra := omit,
 		bssgp_cell_id := gb.cfg.cell_id,
@@ -211,14 +213,11 @@ runs on BSSGP_ConnHdlr {
 }
 
 /* TODO:
-   * RAU without Attach
    * Detach without Attach
    * SM procedures without attach / RAU
    * ATTACH / RAU
    ** with / without authentication
    ** with / without P-TMSI allocation
-   ** timeout from HLR on SAI
-   ** timeout from HLR on UL
    ** reject from HLR on SAI
    ** reject from HLR on UL
    * re-transmissions of LLC frames
@@ -285,11 +284,36 @@ function f_gmm_auth () runs on BSSGP_ConnHdlr {
 	deactivate(di);
 }
 
+function f_process_attach_accept(PDU_GMM_AttachAccept aa) runs on BSSGP_ConnHdlr {
+	/* mandatory IE */
+	g_pars.ra := aa.routingAreaIdentification;
+	if (ispresent(aa.allocatedPTMSI)) {
+		if (not g_pars.net.expect_ptmsi) {
+			setverdict(fail, "unexpected P-TMSI allocation");
+			self.stop;
+		}
+		g_pars.p_tmsi := aa.allocatedPTMSI.mobileIdentityLV.mobileIdentityV.oddEvenInd_identity.tmsi_ptmsi.octets;
+		/* update TLLI? */
+	}
+	if (ispresent(aa.msIdentity)) {
+		setverdict(fail, "unexpected TMSI allocation in non-combined attach");
+		self.stop;
+	}
+	/* P-TMSI.sig */
+	if (ispresent(aa.ptmsiSignature)) {
+		g_pars.p_tmsi_sig := aa.ptmsiSignature.valueField;
+	}
+	/* updateTimer */
+	// aa.readyTimer
+	/* T3302, T3319, T3323, T3312_ext, T3324 */
+}
+
 function f_random_RAI(HEX0_3n mcc := '262'H, HEX0_3n mnc := '42'H) return RoutingAreaIdentificationV {
 	return f_RAI(mcc, mnc, f_rnd_octstring(2), f_rnd_octstring(1));
 }
 
 private function f_TC_attach(charstring id) runs on BSSGP_ConnHdlr {
+	var BssgpDecoded bd;
 	var MobileIdentityLV mi;
 	var RoutingAreaIdentificationV old_ra := f_random_RAI();
 
@@ -307,7 +331,9 @@ private function f_TC_attach(charstring id) runs on BSSGP_ConnHdlr {
 	GSUP.receive(tr_GSUP_ISD_RES(g_pars.imsi));
 	GSUP.send(ts_GSUP_UL_RES(g_pars.imsi));
 
-	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?)));
+	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?))) -> value bd {
+		f_process_attach_accept(bd.l3_mt.msgs.gprs_mm.attachAccept);
+	}
 	/* FIXME: Extract P-TMSI, if any. Only send Complete if necessary */
 	BSSGP.send(ts_GMM_ATTACH_COMPL);
 	setverdict(pass);
@@ -382,6 +408,7 @@ testcase TC_attach_auth_sai_timeout() runs on test_CT {
 
 /* HLR never responds to UL REQ, expect ATTACH REJECT */
 private function f_TC_attach_gsup_lu_timeout(charstring id) runs on BSSGP_ConnHdlr {
+	var BssgpDecoded bd;
 	var MobileIdentityLV mi;
 	var RoutingAreaIdentificationV old_ra := f_random_RAI();
 
@@ -400,7 +427,8 @@ private function f_TC_attach_gsup_lu_timeout(charstring id) runs on BSSGP_ConnHd
 	[] BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_REJECT(?))) {
 		setverdict(pass);
 		}
-	[] BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?))) {
+	[] BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?))) -> value bd {
+		f_process_attach_accept(bd.l3_mt.msgs.gprs_mm.attachAccept);
 		setverdict(fail);
 		}
 	}
@@ -415,6 +443,7 @@ testcase TC_attach_gsup_lu_timeout() runs on test_CT {
 
 /* Attempt of combined GPRS + IMSI attach: network should ACK only GPRS attach  */
 private function f_TC_attach_combined(charstring id) runs on BSSGP_ConnHdlr {
+	var BssgpDecoded bd;
 	var MobileIdentityLV mi;
 	var RoutingAreaIdentificationV old_ra := f_random_RAI();
 
@@ -432,11 +461,12 @@ private function f_TC_attach_combined(charstring id) runs on BSSGP_ConnHdlr {
 	GSUP.receive(tr_GSUP_ISD_RES(g_pars.imsi));
 	GSUP.send(ts_GSUP_UL_RES(g_pars.imsi));
 
-	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?)));
+	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?))) -> value bd {
+		f_process_attach_accept(bd.l3_mt.msgs.gprs_mm.attachAccept);
+	}
 	BSSGP.send(ts_GMM_ATTACH_COMPL);
 	setverdict(pass);
 }
-
 testcase TC_attach_combined() runs on test_CT {
 	var BSSGP_ConnHdlr vc_conn;
 	f_init();
@@ -447,6 +477,7 @@ testcase TC_attach_combined() runs on test_CT {
 
 /* Attempt of GPRS ATTACH in 'accept all' mode */
 private function f_TC_attach_accept_all(charstring id) runs on BSSGP_ConnHdlr {
+	var BssgpDecoded bd;
 	var MobileIdentityLV mi;
 	var RoutingAreaIdentificationV old_ra := f_random_RAI();
 
@@ -460,7 +491,9 @@ private function f_TC_attach_accept_all(charstring id) runs on BSSGP_ConnHdlr {
 
 	BSSGP.send(ts_GMM_ATTACH_REQ(mi, old_ra, false, false, omit, omit));
 	f_gmm_auth();
-	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?)));
+	BSSGP.receive(tr_BD_L3(tr_GMM_ATTACH_ACCEPT('001'B, ?, ?))) -> value bd {
+		f_process_attach_accept(bd.l3_mt.msgs.gprs_mm.attachAccept);
+	}
 	BSSGP.send(ts_GMM_ATTACH_COMPL);
 	setverdict(pass);
 }
