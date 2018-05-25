@@ -1725,11 +1725,12 @@ testcase TC_mo_setup_and_dtmf_dup() runs on MTC_CT {
 }
 
 testcase TC_cr_before_reset() runs on MTC_CT {
-	timer T := 4.0;
+	timer T := 10.0;
+	f_sleep(10.0);
 	var boolean reset_ack_seen := false;
 	f_init_bssap_direct();
 
-	/* Make a blind connection attemt, to trigger the deadlock condition */
+	/* Make a blind connection attemt, to trigger the deadlocyk condition */
 	BSSAP_DIRECT.send(ts_BSSAP_CONNECT_req(g_bssap[0].sccp_addr_peer, g_bssap[0].sccp_addr_own, 1, omit));
 
 	/* Send a BSSMAP reset */
