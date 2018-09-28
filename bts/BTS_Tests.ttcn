@@ -1365,7 +1365,10 @@ private function f_est_dchan(boolean encr_enable := false) runs on ConnHdlr {
 	var GsmFrameNumber fn;
 	var ImmediateAssignment imm_ass;
 	var integer ra := 23;
+	var integer ta := g_pars.l1_pars.ms_actual_ta;
+	var integer tx_power := g_pars.l1_pars.ms_power_level;
 
+	f_L1CTL_PARAM(L1CTL, ta, tx_power);
 	fn := f_L1CTL_RACH(L1CTL, ra);
 	/* This arrives on CCHAN, so we cannot test for receiving CHAN RQDhere */
 	//RSL.receive(tr_RSL_CHAN_RQD(int2oct(23,1)));
