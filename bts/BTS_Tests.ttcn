@@ -1399,6 +1399,7 @@ private function f_est_dchan(boolean encr_enable := false) runs on ConnHdlr {
 	if (encr_enable) {
 		var uint8_t alg_id := f_alg_id_to_l1ctl(g_pars.encr.alg_id);
 		f_L1CTL_CRYPTO_REQ(L1CTL, g_pars.chan_nr, alg_id, g_pars.encr.key);
+		f_sleep(2.0); /* make sure encryption is applied */
 	}
 
 	g_first_meas_res := true;
@@ -3863,7 +3864,7 @@ function f_TC_encr_cmd(charstring id) runs on ConnHdlr {
 	/* configure L1 to apply ciphering */
 	var uint8_t alg_id := f_alg_id_to_l1ctl(g_pars.encr.alg_id);
 	f_L1CTL_CRYPTO_REQ(L1CTL, g_pars.chan_nr, alg_id, g_pars.encr.key);
-
+	f_sleep(2.0); /* make sure encryption is applied */
 	/* send first ciphered I-frame in response and expect it on RSL */
 	f_data_mo(link_id, true, 1, 0, '0a0b0c0d'O, exp_sacch := true);
 
