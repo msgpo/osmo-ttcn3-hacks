@@ -491,7 +491,7 @@ testcase TC_chan_exhaustion() runs on test_CT {
 
 	/* expect 5xTCH/F to succeed */
 	for (i := 0; i < NUM_TCHF_PER_BTS + NUM_TCHH_PER_BTS + NUM_SDCCH_PER_BTS; i := i+1) {
-		var RslChannelNr chan_nr := f_chreq_act_ack('23'O, i);
+		var RslChannelNr chan_nr := f_chreq_act_ack('33'O, i);
 	}
 
 	IPA_RSL[0].clear;
