@@ -43,6 +43,7 @@ type component RAW_PCU_CT {
 	/* PCUIF (we emulate the BTS part) */
 	port PCUIF_CODEC_PT PCU;
 	var ConnectionId g_pcu_conn_id := -1;
+	var uint32_t g_rts_fn := 0;
 }
 
 type component RAW_Test_CT extends RAW_NS_CT, RAW_PCU_CT {

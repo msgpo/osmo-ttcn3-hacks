@@ -6,6 +6,8 @@ import from PCU_Tests_RAW all;
 import from Osmocom_Gb_Types all;
 import from NS_CodecPort all;
 import from NS_Types all;
+import from RLCMAC_Types all;
+import from LAPDm_RAW_PT all;
 
 /**********************************************************************************
  * Modern Gb/IP bring-up test cases using IP Sub-Network Service (SNS)
@@ -369,8 +371,109 @@ testcase TC_pcuif_rach() runs on RAW_Test_CT {
 	PCU.receive(t_SD_PCUIF(g_pcu_conn_id,
 			       tr_PCUIF_DATA_REQ(bts_nr:=0, trx_nr:=0, ts_nr:=0, block_nr:=?, fn:=?,
 						 sapi:=PCU_IF_SAPI_AGCH, data:=?)));
+	f_sleep(10.0);
 	setverdict(pass);
 }
+
+private function get_pdtch_f_blocknr(uint32_t fn) return integer
+{
+	/* related TDMA frame numbers in 52-multiframe which carry first burst of block */
+	const uint32_t pdtch_f_blocks52[12] := { 0, 4, 8, 13, 17, 21, 26, 30, 34, 39, 43, 47 };
+	var integer fn52 := fn mod 52;
+	var integer i;
+
+	for (i := 0; i < lengthof(pdtch_f_blocks52); i := i+1) {
+		if (pdtch_f_blocks52[i] == fn52) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+private function get_ptcch_f_blocknr(uint32_t fn) return integer
+{
+	/* related TDMA frame numbers in 416-multiframe which carry first burst of block */
+	const uint32_t ptcch_f_blocks416[4] := { 12, 116, 220, 324 };
+	var integer fn416 := fn mod 416;
+	var integer i;
+
+	for (i := 0; i < lengthof(ptcch_f_blocks416); i := i+1) {
+		if (ptcch_f_blocks416[i] == fn416) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+private function f_dispatch_rts(uint32_t fn, integer block_nr, PCUIF_Sapi sapi) runs on RAW_PCU_CT {
+	var uint8_t trx_nr, ts_nr;
+	for (trx_nr := 0; trx_nr < 1/*FIXME*/; trx_nr := trx_nr+1) {
+		for (ts_nr := 0; ts_nr < 8; ts_nr := ts_nr+1) {
+			/* FIXME: skip TS for which TRX has no PDCH active */
+			if (ts_nr < 7) { continue; }
+			f_pcuif_tx(ts_PCUIF_RTS_REQ(0, trx_nr, ts_nr, sapi, fn, 871, block_nr));
+		}
+	}
+}
+
+
+/* Advance FN by one; return TRUE if this generated a RTS, FALSE otherwise */
+private function f_advance_fn() runs on RAW_PCU_CT return boolean {
+	var integer block_nr;
+
+	/* advance GSM frame number by 1 */
+	g_rts_fn := g_rts_fn+1;
+
+	/* check if this is the first burst fo a PTCCH block */
+	block_nr := get_pdtch_f_blocknr(g_rts_fn);
+	if (block_nr > 0) {
+		f_dispatch_rts(g_rts_fn, block_nr, PCU_IF_SAPI_PDTCH);
+		return true;
+	}
+
+	/* check if this is the first burst of a PTCCH block */
+	block_nr := get_ptcch_f_blocknr(g_rts_fn);
+	if (block_nr > 0) {
+		f_dispatch_rts(g_rts_fn, block_nr, PCU_IF_SAPI_PTCCH);
+		return true;
+	}
+	return false;
+}
+
+/* Advance FN until the next block boundary is hit and hence a RTS is generated */
+private function f_advance_fn_to_next_rts() runs on RAW_PCU_CT {
+	/* increment FN until next RTS is generated */
+	while (f_advance_fn() != true) { }
+}
+
+private altstep as_rx_data() runs on RAW_PCU_CT {
+	var PCUIF_send_data sd;
+	[] PCU.receive(t_SD_PCUIF(g_pcu_conn_id,  tr_PCUIF_DATA_REQ(?, ?, ?))) -> value sd {
+		var octetstring block := substr(sd.data.u.data_req.data, 0, sd.data.u.data_req.len);
+		var RLCMAC_ph_data_ind rpdi;
+		log("L2: ", block);
+		rpdi.cs := CS1; /* FIXME */
+		rpdi.ts_nr := sd.data.u.data_req.ts_nr;
+		rpdi.fn := sd.data.u.data_req.fn;
+		rpdi.block := dec_RlcmacDlBlock(block);
+		log("RPDI: ", rpdi);
+	}
+}
+
+testcase TC_pcuif_time() runs on RAW_PCU_CT
+{
+	f_init_pcuif();
+	activate(as_pcu_activate());
+	f_pcuif_tx(ts_PCUIF_TIME_IND(0, 2342));
+
+	f_advance_fn_to_next_rts();
+	as_rx_data();
+	f_advance_fn_to_next_rts();
+	as_rx_data();
+
+	f_sleep(10.0);
+}
+
 
 
 
@@ -389,6 +492,7 @@ control {
 	execute( TC_sns_chg_weight() );
 
 	execute( TC_pcuif_rach() );
+	execute( TC_pcuif_time() );
 }
 
 }
