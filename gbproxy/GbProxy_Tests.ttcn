@@ -1,0 +1,215 @@
+module GbProxy_Tests {
+
+import from Native_Functions all;
+import from General_Types all;
+import from Osmocom_Types all;
+import from GSM_Types all;
+import from GSM_RR_Types all;
+
+import from NS_Types all;
+import from BSSGP_Types all;
+import from Osmocom_Gb_Types all;
+import from NS_CodecPort all;
+import from NS_CodecPort_CtrlFunct all;
+import from NS_RAW all;
+
+import from NS_Emulation all;
+import from BSSGP_Emulation all;
+
+modulepar {
+	BssgpConfig mp_gb_cfg_bss := {
+		nsei := 1100,
+		bvci := 2100,
+		cell_id := {
+			ra_id := {
+				lai := {
+					mcc_mnc := '262F42'H, lac := 3100
+				},
+				rac := 0
+			},
+			cell_id := 4100
+		},
+		sgsn_role := true
+	};
+
+	NSConfiguration mp_nsconfig_bss := {
+		local_udp_port := 21000,
+		local_ip := "127.0.0.1",
+		remote_udp_port := 23000,
+		remote_ip := "127.0.0.1",
+		nsvci := 100,
+		nsei := 1100,
+		role_sgsn := true,
+		handle_sns := false
+	};
+
+	NSConfiguration mp_nsconfig_sgsn := {
+		local_udp_port := 7777,
+		local_ip := "127.0.0.2",
+		remote_udp_port := 23000,
+		remote_ip := "127.0.0.1",
+		nsvci := 23,
+		nsei := 23,
+		role_sgsn := false,
+		handle_sns := false
+	};
+
+}
+
+/*********************************************************************************
+ * SGSN side tests using RAW NS port (low-level NS behavior)
+ *********************************************************************************/
+
+/* expect a NS-RESET on the SGSN side (and ACK it) */
+testcase TC_sgsn_rx_ns_reset() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_sgsn);
+
+	as_rx_ns_reset_ack(oneshot := true);
+	setverdict(pass);
+}
+
+/* expect proxy-initiated NS-ALIVE on the SGSN side (and ACK it) */
+testcase TC_sgsn_rx_ns_alive() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_sgsn);
+
+	as_rx_ns_reset_ack(oneshot := true);
+	as_rx_alive_tx_ack(oneshot := true);
+	setverdict(pass);
+}
+
+/* FIXME: NS-ALIVE retransmissions (with answer) */
+/* FIXME: NS-ALIVE retransmissions (without answer) */
+
+/* expect proxy-initiated NS-UNBLOCK on the SGSN side (and ACK it) */
+testcase TC_sgsn_rx_ns_unblock() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_sgsn);
+
+	as_rx_ns_reset_ack(oneshot := true);
+	as_rx_alive_tx_ack(oneshot := true);
+	as_rx_ns_unblock_ack(oneshot := true);
+	setverdict(pass);
+}
+
+/* FIXME: Test that SNS messages are rejected */
+/* FIXME: Test invalid NSVCI/NSEI */
+/* FIXME: Test if BSSGP is ignored until NS is unblocked/alive */
+
+
+/*********************************************************************************
+ * BSS side tests using RAW NS port (low-level NS behavior)
+ *********************************************************************************/
+
+
+/* perform BSS-originated NS-RESET procedure */
+testcase TC_bss_ns_reset() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_bss);
+
+	/* perform outbound NS-RESET */
+	f_tx_ns_reset_rx_ack();
+
+	setverdict(pass);
+}
+
+/* test inbound NS-ALIVE procedure after NS-RESET */
+testcase TC_bss_ns_rx_alive() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_bss);
+
+	/* perform outbound NS-RESET */
+	f_tx_ns_reset_rx_ack();
+
+	/* wait for one ALIVE cycle */
+	as_rx_alive_tx_ack(oneshot := true);
+
+	setverdict(pass);
+}
+
+/* test inbound NS-ALIVE procedure after NS-RESET */
+testcase TC_bss_ns_tx_alive() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_bss);
+
+	/* perform outbound NS-RESET */
+	f_tx_ns_reset_rx_ack();
+
+	/* wait for one ALIVE cycle */
+	as_rx_alive_tx_ack(oneshot := true);
+
+	/* perform outgoing NS-ALIVE */
+	f_outgoing_ns_alive();
+
+	setverdict(pass);
+}
+
+
+/* Test for NS-RESET after NS-ALIVE timeout */
+testcase TC_bss_ns_alive_timeout_reset() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_bss, guard_secs := 100.0);
+
+	/* perform outbound NS-RESET */
+	f_tx_ns_reset_rx_ack();
+
+	/* wait for at least one NS-ALIVE */
+	NSCP[0].receive(t_NS_RecvFrom(t_NS_ALIVE));
+
+	/* wait for NS-RESET to re-appear, ignoring any NS-ALIVE until then */
+	alt {
+	[] as_rx_ns_reset_ack(oneshot := true) { setverdict(pass); }
+	[] NSCP[0].receive(t_NS_RecvFrom(t_NS_ALIVE)) { repeat; }
+	}
+}
+
+/* test for NS-RESET/NS-ALIVE/NS-UNBLOCK */
+testcase TC_bss_ns_unblock() runs on RAW_NS_CT {
+	f_init_ns_codec(mp_nsconfig_bss);
+
+	/* perform outbound NS-RESET */
+	f_tx_ns_reset_rx_ack();
+
+	/* wait for one ALIVE cycle, then ACK any further ALIVE in the background */
+	as_rx_alive_tx_ack(oneshot := true);
+	activate(as_rx_alive_tx_ack());
+
+	/* perform outgoing NS-ALIVE */
+	f_outgoing_ns_alive();
+
+	/* perform NS-UNBLOCK on signalling BVCI */
+	as_rx_bvc_unblock_tx_ack(0, oneshot := true);
+
+	/* perform NS-UNBLOCK on PTP BVCI */
+	as_rx_bvc_unblock_tx_ack(mp_gb_cfg_bss.bvci, oneshot := true);
+}
+
+
+
+/*********************************************************************************
+ * Tests of proxying functionality
+ *********************************************************************************/
+
+
+/* FIXME: proxy-originated BVC-RESET for BVCI=0 after NS link establishment */
+/* FIXME: SGSN-originated BVC-RESET for BVCI=0 after NS link establishment
+
+/* FIXME: Test if NS-RESET/BLOCK from BSS side is converted to BVC-BLOCK on SGSN side */
+/* FIXME: Test if NS-RESET/BLOCK from SGSN is converted to NS-BLCOK on BSS side */
+/* FIXME: PCU-originated BVC-RESET for BVCI=0 shouldn't trigger RESET on SGSN side */
+/* FIXME: BSS: reject of UL/DL UNITDATA on BVCI=0 */
+/* FIXME: SGSN: reject of UL/DL UNITDATA on BVCI=0
+
+/* relay of PCU-originated BVC-RESET for P-t-P BVCI */
+/* relay of SGSN-originated BVC-RESET for P-t-P BVCI (once BVCI is known) */
+/* relay of PtP BSSGP from PCU to SGSN */
+/* relay of PtP BSSGP from SGSN to PCU */
+/* relay of SUSPEND/RESUME BSS->SGSN and ACK/NACK back to PCU based on RA-ID */
+
+/*********************************************************************************
+ * Tests of patching functionality
+ *********************************************************************************/
+
+/* FIXME: MCC/MNC patching in RA-ID */
+/* FIXME: APN patching in PDP CTX ACT REQ (size changes, LLC csum changes) */
+/* FIXME: P-TMSI patching */
+/* FIXME: IMSI acquisition */
+
+/* FIXME: validate counters */
+
+
+}
