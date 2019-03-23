@@ -5,6 +5,7 @@ import from PCU_Tests all;
 import from PCU_Tests_RAW all;
 import from Osmocom_Gb_Types all;
 import from NS_CodecPort all;
+import from NS_RAW all;
 import from NS_Types all;
 import from RLCMAC_Types all;
 import from LAPDm_RAW_PT all;
@@ -123,7 +124,7 @@ runs on RAW_NS_CT {
 
 /* PCU-originated SNS-SIZE: successful case */
 testcase TC_sns_po_size_success() runs on RAW_Test_CT {
-	f_init_ns_codec();
+	f_init_ns_codec(mp_nsconfig);
 	f_init_pcuif();
 	f_incoming_sns_size();
 	f_sleep(1.0);
@@ -132,7 +133,7 @@ testcase TC_sns_po_size_success() runs on RAW_Test_CT {
 
 /* PCU-originated SNS-SIZE: NACK from our side */
 testcase TC_sns_po_size_nack() runs on RAW_Test_CT {
-	f_init_ns_codec();
+	f_init_ns_codec(mp_nsconfig);
 	f_init_pcuif();
 	f_incoming_sns_size(NS_CAUSE_PROTOCOL_ERROR_UNSPEIFIED);
 	/* FIXME: ensure we don't get a SNS-CONFIG */
@@ -143,7 +144,7 @@ testcase TC_sns_po_size_nack() runs on RAW_Test_CT {
 
 /* PCU-originated SNS-CONFIG: successful case */
 testcase TC_sns_po_config_success() runs on RAW_Test_CT {
-	f_init_ns_codec();
+	f_init_ns_codec(mp_nsconfig);
 	f_init_pcuif();
 	f_incoming_sns_size();
 	f_incoming_sns_config();
@@ -153,7 +154,7 @@ testcase TC_sns_po_config_success() runs on RAW_Test_CT {
 
 /* PCU-originated SNS-CONFIG: successful case */
 testcase TC_sns_po_config_nack() runs on RAW_Test_CT {
-	f_init_ns_codec();
+	f_init_ns_codec(mp_nsconfig);
 	f_init_pcuif();
 	f_incoming_sns_size();
 	f_incoming_sns_config(NS_CAUSE_PROTOCOL_ERROR_UNSPEIFIED);
@@ -165,7 +166,7 @@ testcase TC_sns_po_config_nack() runs on RAW_Test_CT {
 
 /* SGSN-originated SNS-SIZE: successful case */
 testcase TC_sns_so_config_success() runs on RAW_Test_CT {
-	f_init_ns_codec();
+	f_init_ns_codec(mp_nsconfig);
 	f_init_pcuif();
 	f_incoming_sns_size();
 	f_incoming_sns_config();
@@ -178,8 +179,8 @@ testcase TC_sns_so_config_success() runs on RAW_Test_CT {
 	f_outgoing_ns_alive();
 
 	/* Expect BVC-RESET for signaling (0) and ptp BVCI */
-	as_rx_bvc_reset_tx_ack(0, oneshot := true);
-	as_rx_bvc_reset_tx_ack(mp_gb_cfg.bvci, oneshot := true);
+	as_rx_bvc_reset_tx_ack(0, mp_gb_cfg.cell_id, oneshot := true);
+	as_rx_bvc_reset_tx_ack(mp_gb_cfg.bvci, mp_gb_cfg.cell_id, oneshot := true);
 	as_rx_bvc_unblock_tx_ack(mp_gb_cfg.bvci, oneshot := true);
 
 	/* wait for one FLOW-CONTROL BVC and then ACK any further in the future */
@@ -190,8 +191,8 @@ testcase TC_sns_so_config_success() runs on RAW_Test_CT {
 
 private function f_sns_bringup_1c1u(boolean sgsn_originated_reset := false) runs on RAW_Test_CT {
 	/* Activate two NS codec ports */
-	f_init_ns_codec();
-	f_init_ns_codec(1);
+	f_init_ns_codec(mp_nsconfig);
+	f_init_ns_codec(mp_nsconfig, 1);
 	f_init_pcuif();
 	/* Perform Size + BSS-originated config */
 	f_incoming_sns_size();
@@ -211,12 +212,12 @@ private function f_sns_bringup_1c1u(boolean sgsn_originated_reset := false) runs
 	f_outgoing_ns_alive(1);
 
 	if (sgsn_originated_reset) {
-		f_tx_bvc_reset_rx_ack(0);
-		f_tx_bvc_reset_rx_ack(mp_gb_cfg.bvci);
+		f_tx_bvc_reset_rx_ack(0, mp_gb_cfg.cell_id);
+		f_tx_bvc_reset_rx_ack(mp_gb_cfg.bvci, mp_gb_cfg.cell_id);
 	} else {
 		/* Expect BVC-RESET for signaling (0) and ptp BVCI */
-		as_rx_bvc_reset_tx_ack(0, oneshot := true);
-		as_rx_bvc_reset_tx_ack(mp_gb_cfg.bvci, oneshot := true);
+		as_rx_bvc_reset_tx_ack(0, mp_gb_cfg.cell_id, oneshot := true);
+		as_rx_bvc_reset_tx_ack(mp_gb_cfg.bvci, mp_gb_cfg.cell_id, oneshot := true);
 	}
 	/* Expect UNBLOCK for ptp BVCI on signaling NS-VC (idx==0) */
 	as_rx_bvc_unblock_tx_ack(mp_gb_cfg.bvci, oneshot := true);
@@ -235,9 +236,9 @@ testcase TC_sns_1c1u() runs on RAW_Test_CT {
 
 private function f_sns_bringup_1c1u_separate(boolean sgsn_originated_reset := false) runs on RAW_Test_CT {
 	/* Activate two NS codec ports */
-	f_init_ns_codec();
-	f_init_ns_codec(1);
-	f_init_ns_codec(2);
+	f_init_ns_codec(mp_nsconfig);
+	f_init_ns_codec(mp_nsconfig, 1);
+	f_init_ns_codec(mp_nsconfig, 2);
 	f_init_pcuif();
 	/* Perform Size + BSS-originated config */
 	f_incoming_sns_size();
@@ -261,12 +262,12 @@ private function f_sns_bringup_1c1u_separate(boolean sgsn_originated_reset := fa
 	f_outgoing_ns_alive_no_ack(idx := 0);
 
 	if (sgsn_originated_reset) {
-		f_tx_bvc_reset_rx_ack(0, idx := 1);
-		f_tx_bvc_reset_rx_ack(mp_gb_cfg.bvci, idx := 1);
+		f_tx_bvc_reset_rx_ack(0, mp_gb_cfg.cell_id, idx := 1);
+		f_tx_bvc_reset_rx_ack(mp_gb_cfg.bvci, mp_gb_cfg.cell_id, idx := 1);
 	} else {
 		/* Expect BVC-RESET for signaling BVCI=0 and ptp BVCI */
-		as_rx_bvc_reset_tx_ack(0, oneshot := true, idx := 1);
-		as_rx_bvc_reset_tx_ack(mp_gb_cfg.bvci, oneshot := true, idx := 1);
+		as_rx_bvc_reset_tx_ack(0, mp_gb_cfg.cell_id, oneshot := true, idx := 1);
+		as_rx_bvc_reset_tx_ack(mp_gb_cfg.bvci, mp_gb_cfg.cell_id, oneshot := true, idx := 1);
 	}
 	/* Expect UNBLOCK for ptp BVCI on signaling NS-VC (idx==1) */
 	as_rx_bvc_unblock_tx_ack(mp_gb_cfg.bvci, oneshot := true, idx := 1);
@@ -294,9 +295,9 @@ testcase TC_sns_1c1u_so_bvc_reset() runs on RAW_Test_CT {
 /* Transmit BVC-RESET before NS-ALIVE of PCU was ACKed: expect no response */
 testcase TC_sns_1c1u_so_bvc_reset_too_early() runs on RAW_Test_CT {
 	/* Activate two NS codec ports */
-	f_init_ns_codec();
-	f_init_ns_codec(1);
-	f_init_ns_codec(2);
+	f_init_ns_codec(mp_nsconfig);
+	f_init_ns_codec(mp_nsconfig, 1);
+	f_init_ns_codec(mp_nsconfig, 2);
 	f_init_pcuif();
 	/* Perform Size + BSS-originated config */
 	f_incoming_sns_size();
@@ -313,8 +314,8 @@ testcase TC_sns_1c1u_so_bvc_reset_too_early() runs on RAW_Test_CT {
 	f_outgoing_ns_alive_no_ack(idx := 0);
 
 	/* Transmit BVC-RESET and expect no ACK*/
-	f_tx_bvc_reset_rx_ack(0, idx := 1, exp_ack := false);
-	f_tx_bvc_reset_rx_ack(mp_gb_cfg.bvci, idx := 1, exp_ack := false);
+	f_tx_bvc_reset_rx_ack(0, mp_gb_cfg.cell_id, idx := 1, exp_ack := false);
+	f_tx_bvc_reset_rx_ack(mp_gb_cfg.bvci, mp_gb_cfg.cell_id, idx := 1, exp_ack := false);
 }
 
 /* Test adding new IP endpoints at runtime */
@@ -322,7 +323,7 @@ testcase TC_sns_add() runs on RAW_Test_CT {
 	f_sns_bringup_1c1u();
 
 	/* crate another NS codec port on the tester side */
-	f_init_ns_codec(2);
+	f_init_ns_codec(mp_nsconfig, 2);
 
 	f_outgoing_sns_add(idx_add := 2, w_sig := 0, w_user := 1, idx := 0);
 

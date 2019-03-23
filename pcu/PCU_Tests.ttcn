@@ -20,6 +20,7 @@ import from L1CTL_PortType all;
 import from MobileL3_Types all;
 import from MobileL3_CommonIE_Types all;
 import from L3_Templates all;
+import from NS_RAW all;
 
 modulepar {
 	BssgpConfig mp_gb_cfg := {
