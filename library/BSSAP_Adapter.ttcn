@@ -81,12 +81,12 @@ private function init_pars(inout BSSAP_Adapter ba, in BSSAP_Configuration cfg) {
 function f_bssap_init(inout BSSAP_Adapter ba, in BSSAP_Configuration cfg, charstring id,
 			template BssmapOps ops) {
 	init_pars(ba, cfg);
-	ops.sccp_addr_local := ba.sccp_addr_own;
-	ops.sccp_addr_peer := ba.sccp_addr_peer;
 
 	/* create components */
 	ba.vc_SCCP := SCCP_CT.create(id & "-SCCP");
 	if (isvalue(ops)) {
+		ops.sccp_addr_local := ba.sccp_addr_own;
+		ops.sccp_addr_peer := ba.sccp_addr_peer;
 		ba.vc_BSSMAP := BSSMAP_Emulation_CT.create(id & "-BSSMAP");
 	}
 	select (cfg.transport) {
