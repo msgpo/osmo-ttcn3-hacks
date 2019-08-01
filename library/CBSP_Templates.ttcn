@@ -54,7 +54,7 @@ function tr_CbspChannelInd(template uint8_t val := ?) return template CBSP_IE {
 	if (istemplatekind(val, "omit")) {
 		ie := omit;
 	} else if (istemplatekind(val, "*")) {
-		ie := tr_CBSP_IE({channel_ind := ?}) ifpresent;
+		ie := tr_CBSP_IE({channel_ind := ?}); //ifpresent;
 	} else {
 		ie := tr_CBSP_IE({channel_ind := val});
 	}
@@ -368,7 +368,7 @@ return template CBSP_PDU {
 		tr_NewSerNo(new_ser_nr)
 	};
 	if (istemplatekind(cell_list, "*")) {
-		ies[lengthof(ies)] := tr_CbspCellList ifpresent;
+		ies[lengthof(ies)] := tr_CbspCellList; //ifpresent;
 	} else if (istemplatekind(cell_list, "?")) {
 		ies[lengthof(ies)] := tr_CbspCellList(?);
 	} else if (not istemplatekind(cell_list, "omit")) {
@@ -411,7 +411,7 @@ return template CBSP_PDU {
 		tr_CbspNumComplList(compl_list)
 	};
 	if (istemplatekind(cell_list, "*")) {
-		ies[lengthof(ies)] := tr_CbspCellList ifpresent;
+		ies[lengthof(ies)] := tr_CbspCellList; //ifpresent;
 	} else if (istemplatekind(cell_list, "?")) {
 		ies[lengthof(ies)] := tr_CbspCellList(?);
 	} else if (not istemplatekind(cell_list, "omit")) {
@@ -464,7 +464,7 @@ return template CBSP_PDU {
 		ies[lengthof(ies)] := tr_CbspNumComplList(compl_list);
 	}
 	if (istemplatekind(cell_list, "*")) {
-		ies[lengthof(ies)] := tr_CbspCellList ifpresent;
+		ies[lengthof(ies)] := tr_CbspCellList; //ifpresent;
 	} else if (istemplatekind(cell_list, "?")) {
 		ies[lengthof(ies)] := tr_CbspCellList(?);
 	} else if (not istemplatekind(cell_list, "omit")) {
@@ -641,7 +641,7 @@ return template CBSP_PDU {
 		ies[lengthof(ies)] := tr_CbspCellList(cell_list);
 	}
 	if (istemplatekind(channel_ind, "*")) {
-		ies[lengthof(ies)] := tr_CbspChannelInd(?) ifpresent;
+		ies[lengthof(ies)] := tr_CbspChannelInd(?); //ifpresent;
 	} else if (not istemplatekind(channel_ind, "omit")) {
 		ies[lengthof(ies)] := tr_CbspChannelInd(channel_ind);
 	}
