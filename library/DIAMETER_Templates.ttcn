@@ -337,6 +337,15 @@ template (value) GenericAVP ts_AVP_ResultCode(DIAMETER_Resultcode res_code) := {
 		}
 	}
 }
+template (present) GenericAVP tr_AVP_ResultCode(template (present) octetstring res_code_oct) := {
+	avp := {
+		avp_header := tr_DIA_Hdr(c_AVP_Code_BASE_NONE_Result_Code),
+		avp_data := {
+			avp_BASE_NONE_Result_Code := res_code_oct
+		}
+	}
+}
+
 
 template (value) GenericAVP ts_AVP_AuthSessionState(template (value) BASE_NONE_Auth_Session_State ass := NO_STATE_MAINTAINED) := {
 	avp := {
@@ -499,6 +508,15 @@ template (value) GenericAVP ts_AVP_3GPP_AuthInfo(template (value) AVP_list conte
 		}
 	}
 }
+template (present) GenericAVP tr_AVP_3GPP_AuthInfo(template (present) AVP_list content) := {
+	avp := {
+		avp_header := tr_DIA_Hdr_3GPP(c_AVP_Code_AAA_3GPP_Authentication_Info),
+		avp_data := {
+			avp_AAA_3GPP_Authentication_Info := content
+		}
+	}
+}
+
 
 /* TS 29.262 7.3.9 Visited-PLMN-Id */
 template (value) GenericAVP ts_AVP_3GPP_VisitedPlmnId(template (value) octetstring id) := {
@@ -757,6 +775,17 @@ ts_DIA_CEA(template (value) UINT32 hbh_id, template (value) UINT32 ete_id)
 		ts_AVP_VendorSpecAppId(vendor_id_3GPP, c_DIAMETER_3GPP_S6_AID)
 	});
 
+template (value) PDU_DIAMETER
+ts_DIA_AIR(template (value) UINT32 hbh_id, template (value) UINT32 ete_id,
+	   template (value) octetstring sess_id, hexstring imsi, octetstring vplmn)
+:= ts_DIAMETER(flags := '11000000'B, cmd_code:=Authentication_Information,
+	       app_id := int2oct(c_DIAMETER_3GPP_S6_AID, 4), hbh_id:=hbh_id, ete_id:=ete_id,
+	avps := {
+		ts_AVP_SessionId(sess_id),
+		ts_AVP_DestinationRealm("localdomain"),
+		ts_AVP_UserNameImsi(imsi),
+		ts_AVP_3GPP_VisitedPlmnId(vplmn)
+	});
 template (present) PDU_DIAMETER
 tr_DIA_AIR(hexstring imsi) := tr_DIAMETER(flags := '11000000'B, cmd_code:=Authentication_Information,
 					  app_id := int2oct(c_DIAMETER_3GPP_S6_AID, 4),
@@ -782,6 +811,18 @@ ts_DIA_AIA(template (value) UINT32 hbh_id, template (value) UINT32 ete_id,
 		ts_AVP_OriginRealm("localdomain"),
 		ts_AVP_3GPP_AuthInfo(auth_info_contents)
 	});
+template (present) PDU_DIAMETER
+tr_DIA_AIA(template (present) AVP_list auth_info_contents := ?)
+:= tr_DIAMETER(flags:='01000000'B, cmd_code:=Authentication_Information,
+		app_id := int2oct(c_DIAMETER_3GPP_S6_AID, 4),
+	avps := superset(
+		tr_AVP_SessionId,
+		ts_AVP_ResultCode(DIAMETER_SUCCESS),
+		tr_AVP_AuthSessionState(NO_STATE_MAINTAINED),
+		tr_AVP_OriginHost,
+		tr_AVP_OriginRealm,
+		tr_AVP_3GPP_AuthInfo(auth_info_contents)
+	));
 
 
 /* TS 29.262 7.2.3 Update Location Request */
