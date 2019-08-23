@@ -4,7 +4,7 @@
 //                                               //
 ///////////////////////////////////////////////////
 // Generated with command:
-// AVP.sh Base_IETF_RFC3588.ddf BaseTypes_IETF_RFC3588.ddf AAAInterface_3GPP_TS29272_f10.ddf GxInterface_PCC_3GPP_TS29212_f10.ddf S6Interfaces_3GPP_TS29336_f00.ddf MobileIPv6_HA_IETF_RFC5778.ddf RxInterface_PCC_3GPP_TS29214_f20.ddf
+// AVP.sh Base_IETF_RFC3588.ddf BaseTypes_IETF_RFC3588.ddf AAAInterface_3GPP_TS29272_f10.ddf GxInterface_PCC_3GPP_TS29212_f10.ddf S6Interfaces_3GPP_TS29336_f00.ddf MobileIPv6_HA_IETF_RFC5778.ddf RxInterface_PCC_3GPP_TS29214_f20.ddf CreditControl_IETF_RFC4006.ddf NetworkAccessServer_IETF_RFC4005.ddf
 module DIAMETER_Types {
 /******************************************************************************
 * Copyright (c) 2000-2019 Ericsson Telecom AB
@@ -3947,8 +3947,1001 @@ type AVP_Unsigned32 RX_3GPP_Extended_Min_Requested_BW_DL
 type AVP_Unsigned32 RX_3GPP_Extended_Min_Requested_BW_UL 
 
 
-// STATISTICS: 523 AVP descriptors found
-// STATISTICS: 523 AVP type definitions matching AVP descriptors found
+/******************************************************************************
+* Copyright (c) 2000-2019 Ericsson Telecom AB
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.html
+*
+* Contributors:
+*   Roland Gecse - initial implementation and initial documentation
+*   Akos Pernek
+*   Antal Wuh.Hen.Chang
+*   Attila Fulop
+*   Balazs Barcsik
+*   Bence Molnar
+*   Csaba Koppany
+*   David Juhasz
+*   Eduard Czimbalmos
+*   Elemer Lelik
+*   Endre Kiss
+*   Endre Kulcsar
+*   Gabor Szalai
+*   Gabor Tatarka
+*   Gergely Futo
+*   Istvan Sandor
+*   Krisztian Pandi
+*   Kulcsár Endre
+*   Laszlo Tamas Zeke
+*   Norbert Pinter
+*   Roland Gecse
+*   Tibor Bende
+*   Tibor Szabo
+*   Timea Moder
+*   Zoltan Medve
+*   Zsolt Nandor Torok
+*   Zsolt Szalai
+******************************************************************************/
+//
+//  File:               CreditControl_IETF_RFC4006.ddf
+//  Description:        DDF for DCC according to RFC 4006
+//  Rev:                R55A
+//  Prodnr:             CNL 1134 62
+///////////////////////////////////////////////
+
+// APPLICATION-NAME: DCC
+// APPLICATION-REVISION: RFC4006
+
+// AVP implementations according to:
+// RFC 4006 - Diameter Credit Control Application
+// IS for Additional Billing for Verizon in MTAS 125/1594-FCP 101 8664 Uen PA8
+
+// RFC 4006 12.2
+// WARNING: Enumeration item with code (272) exists in type Command_Code
+
+
+// RFC 4006
+// AVP: CC-Correlation-Id (411)
+// 8.1
+type AVP_OctetString DCC_NONE_CC_Correlation_Id 
+
+// RFC 4006
+// AVP: CC-Input-Octets (412)
+// 8.24
+type AVP_Unsigned64 DCC_NONE_CC_Input_Octets 
+
+// RFC 4006
+// AVP: CC-Money (413)
+// 8.22
+type AVP_Grouped DCC_NONE_CC_Money 
+
+// RFC 4006
+// AVP: CC-Output-Octets (414)
+// 8.25
+type AVP_Unsigned64 DCC_NONE_CC_Output_Octets 
+
+// RFC 4006
+// AVP: CC-Request-Number (415)
+// 8.2
+type AVP_Unsigned32 DCC_NONE_CC_Request_Number 
+
+// RFC 4006
+// AVP: CC-Request-Type (416)
+// 8.3
+type enumerated DCC_NONE_CC_Request_Type {
+ INITIAL_REQUEST (1),
+ UPDATE_REQUEST (2),
+ TERMINATION_REQUEST (3),
+ EVENT_REQUEST (4)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: CC-Service-Specific-Units (417)
+// 8.26
+type AVP_Unsigned64 DCC_NONE_CC_Service_Specific_Units 
+
+// RFC 4006
+// AVP: CC-Session-Failover (418)
+// 8.4
+type enumerated DCC_NONE_CC_Session_Failover {
+ FAILOVER_NOT_SUPPORTED (0),
+ FAILOVER_SUPPORTED (1)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: CC-Sub-Session-Id (419)
+// 8.5
+type AVP_Unsigned64 DCC_NONE_CC_Sub_Session_Id 
+
+// RFC 4006
+// AVP: CC-Time (420)
+// 8.21
+type AVP_Unsigned32 DCC_NONE_CC_Time 
+
+// RFC 4006
+// AVP: CC-Total-Octets (421)
+// 8.23
+type AVP_Unsigned64 DCC_NONE_CC_Total_Octets 
+
+// RFC 4006
+// AVP: CC-Unit-Type (454)
+// 8.32
+type enumerated DCC_NONE_CC_Unit_Type {
+ TIME (0),
+ MONEY (1),
+ TOTAL_OCTETS (2),
+ INPUT_OCTETS (3),
+ OUTPUT_OCTETS (4),
+ SERVICE_SPECIFIC_UNITS (5)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Check-Balance-Result (422)
+// 8.6
+type enumerated DCC_NONE_Check_Balance_Result {
+ ENOUGH_CREDIT (0),
+ NO_CREDIT (1)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Cost-Information (423)
+// 8.7
+type AVP_Grouped DCC_NONE_Cost_Information 
+
+// RFC 4006
+// AVP: Cost-Unit (424)
+// 8.12
+type AVP_UTF8String DCC_NONE_Cost_Unit 
+
+// RFC 4006
+// AVP: Credit-Control (426)
+// 8.13
+type enumerated DCC_NONE_Credit_Control {
+ CREDIT_AUTHORIZATION (0),
+ RE_AUTHORIZATION (1)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Credit-Control-Failure-Handling (427)
+// 8.14
+type enumerated DCC_NONE_Credit_Control_Failure_Handling {
+ TERMINATE (0),
+ CONTINUE (1),
+ RETRY_AND_TERMINATE (2)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Currency-Code (425)
+// 8.11
+type AVP_Unsigned32 DCC_NONE_Currency_Code 
+
+// RFC 4006
+// AVP: Direct-Debiting-Failure-Handling (428)
+// 8.15
+type enumerated DCC_NONE_Direct_Debiting_Failure_Handling {
+ TERMINATE_OR_BUFFER (0),
+ CONTINUE (1)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Exponent (429)
+// 8.9
+type AVP_Integer32 DCC_NONE_Exponent 
+
+// RFC 4006
+// AVP: Final-Unit-Action (449)
+// 8.35
+type enumerated DCC_NONE_Final_Unit_Action {
+ TERMINATE (0),
+ REDIRECT (1),
+ RESTRICT_ACCESS (2)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Final-Unit-Indication (430)
+// 8.34
+type AVP_Grouped DCC_NONE_Final_Unit_Indication 
+
+// RFC 4006
+// AVP: Granted-Service-Unit (431)
+// 8.17
+type AVP_Grouped DCC_NONE_Granted_Service_Unit 
+
+// RFC 4006
+// AVP: G-S-U-Pool-Identifier (453)
+// 8.31
+type AVP_Unsigned32 DCC_NONE_G_S_U_Pool_Identifier 
+
+// RFC 4006
+// AVP: G-S-U-Pool-Reference (457)
+// 8.30
+type AVP_Grouped DCC_NONE_G_S_U_Pool_Reference 
+
+// RFC 4006
+// AVP: Multiple-Services-Credit-Control (456)
+// 8.16
+type AVP_Grouped DCC_NONE_Multiple_Services_Credit_Control 
+
+// RFC 4006
+// AVP: Multiple-Services-Indicator (455)
+// 8.40
+type enumerated DCC_NONE_Multiple_Services_Indicator {
+ MULTIPLE_SERVICES_NOT_SUPPORTED (0),
+ MULTIPLE_SERVICES_SUPPORTED (1)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Rating-Group (432)
+// 8.29
+type AVP_Unsigned32 DCC_NONE_Rating_Group
+
+// RFC 4006
+// AVP: Redirect-Address-Type (433)
+// 8.38
+type enumerated DCC_NONE_Redirect_Address_Type {
+ IPV4_ADDRESS (0),
+ IPV6_ADDRESS (1),
+ URL (2),
+ SIP_URI (3)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Redirect-Server (434)
+type AVP_Grouped DCC_NONE_Redirect_Server 
+
+// RFC 4006
+// AVP: Redirect-Server-Address (435)
+// 8.37
+type AVP_UTF8String DCC_NONE_Redirect_Server_Address
+
+// RFC 4006
+// AVP: Requested-Action (436)
+// 8.41
+type enumerated DCC_NONE_Requested_Action {
+ DIRECT_DEBITING (0),
+ REFUND_ACCOUNT (1),
+ CHECK_BALANCE (2),
+ PRICE_ENQUIRY (3) 
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Requested-Service-Unit (437)
+// 8.18
+type AVP_Grouped DCC_NONE_Requested_Service_Unit
+
+// RFC 4006
+// AVP: Restriction-Filter-Rule (438)
+// 8.36
+type AVP_IPFilterRule DCC_NONE_Restriction_Filter_Rule
+
+// RFC 4006
+// AVP: Service-Context-Id (461)
+// 8.42
+type AVP_UTF8String DCC_NONE_Service_Context_Id
+
+// RFC 4006
+// AVP: Service-Identifier (439)
+// 8.28
+type AVP_Unsigned32 DCC_NONE_Service_Identifier
+
+// RFC 4006
+// AVP: Service-Parameter-Info (440)
+// 8.43
+type AVP_Grouped DCC_NONE_Service_Parameter_Info
+
+// RFC 4006
+// AVP: Service-Parameter-Type (441)
+// 8.44
+type AVP_Unsigned32 DCC_NONE_Service_Parameter_Type
+
+// RFC 4006
+// AVP: Service-Parameter-Value (442)
+// 8.45
+type AVP_OctetString DCC_NONE_Service_Parameter_Value
+
+// RFC 4006
+// AVP: Subscription-Id (443)
+// 8.46
+type AVP_Grouped DCC_NONE_Subscription_Id 
+
+// RFC 4006
+// AVP: Subscription-Id-Data (444)
+// 8.48
+type AVP_UTF8String DCC_NONE_Subscription_Id_Data
+
+// RFC 4006
+// AVP: Subscription-Id-Type (450)
+// 8.47
+type enumerated DCC_NONE_Subscription_Id_Type {
+ END_USER_E164 (0),
+ END_USER_IMSI (1),
+ END_USER_SIP_URI (2),
+ END_USER_NAI (3),
+ END_USER_PRIVATE (4)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Tariff-Change-Usage (452)
+// 8.27
+type enumerated DCC_NONE_Tariff_Change_Usage {
+ UNIT_BEFORE_TARIFF_CHANGE (0),
+ UNIT_AFTER_TARIFF_CHANGE (1),
+ UNIT_INDETERMINATE (2)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: Tariff-Time-Change (451)
+// 8.20
+type AVP_Time DCC_NONE_Tariff_Time_Change
+
+// RFC 4006
+// AVP: Unit-Value (445)
+// 8.8
+type AVP_Grouped DCC_NONE_Unit_Value
+
+// RFC 4006
+// AVP: Used-Service-Unit (446)
+// 8.19
+type AVP_Grouped DCC_NONE_Used_Service_Unit
+
+// RFC 4006
+// AVP: User-Equipment-Info (458)
+// 8.49
+type AVP_Grouped DCC_NONE_User_Equipment_Info
+
+// RFC 4006, 125/1594-FCP 101 8664
+// AVP: User-Equipment-Info-Type (459)
+// RFC 4006 section 8.50, 125/1594-FCP 101 8664 section 3.3.12
+type enumerated DCC_NONE_User_Equipment_Info_Type {
+ IMEISV (0),
+ MAC (1),
+ EUI64 (2),
+ MODIFIED_EUI64 (3),
+ ESN (4),
+ MEID (5)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4006
+// AVP: User-Equipment-Info-Value (460)
+// 8.51
+type AVP_OctetString DCC_NONE_User_Equipment_Info_Value
+
+// RFC 4006
+// AVP: Value-Digits (447)
+// 8.10
+type AVP_Integer64 DCC_NONE_Value_Digits
+
+// RFC 4006
+// AVP: Validity-Time (448)
+// 8.33
+type AVP_Unsigned32 DCC_NONE_Validity_Time
+
+/******************************************************************************
+* Copyright (c) 2000-2019 Ericsson Telecom AB
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.html
+*
+* Contributors:
+*   Roland Gecse - initial implementation and initial documentation
+*   Akos Pernek
+*   Antal Wuh.Hen.Chang
+*   Attila Fulop
+*   Balazs Barcsik
+*   Bence Molnar
+*   Csaba Koppany
+*   David Juhasz
+*   Eduard Czimbalmos
+*   Elemer Lelik
+*   Endre Kiss
+*   Endre Kulcsar
+*   Gabor Szalai
+*   Gabor Tatarka
+*   Gergely Futo
+*   Istvan Sandor
+*   Krisztian Pandi
+*   Kulcsár Endre
+*   Laszlo Tamas Zeke
+*   Norbert Pinter
+*   Roland Gecse
+*   Tibor Bende
+*   Tibor Szabo
+*   Timea Moder
+*   Zoltan Medve
+*   Zsolt Nandor Torok
+*   Zsolt Szalai
+******************************************************************************/
+//
+//  File:               NetworkAccessServer_IETF_RFC4005.ddf
+//  Description:        DDF for NAS according to RFC 4005
+//  Rev:                R55A
+//  Prodnr:             CNL113462
+///////////////////////////////////////////////
+
+// APPLICATION-NAME: DNAS
+// APPLICATION-REVISION: RFC4005
+
+// AVP implementations according to:
+// RFC 4005 - Diameter Network Access Server Application
+//
+
+// RFC 4005 3
+// WARNING: Enumeration item with code (265) exists in type Command_Code
+// WARNING: Enumeration item with code (258) exists in type Command_Code
+// WARNING: Enumeration item with code (275) exists in type Command_Code
+// WARNING: Enumeration item with code (274) exists in type Command_Code
+// WARNING: Enumeration item with code (271) exists in type Command_Code
+
+
+// RFC 4005
+// AVP: NAS-Port (5)
+// 4.2
+type AVP_Unsigned32 DNAS_NONE_NAS_Port 
+
+// RFC 4005
+// AVP: NAS-Port-Id (87)
+// 4.3
+type AVP_UTF8String DNAS_NONE_NAS_Port_Id 
+
+// RFC 4005
+// AVP: NAS-Port-Type (61)
+// 4.4
+type AVP_Unsigned32 DNAS_NONE_NAS_Port_Type 
+
+// RFC 4005
+// AVP: Called-Station-Id (30)
+// 4.5
+type AVP_UTF8String DNAS_NONE_Called_Station_Id 
+
+// RFC 4005
+// AVP: Calling-Station-Id (31)
+// 4.6
+type AVP_UTF8String DNAS_NONE_Calling_Station_Id 
+
+// RFC 4005
+// AVP: Connect-Info (77)
+// 4.7
+type AVP_UTF8String DNAS_NONE_Connect_Info 
+
+// RFC 4005
+// AVP: Originating-Line-Info (94)
+// 4.8
+type AVP_OctetString DNAS_NONE_Originating_Line_Info 
+
+// RFC 4005
+// AVP: Reply-Message (18)
+// 4.9
+type AVP_UTF8String DNAS_NONE_Reply_Message 
+
+
+
+// RFC 4005
+// AVP: User-Password (2)
+// 5.1
+type AVP_OctetString DNAS_NONE_User_Password 
+
+// RFC 4005
+// AVP: Password-Retry (75)
+// 5.2
+type AVP_Unsigned32 DNAS_NONE_Password_Retry 
+
+// RFC 4005
+// AVP: Prompt (76)
+// 5.3
+type enumerated DNAS_NONE_Prompt {
+ NO_ECHO (0),
+ ECHO (1)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: CHAP-Auth (402)
+// 5.4
+type AVP_Grouped DNAS_NONE_CHAP_Auth 
+
+// RFC 4005
+// AVP: CHAP-Algorithm (403)
+// 5.5
+type enumerated DNAS_NONE_CHAP_Algorithm {
+ CHAP_with_MD5 (5)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: CHAP-Ident (404)
+// 5.6
+type AVP_OctetString DNAS_NONE_CHAP_Ident 
+
+// RFC 4005
+// AVP: CHAP-Response (405)
+// 5.7
+type AVP_OctetString DNAS_NONE_CHAP_Response 
+
+// RFC 4005
+// AVP: CHAP-Challenge (60)
+// 5.8
+type AVP_OctetString DNAS_NONE_CHAP_Challenge 
+
+// RFC 4005
+// AVP: ARAP-Password (70)
+// 5.9
+type AVP_OctetString DNAS_NONE_ARAP_Password 
+
+// RFC 4005
+// AVP: ARAP-Challenge-Response (84)
+// 5.10
+type AVP_OctetString DNAS_NONE_ARAP_Challenge_Response 
+
+// RFC 4005
+// AVP: ARAP-Security (73)
+// 5.11
+type AVP_Unsigned32 DNAS_NONE_ARAP_Security 
+
+// RFC 4005
+// AVP: ARAP-Security-Data (74)
+// 5.12
+type AVP_OctetString DNAS_NONE_ARAP_Security_Data 
+
+
+
+// RFC 4005
+// AVP: Service-Type (6)
+// 6.1
+type AVP_Unsigned32 DNAS_NONE_Service_Type 
+
+// RFC 4005
+// AVP: Callback-Number (19)
+// 6.2
+type AVP_UTF8String DNAS_NONE_Callback_Number 
+
+// RFC 4005
+// AVP: Callback-Id (20)
+// 6.3
+type AVP_UTF8String DNAS_NONE_Callback_Id 
+
+// RFC 4005
+// AVP: Idle-Timeout (28)
+// 6.4
+type AVP_Unsigned32 DNAS_NONE_Idle_Timeout 
+
+// RFC 4005
+// AVP: Port-Limit (62)
+// 6.5
+type AVP_Unsigned32 DNAS_NONE_Port_Limit 
+
+// RFC 4005
+// AVP: NAS-Filter-Rule (400)
+// 6.6
+type AVP_IPFilterRule DNAS_NONE_NAS_Filter_Rule 
+
+// RFC 4005
+// AVP: Filter-Id (11)
+// 6.7
+type AVP_UTF8String DNAS_NONE_Filter_Id 
+
+// RFC 4005
+// AVP: Configuration-Token (78)
+// 6.8
+type AVP_OctetString DNAS_NONE_Configuration_Token 
+
+// RFC 4005
+// AVP: QoS-Filter-Rule (407)
+// 6.9
+type AVP_QoSFilterRule DNAS_NONE_QoS_Filter_Rule 
+
+// RFC 4005
+// AVP: Framed-Protocol (7)
+// 6.10.1
+type enumerated DNAS_NONE_Framed_Protocol {
+ PPP (1),
+ SLIP (2),
+ ARAP (3),
+ GANDALF (4),
+ XYLOGICS (5),
+ X_75_SYNCHRONOUS (6),
+ GPRS_PDP_CONTEXT (7)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: Framed-Routing (10)
+// 6.10.2
+type enumerated DNAS_NONE_Framed_Routing {
+ NONE (0),
+ SEND_ROUTING_PACKETS (1),
+ LISTEN_FOR_ROUTING_PACKETS (2),
+ SEND_AND_LISTEN (3)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: Framed-MTU (12)
+// 6.10.3
+type AVP_Unsigned32 DNAS_NONE_Framed_MTU 
+
+// RFC 4005
+// AVP: Framed-Compression (13)
+// 6.10.4
+type enumerated DNAS_NONE_Framed_Compression {
+ NONE (0),
+ VJ_TCP_IP_HEADER_COMPRESSION (1),
+ IPX_HEADER_COMPRESSION (2),
+ STAC_LZS_COMPRESSION (3)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: Framed-IP-Address (8)
+// 6.11.1
+type AVP_OctetString DNAS_NONE_Framed_IP_Address 
+
+// RFC 4005
+// AVP: Framed-IP-Netmask (9)
+// 6.11.2
+type AVP_OctetString DNAS_NONE_Framed_IP_Netmask 
+
+// RFC 4005
+// AVP: Framed-Route (22)
+// 6.11.3
+type AVP_UTF8String DNAS_NONE_Framed_Route 
+
+// RFC 4005
+// AVP: Framed-Pool (88)
+// 6.11.4
+type AVP_OctetString DNAS_NONE_Framed_Pool 
+
+// RFC 4005
+// AVP: Framed-Interface-Id (96)
+// 6.11.5
+type AVP_Unsigned64 DNAS_NONE_Framed_Interface_Id 
+
+// RFC 4005
+// AVP: Framed-IPv6-Prefix (97)
+// 6.11.6
+type AVP_OctetString DNAS_NONE_Framed_IPv6_Prefix 
+
+// RFC 4005
+// AVP: Framed-IPv6-Route (99)
+// 6.11.7
+type AVP_UTF8String DNAS_NONE_Framed_IPv6_Route 
+
+// RFC 4005
+// AVP: Framed-IPv6-Pool (100)
+// 6.11.8
+type AVP_OctetString DNAS_NONE_Framed_IPv6_Pool 
+
+// RFC 4005
+// AVP: Framed-IPX-Network (23)
+// 6.12.1
+type AVP_UTF8String DNAS_NONE_Framed_IPX_Network 
+
+// RFC 4005
+// AVP: Framed-Appletalk-Link (37)
+// 6.13.1
+type AVP_Unsigned32 DNAS_NONE_Framed_Appletalk_Link 
+
+// RFC 4005
+// AVP: Framed-Appletalk-Network (38)
+// 6.13.2
+type AVP_Unsigned32 DNAS_NONE_Framed_Appletalk_Network 
+
+// RFC 4005
+// AVP: Framed-Appletalk-Zone (39)
+// 6.13.3
+type AVP_OctetString DNAS_NONE_Framed_Appletalk_Zone 
+
+// RFC 4005
+// AVP: ARAP-Features (71)
+// 6.14.1
+type AVP_OctetString DNAS_NONE_ARAP_Features 
+
+// RFC 4005
+// AVP: ARAP-Zone-Access (72)
+// 6.14.2
+type enumerated DNAS_NONE_ARAP_Zone_Access {
+ ONLY_ALLOW_ACCESS_TO_DEFAULT_ZONE (1),
+ USE_ZONE_FILTER_INCLUSIVELY (2),
+ USE_ZONE_FILTER_EXCLUSIVELY (4)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: Login-IP-Host (14)
+// 6.15.1
+type AVP_OctetString DNAS_NONE_Login_IP_Host 
+
+// RFC 4005
+// AVP: Login-IPv6-Host (98)
+// 6.15.2
+type AVP_OctetString DNAS_NONE_Login_IPv6_Host 
+
+// RFC 4005
+// AVP: Login-Service (15)
+// 6.15.3
+type enumerated DNAS_NONE_Login_Service {
+ TELNET (0),
+ RLOGIN (1),
+ TCP_CLEAR (2),
+ PORTMASTER (3),
+ LAT (4),
+ X25_PAD (5),
+ X25_T3POS (6),
+ TCP_CLEAR_QUIET (8)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: Login-TCP-Port (16)
+// 6.16.1
+type AVP_Unsigned32 DNAS_NONE_Login_TCP_Port 
+
+// RFC 4005
+// AVP: Login-LAT-Service (34)
+// 6.17.1
+type AVP_OctetString DNAS_NONE_Login_LAT_Service 
+
+// RFC 4005
+// AVP: Login-LAT-Node (35)
+// 6.17.2
+type AVP_OctetString DNAS_NONE_Login_LAT_Node 
+
+// RFC 4005
+// AVP: Login-LAT-Group (36)
+// 6.17.3
+type AVP_OctetString DNAS_NONE_Login_LAT_Group 
+
+// RFC 4005
+// AVP: Login-LAT-Port (63)
+// 6.17.4
+type AVP_OctetString DNAS_NONE_Login_LAT_Port 
+
+
+
+// RFC 4005
+// AVP: Tunneling (401)
+// 7.1
+type AVP_Grouped DNAS_NONE_Tunneling 
+
+// RFC 4005
+// AVP: Tunnel-Type (64)
+// 7.2
+type AVP_Unsigned32 DNAS_NONE_Tunnel_Type 
+
+// RFC 4005
+// AVP: Tunnel-Medium-Type (65)
+// 7.3
+type AVP_Unsigned32 DNAS_NONE_Tunnel_Medium_Type 
+
+// RFC 4005
+// AVP: Tunnel-Client-Endpoint (66)
+// 7.4
+type AVP_UTF8String DNAS_NONE_Tunnel_Client_Endpoint 
+
+// RFC 4005
+// AVP: Tunnel-Server-Endpoint (67)
+// 7.5
+type AVP_UTF8String DNAS_NONE_Tunnel_Server_Endpoint 
+
+// RFC 4005
+// AVP: Tunnel-Password (69)
+// 7.6
+type AVP_OctetString DNAS_NONE_Tunnel_Password 
+
+// RFC 4005
+// AVP: Tunnel-Private-Group-Id (81)
+// 7.7
+type AVP_OctetString DNAS_NONE_Tunnel_Private_Group_Id 
+
+// RFC 4005
+// AVP: Tunnel-Assignment-Id (82)
+// 7.8
+type AVP_OctetString DNAS_NONE_Tunnel_Assignment_Id 
+
+// RFC 4005
+// AVP: Tunnel-Preference (83)
+// 7.9
+type AVP_Unsigned32 DNAS_NONE_Tunnel_Preference 
+
+// RFC 4005
+// AVP: Tunnel-Client-Auth-Id (90)
+// 7.10
+type AVP_UTF8String DNAS_NONE_Tunnel_Client_Auth_Id 
+
+// RFC 4005
+// AVP: Tunnel-Server-Auth-Id (91)
+// 7.11
+type AVP_UTF8String DNAS_NONE_Tunnel_Server_Auth_Id 
+
+
+
+// RFC 4005
+// AVP: Accounting-Input-Octets (363)
+// 8.1
+type AVP_Unsigned64 DNAS_NONE_Accounting_Input_Octets 
+
+// RFC 4005
+// AVP: Accounting-Output-Octets (364)
+// 8.2
+type AVP_Unsigned64 DNAS_NONE_Accounting_Output_Octets 
+
+// RFC 4005
+// AVP: Accounting-Input-Packets (365)
+// 8.3
+type AVP_Unsigned64 DNAS_NONE_Accounting_Input_Packets 
+
+// RFC 4005
+// AVP: Accounting-Output-Packets (366)
+// 8.4
+type AVP_Unsigned64 DNAS_NONE_Accounting_Output_Packets 
+
+// RFC 4005
+// AVP: Acct-Session-Time (46)
+// 8.5
+type AVP_Unsigned32 DNAS_NONE_Acct_Session_Time 
+
+// RFC 4005
+// AVP: Acct-Authentic (45)
+// 8.6
+type enumerated DNAS_NONE_Acct_Authentic {
+ RADIUS (1),
+ LOCAL (2),
+ REMOTE (3),
+ DIAMETER (4)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: Accounting-Auth-Method (406)
+// 8.7
+type enumerated DNAS_NONE_Accounting_Auth_Method {
+ PAP (1),
+ CHAP (2),
+ MS_CHAP_1 (3),
+ MS_CHAP_2 (4),
+ EAP (5),
+ None (7) 
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+
+// RFC 4005
+// AVP: Acct-Delay-Time (41)
+// 8.8
+type AVP_Unsigned32 DNAS_NONE_Acct_Delay_Time 
+
+// RFC 4005
+// AVP: Acct-Link-Count (51)
+// 8.9
+type AVP_Unsigned32 DNAS_NONE_Acct_Link_Count 
+
+// RFC 4005
+// AVP: Acct-Tunnel-Connection (68)
+// 8.10
+type AVP_OctetString DNAS_NONE_Acct_Tunnel_Connection 
+
+// RFC 4005
+// AVP: Acct-Tunnel-Packets-Lost (86)
+// 8.11
+type AVP_Unsigned32 DNAS_NONE_Acct_Tunnel_Packets_Lost 
+
+
+
+// RFC 4005
+// AVP: NAS-Identifier (32)
+// 9.3.1
+type AVP_UTF8String DNAS_NONE_NAS_Identifier 
+
+// RFC 4005
+// AVP: NAS-IP-Address (4)
+// 9.3.2
+type AVP_OctetString DNAS_NONE_NAS_IP_Address 
+
+// RFC 4005
+// AVP: NAS-IPv6-Address (95)
+// 9.3.3
+type AVP_OctetString DNAS_NONE_NAS_IPv6_Address 
+
+// RFC 4005
+// AVP: State (24)
+// 9.3.4
+type AVP_OctetString DNAS_NONE_State 
+
+// RFC 4005
+// AVP: Origin-AAA-Protocol (408)
+// 9.3.6
+type enumerated DNAS_NONE_Origin_AAA_Protocol {
+ RADIUS (1)
+} with {
+	variant "FIELDLENGTH(32)"
+	variant "BYTEORDER(last)"
+	variant "COMP(2scompl)"
+}
+// STATISTICS: 656 AVP descriptors found
+// STATISTICS: 656 AVP type definitions matching AVP descriptors found
 // STATISTICS:  duplicate AVP definitions deleted
 type enumerated Command_Code {
  Abort_Session (274), Accounting (271), Capabilities_Exchange (257), Device_Watchdog (280), Disconnect_Peer (282), Re_Auth (258), Session_Termination (275), Experimental1 (16777214), Experimental2 (16777215) , Update_Location (316), Cancel_Location (317), Authentication_Information (318), Insert_Subscriber_Data (319), Delete_Subscriber_Data (320), Purge_UE (321), Reset (322), Notify (323), ME_Identity_Check (324), Update_VCSG_Location (8388638), Cancel_VCSG_Location (8388642), Credit_Control (272), TDF_Session (8388637), Subscriber_Information (8388641), Configuration_Information (8388718), Reporting_Information (8388719), NIDD_Information (8388726), Authorize_Authenticate (265)
@@ -3966,73 +4959,206 @@ type enumerated Vendor_Id {
 	variant "COMP(2scompl)"
 }
 type enumerated AVP_Code_NONE {
+	avp_code_DNAS_NONE_Login_LAT_Service (34),
+	avp_code_DCC_NONE_Direct_Debiting_Failure_Handling (428),
 	avp_code_MIPv6_NONE_MIP_Careof_Address (487),
 	avp_code_BASE_NONE_Session_Id (263),
+	avp_code_DCC_NONE_Requested_Service_Unit (437),
+	avp_code_DNAS_NONE_Framed_Pool (88),
+	avp_code_DCC_NONE_CC_Time (420),
+	avp_code_DCC_NONE_Used_Service_Unit (446),
 	avp_code_BASE_NONE_Auth_Application_Id (258),
+	avp_code_DNAS_NONE_Framed_Appletalk_Network (38),
+	avp_code_DNAS_NONE_Framed_IPv6_Prefix (97),
 	avp_code_BASE_NONE_Firmware_Revision (267),
 	avp_code_BASE_NONE_Auth_Grace_Period (276),
 	avp_code_BASE_NONE_Re_Auth_Request_Type (285),
+	avp_code_DCC_NONE_Redirect_Address_Type (433),
 	avp_code_MIPv6_NONE_MIP_MN_HA_MSA (492),
+	avp_code_DNAS_NONE_Tunnel_Medium_Type (65),
+	avp_code_DCC_NONE_User_Equipment_Info_Type (459),
 	avp_code_MIPv6_NONE_QoS_Resources (508),
+	avp_code_DCC_NONE_Service_Parameter_Value (442),
 	avp_code_MIPv6_NONE_MIP_Session_Key (343),
+	avp_code_DCC_NONE_Tariff_Time_Change (451),
+	avp_code_DNAS_NONE_Tunnel_Password (69),
+	avp_code_DNAS_NONE_Tunneling (401),
+	avp_code_DCC_NONE_User_Equipment_Info_Value (460),
 	avp_code_BASE_NONE_Multi_Round_Time_Out (272),
 	avp_code_BASE_NONE_Experimental_Result_Code (298),
+	avp_code_DNAS_NONE_Configuration_Token (78),
+	avp_code_DNAS_NONE_Callback_Number (19),
 	avp_code_BASE_NONE_Error_Message (281),
+	avp_code_DNAS_NONE_NAS_Port_Type (61),
+	avp_code_DCC_NONE_Multiple_Services_Indicator (455),
+	avp_code_DNAS_NONE_Framed_Protocol (7),
+	avp_code_DNAS_NONE_Filter_Id (11),
+	avp_code_DNAS_NONE_ARAP_Password (70),
+	avp_code_DNAS_NONE_CHAP_Response (405),
+	avp_code_DNAS_NONE_Accounting_Input_Packets (365),
+	avp_code_DNAS_NONE_Callback_Id (20),
+	avp_code_DCC_NONE_CC_Output_Octets (414),
+	avp_code_DCC_NONE_Cost_Information (423),
 	avp_code_BASE_NONE_Error_Reporting_Host (294),
+	avp_code_DNAS_NONE_Login_Service (15),
+	avp_code_DNAS_NONE_ARAP_Security_Data (74),
+	avp_code_DNAS_NONE_State (24),
+	avp_code_DNAS_NONE_Tunnel_Preference (83),
+	avp_code_DCC_NONE_CC_Session_Failover (418),
 	avp_code_BASE_NONE_Proxy_State (33),
+	avp_code_DCC_NONE_Credit_Control_Failure_Handling (427),
 	avp_code_BASE_NONE_Redirect_Max_Cache_Time (262),
+	avp_code_DCC_NONE_Requested_Action (436),
+	avp_code_DNAS_NONE_Idle_Timeout (28),
+	avp_code_DNAS_NONE_NAS_Port_Id (87),
 	avp_code_BASE_NONE_Host_IP_Address (257),
+	avp_code_DNAS_NONE_Framed_Appletalk_Link (37),
+	avp_code_DNAS_NONE_Framed_Interface_Id (96),
 	avp_code_BASE_NONE_Vendor_Id (266),
+	avp_code_DNAS_NONE_Acct_Session_Time (46),
 	avp_code_BASE_NONE_Event_Timestamp (55),
+	avp_code_DCC_NONE_Final_Unit_Action (449),
+	avp_code_DNAS_NONE_Framed_IPv6_Pool (100),
+	avp_code_DCC_NONE_Rating_Group (432),
 	avp_code_MIPv6_NONE_MIP_MN_HA_SPI (491),
+	avp_code_DCC_NONE_User_Equipment_Info (458),
 	avp_code_MIPv6_NONE_MIP_Mobile_Node_Address (333),
+	avp_code_DCC_NONE_Service_Parameter_Type (441),
 	avp_code_BASE_NONE_Failed_AVP (279),
+	avp_code_DCC_NONE_Subscription_Id_Type (450),
+	avp_code_DNAS_NONE_User_Password (2),
+	avp_code_DNAS_NONE_Acct_Tunnel_Connection (68),
+	avp_code_DNAS_NONE_NAS_Filter_Rule (400),
 	avp_code_BASE_NONE_Session_Server_Failover (271),
 	avp_code_BASE_NONE_Experimental_Result (297),
+	avp_code_DNAS_NONE_Acct_Link_Count (51),
+	avp_code_DCC_NONE_Unit_Value (445),
+	avp_code_DNAS_NONE_Reply_Message (18),
+	avp_code_DNAS_NONE_Connect_Info (77),
 	avp_code_MIPv6_NONE_MIP_Replay_Mode (346),
 	avp_code_BASE_NONE_Proxy_Host (280),
+	avp_code_DNAS_NONE_CHAP_Challenge (60),
+	avp_code_DCC_NONE_CC_Unit_Type (454),
+	avp_code_DNAS_NONE_Service_Type (6),
+	avp_code_DNAS_NONE_Framed_Routing (10),
+	avp_code_DNAS_NONE_CHAP_Ident (404),
+	avp_code_DCC_NONE_CC_Money (413),
 	avp_code_BASE_NONE_Proxy_Info (284),
+	avp_code_DNAS_NONE_Tunnel_Type (64),
+	avp_code_DCC_NONE_Check_Balance_Result (422),
 	avp_code_BASE_NONE_Destination_Host (293),
+	avp_code_DNAS_NONE_Login_IP_Host (14),
+	avp_code_DNAS_NONE_ARAP_Security (73),
+	avp_code_DNAS_NONE_Origin_AAA_Protocol (408),
+	avp_code_DNAS_NONE_Tunnel_Assignment_Id (82),
+	avp_code_DNAS_NONE_Framed_IPX_Network (23),
+	avp_code_DCC_NONE_CC_Service_Specific_Units (417),
+	avp_code_DNAS_NONE_NAS_Identifier (32),
+	avp_code_DNAS_NONE_Tunnel_Server_Auth_Id (91),
+	avp_code_DCC_NONE_Credit_Control (426),
 	avp_code_BASE_NONE_Accounting_Record_Number (485),
 	avp_code_BASE_NONE_Redirect_Host_Usage (261),
+	avp_code_DCC_NONE_Redirect_Server_Address (435),
 	avp_code_MIPv6_NONE_MIP6_Auth_Mode (494),
+	avp_code_DNAS_NONE_Acct_Tunnel_Packets_Lost (86),
 	avp_code_BASE_NONE_Session_Timeout (27),
+	avp_code_DNAS_NONE_NAS_IPv6_Address (95),
+	avp_code_DNAS_NONE_Login_LAT_Group (36),
 	avp_code_MIPv6_NONE_MIP_MAC_Mobility_Data (489),
+	avp_code_DNAS_NONE_Accounting_Output_Octets (364),
 	avp_code_BASE_NONE_Supported_Vendor_Id (265),
+	avp_code_DNAS_NONE_Acct_Authentic (45),
+	avp_code_DCC_NONE_Service_Identifier (439),
 	avp_code_BASE_NONE_Auth_Request_Type (274),
+	avp_code_DCC_NONE_Validity_Time (448),
+	avp_code_DNAS_NONE_Framed_IPv6_Route (99),
+	avp_code_DCC_NONE_Granted_Service_Unit (431),
 	avp_code_MIPv6_NONE_MIP_Timestamp (490),
 	avp_code_BASE_NONE_Product_Name (269),
+	avp_code_DNAS_NONE_Framed_IP_Netmask (9),
+	avp_code_DCC_NONE_Service_Parameter_Info (440),
 	avp_code_BASE_NONE_Origin_State_Id (278),
 	avp_code_BASE_NONE_User_Name (1),
 	avp_code_BASE_NONE_Accounting_Sub_Session_Id (287),
+	avp_code_DNAS_NONE_Acct_Delay_Time (41),
+	avp_code_DNAS_NONE_Tunnel_Server_Endpoint (67),
 	avp_code_BASE_NONE_Session_Binding (270),
 	avp_code_BASE_NONE_Acct_Multi_Session_Id (50),
+	avp_code_DCC_NONE_Subscription_Id_Data (444),
 	avp_code_MIPv6_NONE_MIP_Algorithm_Type (345),
 	avp_code_MIPv6_NONE_QoS_Capability (578),
+	avp_code_DCC_NONE_G_S_U_Pool_Identifier (453),
+	avp_code_DNAS_NONE_NAS_Port (5),
+	avp_code_DNAS_NONE_CHAP_Algorithm (403),
+	avp_code_DCC_NONE_CC_Input_Octets (412),
 	avp_code_BASE_NONE_Destination_Realm (283),
+	avp_code_DNAS_NONE_Login_LAT_Port (63),
+	avp_code_DCC_NONE_G_S_U_Pool_Reference (457),
 	avp_code_MIPv6_NONE_Chargable_User_Identity (89),
 	avp_code_BASE_NONE_Redirect_Host (292),
+	avp_code_DNAS_NONE_ARAP_Zone_Access (72),
+	avp_code_DNAS_NONE_Framed_Compression (13),
+	avp_code_DNAS_NONE_QoS_Filter_Rule (407),
 	avp_code_MIPv6_NONE_MIP_MN_AAA_SPI (341),
 	avp_code_MIPv6_NONE_MIP_MSA_Lifetime (367),
+	avp_code_DNAS_NONE_Tunnel_Private_Group_Id (81),
+	avp_code_DNAS_NONE_Framed_Route (22),
+	avp_code_DCC_NONE_CC_Request_Type (416),
+	avp_code_DNAS_NONE_Tunnel_Client_Auth_Id (90),
+	avp_code_DNAS_NONE_Calling_Station_Id (31),
+	avp_code_DCC_NONE_Currency_Code (425),
 	avp_code_BASE_NONE_E2E_Sequence (300),
 	avp_code_BASE_NONE_Origin_Realm (296),
+	avp_code_DNAS_NONE_Prompt (76),
+	avp_code_DCC_NONE_Redirect_Server (434),
 	avp_code_BASE_NONE_Acct_Interim_Interval (85),
+	avp_code_DNAS_NONE_Login_LAT_Node (35),
+	avp_code_DNAS_NONE_Originating_Line_Info (94),
+	avp_code_DCC_NONE_Exponent (429),
 	avp_code_MIPv6_NONE_MIP_Authenticator (488),
+	avp_code_DNAS_NONE_Accounting_Input_Octets (363),
 	avp_code_BASE_NONE_Origin_Host (264),
 	avp_code_BASE_NONE_Accounting_Session_Id (44),
+	avp_code_DCC_NONE_Restriction_Filter_Rule (438),
 	avp_code_BASE_NONE_Disconnect_Cause (273),
+	avp_code_DCC_NONE_CC_Total_Octets (421),
 	avp_code_BASE_NONE_Accounting_Record_Type (480),
+	avp_code_DCC_NONE_Value_Digits (447),
 	avp_code_BASE_NONE_Acct_Application_Id (259),
+	avp_code_DNAS_NONE_Login_IPv6_Host (98),
+	avp_code_DNAS_NONE_Framed_Appletalk_Zone (39),
+	avp_code_DCC_NONE_Final_Unit_Indication (430),
 	avp_code_BASE_NONE_Result_Code (268),
+	avp_code_DNAS_NONE_Framed_IP_Address (8),
 	avp_code_BASE_NONE_Auth_Session_State (277),
 	avp_code_BASE_NONE_Vendor_Specific_Application_Id (260),
 	avp_code_MIPv6_NONE_Service_Selection (493),
+	avp_code_DNAS_NONE_Tunnel_Client_Endpoint (66),
+	avp_code_DCC_NONE_Subscription_Id (443),
+	avp_code_DCC_NONE_Tariff_Change_Usage (452),
+	avp_code_DNAS_NONE_NAS_IP_Address (4),
+	avp_code_DNAS_NONE_CHAP_Auth (402),
+	avp_code_DCC_NONE_Service_Context_Id (461),
 	avp_code_BASE_NONE_Inband_Security_Id (299),
+	avp_code_DCC_NONE_CC_Correlation_Id (411),
 	avp_code_BASE_NONE_Route_Record (282),
+	avp_code_DNAS_NONE_Port_Limit (62),
+	avp_code_DCC_NONE_Multiple_Services_Credit_Control (456),
 	avp_code_BASE_NONE_Authorization_Lifetime (291),
+	avp_code_DNAS_NONE_ARAP_Features (71),
+	avp_code_DNAS_NONE_Framed_MTU (12),
+	avp_code_DNAS_NONE_Accounting_Auth_Method (406),
+	avp_code_DNAS_NONE_Accounting_Output_Packets (366),
+	avp_code_DCC_NONE_CC_Request_Number (415),
+	avp_code_DNAS_NONE_Called_Station_Id (30),
+	avp_code_DCC_NONE_Cost_Unit (424),
 	avp_code_BASE_NONE_Accounting_Realtime_Required (483),
 	avp_code_BASE_NONE_Termination_Cause (295),
-	avp_code_BASE_NONE_Class (25)
+	avp_code_DNAS_NONE_Login_TCP_Port (16),
+	avp_code_DNAS_NONE_Password_Retry (75),
+	avp_code_DNAS_NONE_ARAP_Challenge_Response (84),
+	avp_code_BASE_NONE_Class (25),
+	avp_code_DCC_NONE_CC_Sub_Session_Id (419)
 } with {
 	variant "FIELDLENGTH(32)"
 	variant "BYTEORDER(last)"
@@ -4522,6 +5648,8 @@ type record AVP_Header {
 	)"
 }
 type union AVP_Data {
+	DNAS_NONE_Login_LAT_Service avp_DNAS_NONE_Login_LAT_Service,
+	DCC_NONE_Direct_Debiting_Failure_Handling avp_DCC_NONE_Direct_Debiting_Failure_Handling,
 	MIPv6_NONE_MIP_Careof_Address avp_MIPv6_NONE_MIP_Careof_Address,
 	PCC_3GPP_Bearer_Identifier avp_PCC_3GPP_Bearer_Identifier,
 	RX_3GPP_Content_Version avp_RX_3GPP_Content_Version,
@@ -4533,15 +5661,21 @@ type union AVP_Data {
 	PCC_3GPP_Bearer_Usage avp_PCC_3GPP_Bearer_Usage,
 	PCC_3GPP_Tunnel_Header_Filter avp_PCC_3GPP_Tunnel_Header_Filter,
 	AAA_3GPP_List_Of_Measurements avp_AAA_3GPP_List_Of_Measurements,
+	DCC_NONE_Requested_Service_Unit avp_DCC_NONE_Requested_Service_Unit,
 	PCC_3GPP_Default_QoS_Name avp_PCC_3GPP_Default_QoS_Name,
 	AAA_3GPP_UVA_Flags avp_AAA_3GPP_UVA_Flags,
 	AAA_3GPP_Group_Service_Id avp_AAA_3GPP_Group_Service_Id,
 	PCC_3GPP_TDF_Information avp_PCC_3GPP_TDF_Information,
+	DNAS_NONE_Framed_Pool avp_DNAS_NONE_Framed_Pool,
+	DCC_NONE_CC_Time avp_DCC_NONE_CC_Time,
 	AAA_3GPP_Requested_EUTRAN_Authentication_Info avp_AAA_3GPP_Requested_EUTRAN_Authentication_Info,
 	AAA_3GPP_Last_UE_Activity_Time avp_AAA_3GPP_Last_UE_Activity_Time,
 	AAA_3GPP_Context_Identifier avp_AAA_3GPP_Context_Identifier,
+	DCC_NONE_Used_Service_Unit avp_DCC_NONE_Used_Service_Unit,
 	BASE_NONE_Auth_Application_Id avp_BASE_NONE_Auth_Application_Id,
 	AAA_3GPP_Trace_Reference avp_AAA_3GPP_Trace_Reference,
+	DNAS_NONE_Framed_Appletalk_Network avp_DNAS_NONE_Framed_Appletalk_Network,
+	DNAS_NONE_Framed_IPv6_Prefix avp_DNAS_NONE_Framed_IPv6_Prefix,
 	RX_3GPP_Sharing_Key_UL avp_RX_3GPP_Sharing_Key_UL,
 	RX_3GPP_AF_Charging_Identifier avp_RX_3GPP_AF_Charging_Identifier,
 	S6_3GPP_Monitoring_Event_Report avp_S6_3GPP_Monitoring_Event_Report,
@@ -4566,10 +5700,13 @@ type union AVP_Data {
 	AAA_3GPP_APN_OI_Replacement avp_AAA_3GPP_APN_OI_Replacement,
 	BASE_NONE_Re_Auth_Request_Type avp_BASE_NONE_Re_Auth_Request_Type,
 	S6_3GPP_External_Identifier avp_S6_3GPP_External_Identifier,
+	DCC_NONE_Redirect_Address_Type avp_DCC_NONE_Redirect_Address_Type,
 	MIPv6_NONE_MIP_MN_HA_MSA avp_MIPv6_NONE_MIP_MN_HA_MSA,
 	PCC_3GPP_TFT_Filter avp_PCC_3GPP_TFT_Filter,
 	RX_3GPP_Max_Supported_Bandwidth_UL avp_RX_3GPP_Max_Supported_Bandwidth_UL,
+	DNAS_NONE_Tunnel_Medium_Type avp_DNAS_NONE_Tunnel_Medium_Type,
 	S6_3GPP_Loss_Of_Connectivity_Reason avp_S6_3GPP_Loss_Of_Connectivity_Reason,
+	DCC_NONE_User_Equipment_Info_Type avp_DCC_NONE_User_Equipment_Info_Type,
 	RX_3GPP_Flow_Number avp_RX_3GPP_Flow_Number,
 	PCC_3GPP_Resource_Allocation_Notification avp_PCC_3GPP_Resource_Allocation_Notification,
 	S6_3GPP_Monitoring_Type avp_S6_3GPP_Monitoring_Type,
@@ -4579,21 +5716,26 @@ type union AVP_Data {
 	PCC_3GPP_Mute_Notification avp_PCC_3GPP_Mute_Notification,
 	MIPv6_NONE_QoS_Resources avp_MIPv6_NONE_QoS_Resources,
 	AAA_3GPP_Logging_Duration avp_AAA_3GPP_Logging_Duration,
+	DCC_NONE_Service_Parameter_Value avp_DCC_NONE_Service_Parameter_Value,
 	AAA_3GPP_WLAN_offloadability_EUTRAN avp_AAA_3GPP_WLAN_offloadability_EUTRAN,
 	PCC_3GPP_Routing_IP_Address avp_PCC_3GPP_Routing_IP_Address,
 	MIPv6_NONE_MIP_Session_Key avp_MIPv6_NONE_MIP_Session_Key,
 	AAA_3GPP_KASME avp_AAA_3GPP_KASME,
 	AAA_3GPP_Teleservice_List avp_AAA_3GPP_Teleservice_List,
 	AAA_3GPP_UTRAN_Vector avp_AAA_3GPP_UTRAN_Vector,
+	DCC_NONE_Tariff_Time_Change avp_DCC_NONE_Tariff_Time_Change,
 	RX_3GPP_Application_Service_Provider_Identity avp_RX_3GPP_Application_Service_Provider_Identity,
 	S6_3GPP_NIDD_Authorization_Request avp_S6_3GPP_NIDD_Authorization_Request,
 	PCC_3GPP_QoS_Rule_Install avp_PCC_3GPP_QoS_Rule_Install,
 	S6_3GPP_Periodic_Communication_Indicator avp_S6_3GPP_Periodic_Communication_Indicator,
 	RX_3GPP_Flow_Usage avp_RX_3GPP_Flow_Usage,
 	PCC_3GPP_RAN_Rule_Support avp_PCC_3GPP_RAN_Rule_Support,
+	DNAS_NONE_Tunnel_Password avp_DNAS_NONE_Tunnel_Password,
 	S6_3GPP_Monitoring_Duration avp_S6_3GPP_Monitoring_Duration,
 	AAA_3GPP_Routing_Area_Identity avp_AAA_3GPP_Routing_Area_Identity,
 	PCC_3GPP_QoS_Information avp_PCC_3GPP_QoS_Information,
+	DNAS_NONE_Tunneling avp_DNAS_NONE_Tunneling,
+	DCC_NONE_User_Equipment_Info_Value avp_DCC_NONE_User_Equipment_Info_Value,
 	RX_3GPP_Service_Authorization_Info avp_RX_3GPP_Service_Authorization_Info,
 	BASE_NONE_Multi_Round_Time_Out avp_BASE_NONE_Multi_Round_Time_Out,
 	AAA_3GPP_eDRX_Cycle_Length avp_AAA_3GPP_eDRX_Cycle_Length,
@@ -4606,11 +5748,16 @@ type union AVP_Data {
 	BASE_NONE_Experimental_Result_Code avp_BASE_NONE_Experimental_Result_Code,
 	PCC_3GPP_Extended_APN_AMBR_DL avp_PCC_3GPP_Extended_APN_AMBR_DL,
 	AAA_3GPP_GMLC_Number avp_AAA_3GPP_GMLC_Number,
+	DNAS_NONE_Configuration_Token avp_DNAS_NONE_Configuration_Token,
+	DNAS_NONE_Callback_Number avp_DNAS_NONE_Callback_Number,
 	AAA_3GPP_Software_Version avp_AAA_3GPP_Software_Version,
 	AAA_3GPP_Expiration_Date avp_AAA_3GPP_Expiration_Date,
 	BASE_NONE_Error_Message avp_BASE_NONE_Error_Message,
 	AAA_3GPP_SRES avp_AAA_3GPP_SRES,
+	DNAS_NONE_NAS_Port_Type avp_DNAS_NONE_NAS_Port_Type,
 	AAA_3GPP_Item_Number avp_AAA_3GPP_Item_Number,
+	DCC_NONE_Multiple_Services_Indicator avp_DCC_NONE_Multiple_Services_Indicator,
+	DNAS_NONE_Framed_Protocol avp_DNAS_NONE_Framed_Protocol,
 	S6_3GPP_Service_ID avp_S6_3GPP_Service_ID,
 	RX_3GPP_Abort_Cause avp_RX_3GPP_Abort_Cause,
 	PCC_3GPP_Charging_Rule_Base_Name avp_PCC_3GPP_Charging_Rule_Base_Name,
@@ -4618,19 +5765,26 @@ type union AVP_Data {
 	PCC_3GPP_TDF_Destination_Realm avp_PCC_3GPP_TDF_Destination_Realm,
 	S6_3GPP_S6t_HSS_Cause avp_S6_3GPP_S6t_HSS_Cause,
 	RX_3GPP_AF_Requested_Data avp_RX_3GPP_AF_Requested_Data,
+	DNAS_NONE_Filter_Id avp_DNAS_NONE_Filter_Id,
+	DNAS_NONE_ARAP_Password avp_DNAS_NONE_ARAP_Password,
 	PCC_3GPP_QoS_Rule_Report avp_PCC_3GPP_QoS_Rule_Report,
+	DNAS_NONE_CHAP_Response avp_DNAS_NONE_CHAP_Response,
 	S6_3GPP_Stationary_Indication avp_S6_3GPP_Stationary_Indication,
 	PCC_3GPP_Traffic_Steering_Policy_Identifier_DL avp_PCC_3GPP_Traffic_Steering_Policy_Identifier_DL,
 	AAA_3GPP_Geodetic_Information avp_AAA_3GPP_Geodetic_Information,
 	PCC_3GPP_Extended_GBR_UL avp_PCC_3GPP_Extended_GBR_UL,
 	AAA_3GPP_MBSFN_Area_ID avp_AAA_3GPP_MBSFN_Area_ID,
 	AAA_3GPP_Area_Scope avp_AAA_3GPP_Area_Scope,
+	DNAS_NONE_Accounting_Input_Packets avp_DNAS_NONE_Accounting_Input_Packets,
 	AAA_3GPP_PUA_Flags avp_AAA_3GPP_PUA_Flags,
+	DNAS_NONE_Callback_Id avp_DNAS_NONE_Callback_Id,
+	DCC_NONE_CC_Output_Octets avp_DCC_NONE_CC_Output_Octets,
 	AAA_3GPP_Notification_To_UE_User avp_AAA_3GPP_Notification_To_UE_User,
 	AAA_3GPP_Visited_PLMN_Id avp_AAA_3GPP_Visited_PLMN_Id,
 	AAA_3GPP_Homogeneous_Support_of_IMS_Voice_Over_PS_Sessions avp_AAA_3GPP_Homogeneous_Support_of_IMS_Voice_Over_PS_Sessions,
 	RX_3GPP_Codec_Data avp_RX_3GPP_Codec_Data,
 	S6_3GPP_Monitoring_Event_Config_Status avp_S6_3GPP_Monitoring_Event_Config_Status,
+	DCC_NONE_Cost_Information avp_DCC_NONE_Cost_Information,
 	BASE_NONE_Error_Reporting_Host avp_BASE_NONE_Error_Reporting_Host,
 	PCC_3GPP_Rule_Activation_Time avp_PCC_3GPP_Rule_Activation_Time,
 	S6_3GPP_Service_Data avp_S6_3GPP_Service_Data,
@@ -4638,6 +5792,8 @@ type union AVP_Data {
 	PCC_3GPP_NetLoc_Access_Support avp_PCC_3GPP_NetLoc_Access_Support,
 	S6_3GPP_Monitoring_Event_Configuration avp_S6_3GPP_Monitoring_Event_Configuration,
 	PCC_3GPP_Offline avp_PCC_3GPP_Offline,
+	DNAS_NONE_Login_Service avp_DNAS_NONE_Login_Service,
+	DNAS_NONE_ARAP_Security_Data avp_DNAS_NONE_ARAP_Security_Data,
 	AAA_3GPP_Additional_Context_ID avp_AAA_3GPP_Additional_Context_ID,
 	PCC_3GPP_ADC_Rule_Definition avp_PCC_3GPP_ADC_Rule_Definition,
 	S6_3GPP_Allowed_PLMN_List avp_S6_3GPP_Allowed_PLMN_List,
@@ -4649,8 +5805,12 @@ type union AVP_Data {
 	AAA_3GPP_APN_Configuration avp_AAA_3GPP_APN_Configuration,
 	AAA_3GPP_OMC_Id avp_AAA_3GPP_OMC_Id,
 	AAA_3GPP_GMLC_Restriction avp_AAA_3GPP_GMLC_Restriction,
+	DNAS_NONE_State avp_DNAS_NONE_State,
+	DNAS_NONE_Tunnel_Preference avp_DNAS_NONE_Tunnel_Preference,
+	DCC_NONE_CC_Session_Failover avp_DCC_NONE_CC_Session_Failover,
 	AAA_3GPP_Regional_Subscription_Zone_Code avp_AAA_3GPP_Regional_Subscription_Zone_Code,
 	BASE_NONE_Proxy_State avp_BASE_NONE_Proxy_State,
+	DCC_NONE_Credit_Control_Failure_Handling avp_DCC_NONE_Credit_Control_Failure_Handling,
 	S6_3GPP_SIR_Flags avp_S6_3GPP_SIR_Flags,
 	RX_3GPP_MPS_Identifier avp_RX_3GPP_MPS_Identifier,
 	AAA_3GPP_MDT_Allowed_PLMN_Id avp_AAA_3GPP_MDT_Allowed_PLMN_Id,
@@ -4667,13 +5827,18 @@ type union AVP_Data {
 	PCC_3GPP_Application_Detection_Information avp_PCC_3GPP_Application_Detection_Information,
 	AAA_3GPP_Emergency_Info avp_AAA_3GPP_Emergency_Info,
 	AAA_3GPP_MPS_Priority avp_AAA_3GPP_MPS_Priority,
+	DCC_NONE_Requested_Action avp_DCC_NONE_Requested_Action,
 	AAA_3GPP_Alert_Reason avp_AAA_3GPP_Alert_Reason,
+	DNAS_NONE_Idle_Timeout avp_DNAS_NONE_Idle_Timeout,
+	DNAS_NONE_NAS_Port_Id avp_DNAS_NONE_NAS_Port_Id,
 	AAA_3GPP_MO_LR avp_AAA_3GPP_MO_LR,
 	BASE_NONE_Host_IP_Address avp_BASE_NONE_Host_IP_Address,
 	RX_3GPP_Max_Requested_Bandwidth_UL avp_RX_3GPP_Max_Requested_Bandwidth_UL,
 	PCC_3GPP_Usage_Monitoring_Support avp_PCC_3GPP_Usage_Monitoring_Support,
 	S6_3GPP_Maximum_Response_Time avp_S6_3GPP_Maximum_Response_Time,
 	RX_3GPP_Sponsor_Identity avp_RX_3GPP_Sponsor_Identity,
+	DNAS_NONE_Framed_Appletalk_Link avp_DNAS_NONE_Framed_Appletalk_Link,
+	DNAS_NONE_Framed_Interface_Id avp_DNAS_NONE_Framed_Interface_Id,
 	PCC_3GPP_CoA_IP_Address avp_PCC_3GPP_CoA_IP_Address,
 	PCC_3GPP_Default_QoS_Information avp_PCC_3GPP_Default_QoS_Information,
 	PCC_3GPP_AN_GW_Address avp_PCC_3GPP_AN_GW_Address,
@@ -4683,35 +5848,43 @@ type union AVP_Data {
 	AAA_3GPP_Cell_Global_Identity avp_AAA_3GPP_Cell_Global_Identity,
 	BASE_NONE_Vendor_Id avp_BASE_NONE_Vendor_Id,
 	AAA_3GPP_PDN_Connection_Continuity avp_AAA_3GPP_PDN_Connection_Continuity,
+	DNAS_NONE_Acct_Session_Time avp_DNAS_NONE_Acct_Session_Time,
 	AAA_3GPP_DSA_Flags avp_AAA_3GPP_DSA_Flags,
 	AAA_3GPP_Trace_Data avp_AAA_3GPP_Trace_Data,
 	AAA_3GPP_LCS_Info avp_AAA_3GPP_LCS_Info,
 	AAA_3GPP_PDN_GW_Allocation_Type avp_AAA_3GPP_PDN_GW_Allocation_Type,
 	BASE_NONE_Event_Timestamp avp_BASE_NONE_Event_Timestamp,
+	DCC_NONE_Final_Unit_Action avp_DCC_NONE_Final_Unit_Action,
 	RX_3GPP_Extended_Max_Requested_BW_UL avp_RX_3GPP_Extended_Max_Requested_BW_UL,
 	S6_3GPP_User_Identifier avp_S6_3GPP_User_Identifier,
+	DNAS_NONE_Framed_IPv6_Pool avp_DNAS_NONE_Framed_IPv6_Pool,
 	PCC_3GPP_QoS_Rule_Base_Name avp_PCC_3GPP_QoS_Rule_Base_Name,
 	AAA_3GPP_Restoration_Priority avp_AAA_3GPP_Restoration_Priority,
+	DCC_NONE_Rating_Group avp_DCC_NONE_Rating_Group,
 	MIPv6_NONE_MIP_MN_HA_SPI avp_MIPv6_NONE_MIP_MN_HA_SPI,
 	S6_3GPP_Association_Type avp_S6_3GPP_Association_Type,
 	PCC_3GPP_Charging_Rule_Definition avp_PCC_3GPP_Charging_Rule_Definition,
 	RX_3GPP_Min_Requested_Bandwidth_UL avp_RX_3GPP_Min_Requested_Bandwidth_UL,
 	AAA_3GPP_Report_Amount avp_AAA_3GPP_Report_Amount,
 	PCC_3GPP_CoA_Information avp_PCC_3GPP_CoA_Information,
+	DCC_NONE_User_Equipment_Info avp_DCC_NONE_User_Equipment_Info,
 	AAA_3GPP_A_MSISDN avp_AAA_3GPP_A_MSISDN,
 	MIPv6_NONE_MIP_Mobile_Node_Address avp_MIPv6_NONE_MIP_Mobile_Node_Address,
 	PCC_3GPP_Routing_Rule_Report avp_PCC_3GPP_Routing_Rule_Report,
 	AAA_3GPP_Number_Of_Requested_Vectors avp_AAA_3GPP_Number_Of_Requested_Vectors,
 	AAA_3GPP_AIR_Flags avp_AAA_3GPP_AIR_Flags,
 	AAA_3GPP_Geographical_Information avp_AAA_3GPP_Geographical_Information,
+	DCC_NONE_Service_Parameter_Type avp_DCC_NONE_Service_Parameter_Type,
 	AAA_3GPP_MME_User_State avp_AAA_3GPP_MME_User_State,
 	AAA_3GPP_Access_Restriction_Data avp_AAA_3GPP_Access_Restriction_Data,
 	BASE_NONE_Failed_AVP avp_BASE_NONE_Failed_AVP,
 	AAA_3GPP_SS_Status avp_AAA_3GPP_SS_Status,
 	S6_3GPP_NIDD_Authorization_Update avp_S6_3GPP_NIDD_Authorization_Update,
+	DCC_NONE_Subscription_Id_Type avp_DCC_NONE_Subscription_Id_Type,
 	PCC_3GPP_Packet_Filter_Operation avp_PCC_3GPP_Packet_Filter_Operation,
 	S6_3GPP_SCEF_Reference_ID_for_Deletion avp_S6_3GPP_SCEF_Reference_ID_for_Deletion,
 	RX_3GPP_SIP_Forking_Indication avp_RX_3GPP_SIP_Forking_Indication,
+	DNAS_NONE_User_Password avp_DNAS_NONE_User_Password,
 	S6_3GPP_IMEI_Change avp_S6_3GPP_IMEI_Change,
 	PCC_3GPP_IP_CAN_Type avp_PCC_3GPP_IP_CAN_Type,
 	RX_3GPP_Extended_Min_Desired_BW_UL avp_RX_3GPP_Extended_Min_Desired_BW_UL,
@@ -4721,18 +5894,27 @@ type union AVP_Data {
 	AAA_3GPP_WLAN_offloadability avp_AAA_3GPP_WLAN_offloadability,
 	PCC_3GPP_Routing_Filter avp_PCC_3GPP_Routing_Filter,
 	PCC_3GPP_Metering_Method avp_PCC_3GPP_Metering_Method,
+	DNAS_NONE_Acct_Tunnel_Connection avp_DNAS_NONE_Acct_Tunnel_Connection,
 	AAA_3GPP_Non_IP_Data_Delivery_Mechanism avp_AAA_3GPP_Non_IP_Data_Delivery_Mechanism,
+	DNAS_NONE_NAS_Filter_Rule avp_DNAS_NONE_NAS_Filter_Rule,
 	BASE_NONE_Session_Server_Failover avp_BASE_NONE_Session_Server_Failover,
 	AAA_3GPP_E_UTRAN_Vector avp_AAA_3GPP_E_UTRAN_Vector,
 	BASE_NONE_Experimental_Result avp_BASE_NONE_Experimental_Result,
+	DNAS_NONE_Acct_Link_Count avp_DNAS_NONE_Acct_Link_Count,
+	DCC_NONE_Unit_Value avp_DCC_NONE_Unit_Value,
 	AAA_3GPP_Trace_Event_List avp_AAA_3GPP_Trace_Event_List,
+	DNAS_NONE_Reply_Message avp_DNAS_NONE_Reply_Message,
+	DNAS_NONE_Connect_Info avp_DNAS_NONE_Connect_Info,
 	MIPv6_NONE_MIP_Replay_Mode avp_MIPv6_NONE_MIP_Replay_Mode,
 	BASE_NONE_Proxy_Host avp_BASE_NONE_Proxy_Host,
 	S6_3GPP_Communication_Pattern_Set avp_S6_3GPP_Communication_Pattern_Set,
 	RX_3GPP_Flow_Status avp_RX_3GPP_Flow_Status,
+	DNAS_NONE_CHAP_Challenge avp_DNAS_NONE_CHAP_Challenge,
+	DCC_NONE_CC_Unit_Type avp_DCC_NONE_CC_Unit_Type,
 	RX_3GPP_MCPTT_Identifier avp_RX_3GPP_MCPTT_Identifier,
 	S6_3GPP_Group_Monitoring_Event_Report avp_S6_3GPP_Group_Monitoring_Event_Report,
 	PCC_3GPP_QoS_Upgrade avp_PCC_3GPP_QoS_Upgrade,
+	DNAS_NONE_Service_Type avp_DNAS_NONE_Service_Type,
 	PCC_3GPP_AN_GW_Status avp_PCC_3GPP_AN_GW_Status,
 	AAA_3GPP_Measurement_Period_UMTS avp_AAA_3GPP_Measurement_Period_UMTS,
 	PCC_3GPP_Monitoring_Key avp_PCC_3GPP_Monitoring_Key,
@@ -4740,15 +5922,19 @@ type union AVP_Data {
 	AAA_3GPP_Reset_ID avp_AAA_3GPP_Reset_ID,
 	PCC_3GPP_Routing_Rule_Install avp_PCC_3GPP_Routing_Rule_Install,
 	AAA_3GPP_PUR_Flags avp_AAA_3GPP_PUR_Flags,
+	DNAS_NONE_Framed_Routing avp_DNAS_NONE_Framed_Routing,
 	PCC_3GPP_IP_CAN_Session_Charging_Scope avp_PCC_3GPP_IP_CAN_Session_Charging_Scope,
 	AAA_3GPP_IMEI avp_AAA_3GPP_IMEI,
+	DNAS_NONE_CHAP_Ident avp_DNAS_NONE_CHAP_Ident,
 	AAA_3GPP_Kc avp_AAA_3GPP_Kc,
 	AAA_3GPP_SGSN_Number avp_AAA_3GPP_SGSN_Number,
 	AAA_3GPP_HPLMN_ODB avp_AAA_3GPP_HPLMN_ODB,
 	AAA_3GPP_PDP_Context avp_AAA_3GPP_PDP_Context,
+	DCC_NONE_CC_Money avp_DCC_NONE_CC_Money,
 	BASE_NONE_Proxy_Info avp_BASE_NONE_Proxy_Info,
 	S6_3GPP_Node_Type avp_S6_3GPP_Node_Type,
 	RX_3GPP_Priority_Sharing_Indicator avp_RX_3GPP_Priority_Sharing_Indicator,
+	DNAS_NONE_Tunnel_Type avp_DNAS_NONE_Tunnel_Type,
 	PCC_3GPP_QoS_Rule_Name avp_PCC_3GPP_QoS_Rule_Name,
 	S6_3GPP_Scheduled_Communication_Time avp_S6_3GPP_Scheduled_Communication_Time,
 	RX_3GPP_Max_Requested_Bandwidth_DL avp_RX_3GPP_Max_Requested_Bandwidth_DL,
@@ -4756,16 +5942,23 @@ type union AVP_Data {
 	PCC_3GPP_PCC_Rule_Status avp_PCC_3GPP_PCC_Rule_Status,
 	PCC_3GPP_Extended_GBR_DL avp_PCC_3GPP_Extended_GBR_DL,
 	AAA_3GPP_MBSFN_Area avp_AAA_3GPP_MBSFN_Area,
+	DCC_NONE_Check_Balance_Result avp_DCC_NONE_Check_Balance_Result,
 	S6_3GPP_APN_Validity_Time avp_S6_3GPP_APN_Validity_Time,
 	AAA_3GPP_Job_Type avp_AAA_3GPP_Job_Type,
 	PCC_3GPP_Allocation_Retention_Priority avp_PCC_3GPP_Allocation_Retention_Priority,
 	BASE_NONE_Destination_Host avp_BASE_NONE_Destination_Host,
 	AAA_3GPP_Positioning_Method avp_AAA_3GPP_Positioning_Method,
 	AAA_3GPP_DL_Buffering_Suggested_Packet_Count avp_AAA_3GPP_DL_Buffering_Suggested_Packet_Count,
+	DNAS_NONE_Login_IP_Host avp_DNAS_NONE_Login_IP_Host,
+	DNAS_NONE_ARAP_Security avp_DNAS_NONE_ARAP_Security,
 	AAA_3GPP_IDA_Flags avp_AAA_3GPP_IDA_Flags,
+	DNAS_NONE_Origin_AAA_Protocol avp_DNAS_NONE_Origin_AAA_Protocol,
 	AAA_3GPP_ULA_Flags avp_AAA_3GPP_ULA_Flags,
 	AAA_3GPP_IMS_Voice_Over_PS_Sessions_Supported avp_AAA_3GPP_IMS_Voice_Over_PS_Sessions_Supported,
 	AAA_3GPP_Roaming_Restricted_Due_To_Unsupported_Feature avp_AAA_3GPP_Roaming_Restricted_Due_To_Unsupported_Feature,
+	DNAS_NONE_Tunnel_Assignment_Id avp_DNAS_NONE_Tunnel_Assignment_Id,
+	DNAS_NONE_Framed_IPX_Network avp_DNAS_NONE_Framed_IPX_Network,
+	DCC_NONE_CC_Service_Specific_Units avp_DCC_NONE_CC_Service_Specific_Units,
 	S6_3GPP_T4_Parameters avp_S6_3GPP_T4_Parameters,
 	RX_3GPP_Access_Network_Charging_Identifier_Value avp_RX_3GPP_Access_Network_Charging_Identifier_Value,
 	S6_3GPP_AESE_Error_Report avp_S6_3GPP_AESE_Error_Report,
@@ -4776,7 +5969,10 @@ type union AVP_Data {
 	PCC_3GPP_Access_Network_Charging_Identifier_Gx avp_PCC_3GPP_Access_Network_Charging_Identifier_Gx,
 	RX_3GPP_Extended_Max_Requested_BW_DL avp_RX_3GPP_Extended_Max_Requested_BW_DL,
 	PCC_3GPP_Flow_Information avp_PCC_3GPP_Flow_Information,
+	DNAS_NONE_NAS_Identifier avp_DNAS_NONE_NAS_Identifier,
+	DNAS_NONE_Tunnel_Server_Auth_Id avp_DNAS_NONE_Tunnel_Server_Auth_Id,
 	PCC_3GPP_Execution_Time avp_PCC_3GPP_Execution_Time,
+	DCC_NONE_Credit_Control avp_DCC_NONE_Credit_Control,
 	BASE_NONE_Accounting_Record_Number avp_BASE_NONE_Accounting_Record_Number,
 	AAA_3GPP_Event_Threshold_Event_1I avp_AAA_3GPP_Event_Threshold_Event_1I,
 	PCC_3GPP_Charging_Correlation_Indicator avp_PCC_3GPP_Charging_Correlation_Indicator,
@@ -4785,8 +5981,10 @@ type union AVP_Data {
 	AAA_3GPP_Client_Identity avp_AAA_3GPP_Client_Identity,
 	BASE_NONE_Redirect_Host_Usage avp_BASE_NONE_Redirect_Host_Usage,
 	AAA_3GPP_Equipment_Status avp_AAA_3GPP_Equipment_Status,
+	DCC_NONE_Redirect_Server_Address avp_DCC_NONE_Redirect_Server_Address,
 	MIPv6_NONE_MIP6_Auth_Mode avp_MIPv6_NONE_MIP6_Auth_Mode,
 	AAA_3GPP_EPS_Location_Information avp_AAA_3GPP_EPS_Location_Information,
+	DNAS_NONE_Acct_Tunnel_Packets_Lost avp_DNAS_NONE_Acct_Tunnel_Packets_Lost,
 	BASE_NONE_Session_Timeout avp_BASE_NONE_Session_Timeout,
 	RX_3GPP_Service_Info_Status avp_RX_3GPP_Service_Info_Status,
 	S6_3GPP_CIR_Flags avp_S6_3GPP_CIR_Flags,
@@ -4803,16 +6001,22 @@ type union AVP_Data {
 	PCC_3GPP_ADC_Rule_Report avp_PCC_3GPP_ADC_Rule_Report,
 	AAA_3GPP_UE_SRVCC_Capability avp_AAA_3GPP_UE_SRVCC_Capability,
 	PCC_3GPP_Guaranteed_Bitrate_UL avp_PCC_3GPP_Guaranteed_Bitrate_UL,
+	DNAS_NONE_NAS_IPv6_Address avp_DNAS_NONE_NAS_IPv6_Address,
+	DNAS_NONE_Login_LAT_Group avp_DNAS_NONE_Login_LAT_Group,
 	MIPv6_NONE_MIP_MAC_Mobility_Data avp_MIPv6_NONE_MIP_MAC_Mobility_Data,
+	DNAS_NONE_Accounting_Output_Octets avp_DNAS_NONE_Accounting_Output_Octets,
 	AAA_3GPP_Coupled_Node_Diameter_ID avp_AAA_3GPP_Coupled_Node_Diameter_ID,
 	AAA_3GPP_STN_SR avp_AAA_3GPP_STN_SR,
 	BASE_NONE_Supported_Vendor_Id avp_BASE_NONE_Supported_Vendor_Id,
 	AAA_3GPP_ServiceTypeIdentity avp_AAA_3GPP_ServiceTypeIdentity,
+	DNAS_NONE_Acct_Authentic avp_DNAS_NONE_Acct_Authentic,
+	DCC_NONE_Service_Identifier avp_DCC_NONE_Service_Identifier,
 	AAA_3GPP_AUTN avp_AAA_3GPP_AUTN,
 	RX_3GPP_Sponsored_Connectivity_Data avp_RX_3GPP_Sponsored_Connectivity_Data,
 	BASE_NONE_Auth_Request_Type avp_BASE_NONE_Auth_Request_Type,
 	S6_3GPP_AESE_Communication_Pattern avp_S6_3GPP_AESE_Communication_Pattern,
 	PCC_3GPP_NBIFOM_Mode avp_PCC_3GPP_NBIFOM_Mode,
+	DCC_NONE_Validity_Time avp_DCC_NONE_Validity_Time,
 	PCC_3GPP_Redirect_Information avp_PCC_3GPP_Redirect_Information,
 	S6_3GPP_Event_Handling avp_S6_3GPP_Event_Handling,
 	AAA_3GPP_Tracking_Area_Identity avp_AAA_3GPP_Tracking_Area_Identity,
@@ -4821,15 +6025,19 @@ type union AVP_Data {
 	AAA_3GPP_UVR_Flags avp_AAA_3GPP_UVR_Flags,
 	AAA_3GPP_Subscription_Data_Flags avp_AAA_3GPP_Subscription_Data_Flags,
 	PCC_3GPP_PDN_Connection_ID avp_PCC_3GPP_PDN_Connection_ID,
+	DNAS_NONE_Framed_IPv6_Route avp_DNAS_NONE_Framed_IPv6_Route,
 	AAA_3GPP_DSR_Flags avp_AAA_3GPP_DSR_Flags,
 	PCC_3GPP_PRA_Remove avp_PCC_3GPP_PRA_Remove,
+	DCC_NONE_Granted_Service_Unit avp_DCC_NONE_Granted_Service_Unit,
 	MIPv6_NONE_MIP_Timestamp avp_MIPv6_NONE_MIP_Timestamp,
 	AAA_3GPP_Subscribed_Periodic_RAU_TAU_Timer avp_AAA_3GPP_Subscribed_Periodic_RAU_TAU_Timer,
 	AAA_3GPP_Specific_APN_Info avp_AAA_3GPP_Specific_APN_Info,
 	AAA_3GPP_Terminal_Information avp_AAA_3GPP_Terminal_Information,
 	BASE_NONE_Product_Name avp_BASE_NONE_Product_Name,
 	AAA_3GPP_CSG_Id avp_AAA_3GPP_CSG_Id,
+	DNAS_NONE_Framed_IP_Netmask avp_DNAS_NONE_Framed_IP_Netmask,
 	AAA_3GPP_Call_Barring_Info avp_AAA_3GPP_Call_Barring_Info,
+	DCC_NONE_Service_Parameter_Info avp_DCC_NONE_Service_Parameter_Info,
 	BASE_NONE_Origin_State_Id avp_BASE_NONE_Origin_State_Id,
 	S6_3GPP_IP_SM_GW_Name avp_S6_3GPP_IP_SM_GW_Name,
 	RX_3GPP_Media_Sub_Component avp_RX_3GPP_Media_Sub_Component,
@@ -4849,11 +6057,14 @@ type union AVP_Data {
 	BASE_NONE_User_Name avp_BASE_NONE_User_Name,
 	AAA_3GPP_UE_PC5_AMBR avp_AAA_3GPP_UE_PC5_AMBR,
 	BASE_NONE_Accounting_Sub_Session_Id avp_BASE_NONE_Accounting_Sub_Session_Id,
+	DNAS_NONE_Acct_Delay_Time avp_DNAS_NONE_Acct_Delay_Time,
 	AAA_3GPP_Collection_Period_RRM_UMTS avp_AAA_3GPP_Collection_Period_RRM_UMTS,
 	AAA_3GPP_Operator_Determined_Barring avp_AAA_3GPP_Operator_Determined_Barring,
+	DNAS_NONE_Tunnel_Server_Endpoint avp_DNAS_NONE_Tunnel_Server_Endpoint,
 	BASE_NONE_Session_Binding avp_BASE_NONE_Session_Binding,
 	AAA_3GPP_SS_Code avp_AAA_3GPP_SS_Code,
 	BASE_NONE_Acct_Multi_Session_Id avp_BASE_NONE_Acct_Multi_Session_Id,
+	DCC_NONE_Subscription_Id_Data avp_DCC_NONE_Subscription_Id_Data,
 	RX_3GPP_RS_Bandwidth avp_RX_3GPP_RS_Bandwidth,
 	MIPv6_NONE_MIP_Algorithm_Type avp_MIPv6_NONE_MIP_Algorithm_Type,
 	S6_3GPP_Reachability_Information avp_S6_3GPP_Reachability_Information,
@@ -4866,16 +6077,20 @@ type union AVP_Data {
 	PCC_3GPP_Event_Trigger avp_PCC_3GPP_Event_Trigger,
 	RX_3GPP_GCS_Identifier avp_RX_3GPP_GCS_Identifier,
 	MIPv6_NONE_QoS_Capability avp_MIPv6_NONE_QoS_Capability,
+	DCC_NONE_G_S_U_Pool_Identifier avp_DCC_NONE_G_S_U_Pool_Identifier,
 	AAA_3GPP_Non_IP_PDN_Type_Indicator avp_AAA_3GPP_Non_IP_PDN_Type_Indicator,
 	PCC_3GPP_ADC_Rule_Install avp_PCC_3GPP_ADC_Rule_Install,
 	PCC_3GPP_Flow_Label avp_PCC_3GPP_Flow_Label,
+	DNAS_NONE_NAS_Port avp_DNAS_NONE_NAS_Port,
 	AAA_3GPP_Authentication_Info avp_AAA_3GPP_Authentication_Info,
 	AAA_3GPP_Trace_Interface_List avp_AAA_3GPP_Trace_Interface_List,
+	DNAS_NONE_CHAP_Algorithm avp_DNAS_NONE_CHAP_Algorithm,
 	AAA_3GPP_APN_Configuration_Profile avp_AAA_3GPP_APN_Configuration_Profile,
 	RX_3GPP_Flows avp_RX_3GPP_Flows,
 	S6_3GPP_CIA_Flags avp_S6_3GPP_CIA_Flags,
 	RX_3GPP_Extended_Min_Requested_BW_UL avp_RX_3GPP_Extended_Min_Requested_BW_UL,
 	PCC_3GPP_Monitoring_Time avp_PCC_3GPP_Monitoring_Time,
+	DCC_NONE_CC_Input_Octets avp_DCC_NONE_CC_Input_Octets,
 	S6_3GPP_UE_Reachability_Configuration avp_S6_3GPP_UE_Reachability_Configuration,
 	BASE_NONE_Destination_Realm avp_BASE_NONE_Destination_Realm,
 	RX_3GPP_Acceptable_Service_Info avp_RX_3GPP_Acceptable_Service_Info,
@@ -4883,17 +6098,25 @@ type union AVP_Data {
 	S6_3GPP_Supported_Monitoring_Events avp_S6_3GPP_Supported_Monitoring_Events,
 	PCC_3GPP_Session_Release_Cause avp_PCC_3GPP_Session_Release_Cause,
 	AAA_3GPP_MDT_User_Consent avp_AAA_3GPP_MDT_User_Consent,
+	DNAS_NONE_Login_LAT_Port avp_DNAS_NONE_Login_LAT_Port,
 	S6_3GPP_HSS_Cause avp_S6_3GPP_HSS_Cause,
+	DCC_NONE_G_S_U_Pool_Reference avp_DCC_NONE_G_S_U_Pool_Reference,
 	PCC_3GPP_PCSCF_Restoration_Indication avp_PCC_3GPP_PCSCF_Restoration_Indication,
 	AAA_3GPP_Subscription_Data_Deletion avp_AAA_3GPP_Subscription_Data_Deletion,
 	MIPv6_NONE_Chargable_User_Identity avp_MIPv6_NONE_Chargable_User_Identity,
 	AAA_3GPP_Trace_Collection_Entity avp_AAA_3GPP_Trace_Collection_Entity,
 	BASE_NONE_Redirect_Host avp_BASE_NONE_Redirect_Host,
 	AAA_3GPP_Network_Access_Mode avp_AAA_3GPP_Network_Access_Mode,
+	DNAS_NONE_ARAP_Zone_Access avp_DNAS_NONE_ARAP_Zone_Access,
+	DNAS_NONE_Framed_Compression avp_DNAS_NONE_Framed_Compression,
+	DNAS_NONE_QoS_Filter_Rule avp_DNAS_NONE_QoS_Filter_Rule,
 	AAA_3GPP_Complete_Data_List_Included_Indicator avp_AAA_3GPP_Complete_Data_List_Included_Indicator,
 	MIPv6_NONE_MIP_MN_AAA_SPI avp_MIPv6_NONE_MIP_MN_AAA_SPI,
 	MIPv6_NONE_MIP_MSA_Lifetime avp_MIPv6_NONE_MIP_MSA_Lifetime,
 	S6_3GPP_Reachability_Type avp_S6_3GPP_Reachability_Type,
+	DNAS_NONE_Tunnel_Private_Group_Id avp_DNAS_NONE_Tunnel_Private_Group_Id,
+	DNAS_NONE_Framed_Route avp_DNAS_NONE_Framed_Route,
+	DCC_NONE_CC_Request_Type avp_DCC_NONE_CC_Request_Type,
 	S6_3GPP_Type_Of_External_Identifier avp_S6_3GPP_Type_Of_External_Identifier,
 	PCC_3GPP_Event_Report_Indication avp_PCC_3GPP_Event_Report_Indication,
 	AAA_3GPP_MDT_Configuration avp_AAA_3GPP_MDT_Configuration,
@@ -4903,12 +6126,17 @@ type union AVP_Data {
 	AAA_3GPP_CLR_Flags avp_AAA_3GPP_CLR_Flags,
 	PCC_3GPP_Default_EPS_Bearer_QoS avp_PCC_3GPP_Default_EPS_Bearer_QoS,
 	AAA_3GPP_ULR_Flags avp_AAA_3GPP_ULR_Flags,
+	DNAS_NONE_Tunnel_Client_Auth_Id avp_DNAS_NONE_Tunnel_Client_Auth_Id,
+	DNAS_NONE_Calling_Station_Id avp_DNAS_NONE_Calling_Station_Id,
 	AAA_3GPP_ICS_Indicator avp_AAA_3GPP_ICS_Indicator,
+	DCC_NONE_Currency_Code avp_DCC_NONE_Currency_Code,
 	AAA_3GPP_Cancellation_Type avp_AAA_3GPP_Cancellation_Type,
 	BASE_NONE_E2E_Sequence avp_BASE_NONE_E2E_Sequence,
 	BASE_NONE_Origin_Realm avp_BASE_NONE_Origin_Realm,
 	AAA_3GPP_PDN_Type avp_AAA_3GPP_PDN_Type,
+	DNAS_NONE_Prompt avp_DNAS_NONE_Prompt,
 	RX_3GPP_Access_Network_Charging_Identifier avp_RX_3GPP_Access_Network_Charging_Identifier,
+	DCC_NONE_Redirect_Server avp_DCC_NONE_Redirect_Server,
 	S6_3GPP_AESE_Communication_Pattern_Config_Status avp_S6_3GPP_AESE_Communication_Pattern_Config_Status,
 	S6_3GPP_Enhanced_Coverage_Restriction_Data avp_S6_3GPP_Enhanced_Coverage_Restriction_Data,
 	PCC_3GPP_Bearer_Operation avp_PCC_3GPP_Bearer_Operation,
@@ -4926,12 +6154,17 @@ type union AVP_Data {
 	PCC_3GPP_Conditional_APN_Aggregate_Max_Bitrate avp_PCC_3GPP_Conditional_APN_Aggregate_Max_Bitrate,
 	AAA_3GPP_Group_PLMN_Id avp_AAA_3GPP_Group_PLMN_Id,
 	AAA_3GPP_User_Id avp_AAA_3GPP_User_Id,
+	DNAS_NONE_Login_LAT_Node avp_DNAS_NONE_Login_LAT_Node,
+	DNAS_NONE_Originating_Line_Info avp_DNAS_NONE_Originating_Line_Info,
+	DCC_NONE_Exponent avp_DCC_NONE_Exponent,
 	MIPv6_NONE_MIP_Authenticator avp_MIPv6_NONE_MIP_Authenticator,
+	DNAS_NONE_Accounting_Input_Octets avp_DNAS_NONE_Accounting_Input_Octets,
 	AAA_3GPP_Requested_UTRAN_GERAN_Authentication_Info avp_AAA_3GPP_Requested_UTRAN_GERAN_Authentication_Info,
 	AAA_3GPP_EPS_User_State avp_AAA_3GPP_EPS_User_State,
 	BASE_NONE_Origin_Host avp_BASE_NONE_Origin_Host,
 	RX_3GPP_Retry_Interval avp_RX_3GPP_Retry_Interval,
 	BASE_NONE_Accounting_Session_Id avp_BASE_NONE_Accounting_Session_Id,
+	DCC_NONE_Restriction_Filter_Rule avp_DCC_NONE_Restriction_Filter_Rule,
 	PCC_3GPP_Packet_Filter_Identifier avp_PCC_3GPP_Packet_Filter_Identifier,
 	S6_3GPP_SCEF_Reference_ID avp_S6_3GPP_SCEF_Reference_ID,
 	PCC_3GPP_Resource_Release_Notification avp_PCC_3GPP_Resource_Release_Notification,
@@ -4940,17 +6173,23 @@ type union AVP_Data {
 	AAA_3GPP_Error_Diagnostic avp_AAA_3GPP_Error_Diagnostic,
 	PCC_3GPP_Guaranteed_Bitrate_DL avp_PCC_3GPP_Guaranteed_Bitrate_DL,
 	RX_3GPP_Extended_Max_Supported_BW_UL avp_RX_3GPP_Extended_Max_Supported_BW_UL,
+	DCC_NONE_CC_Total_Octets avp_DCC_NONE_CC_Total_Octets,
 	PCC_3GPP_UDP_Source_Port avp_PCC_3GPP_UDP_Source_Port,
 	BASE_NONE_Accounting_Record_Type avp_BASE_NONE_Accounting_Record_Type,
 	AAA_3GPP_SIPTO_Local_Network_Permission avp_AAA_3GPP_SIPTO_Local_Network_Permission,
 	PCC_3GPP_Routing_Rule_Definition avp_PCC_3GPP_Routing_Rule_Definition,
+	DCC_NONE_Value_Digits avp_DCC_NONE_Value_Digits,
 	AAA_3GPP_VPLMN_Dynamic_Address_Allowed avp_AAA_3GPP_VPLMN_Dynamic_Address_Allowed,
 	BASE_NONE_Acct_Application_Id avp_BASE_NONE_Acct_Application_Id,
 	AAA_3GPP_Service_Type avp_AAA_3GPP_Service_Type,
 	AAA_3GPP_Immediate_Response_Preferred avp_AAA_3GPP_Immediate_Response_Preferred,
+	DNAS_NONE_Login_IPv6_Host avp_DNAS_NONE_Login_IPv6_Host,
+	DNAS_NONE_Framed_Appletalk_Zone avp_DNAS_NONE_Framed_Appletalk_Zone,
+	DCC_NONE_Final_Unit_Indication avp_DCC_NONE_Final_Unit_Indication,
 	AAA_3GPP_XRES avp_AAA_3GPP_XRES,
 	AAA_3GPP_User_State avp_AAA_3GPP_User_State,
 	BASE_NONE_Result_Code avp_BASE_NONE_Result_Code,
+	DNAS_NONE_Framed_IP_Address avp_DNAS_NONE_Framed_IP_Address,
 	S6_3GPP_IP_SM_GW_Realm avp_S6_3GPP_IP_SM_GW_Realm,
 	S6_3GPP_Reference_ID_Validity_Time avp_S6_3GPP_Reference_ID_Validity_Time,
 	AAA_3GPP_E_UTRAN_Cell_Global_Identity avp_AAA_3GPP_E_UTRAN_Cell_Global_Identity,
@@ -4971,10 +6210,12 @@ type union AVP_Data {
 	AAA_3GPP_CSG_Subscription_Data avp_AAA_3GPP_CSG_Subscription_Data,
 	MIPv6_NONE_Service_Selection avp_MIPv6_NONE_Service_Selection,
 	AAA_3GPP_TS_Code avp_AAA_3GPP_TS_Code,
+	DNAS_NONE_Tunnel_Client_Endpoint avp_DNAS_NONE_Tunnel_Client_Endpoint,
 	S6_3GPP_IP_SM_GW_Number avp_S6_3GPP_IP_SM_GW_Number,
 	PCC_3GPP_Charging_Rule_Install avp_PCC_3GPP_Charging_Rule_Install,
 	RX_3GPP_Rx_Request_Type avp_RX_3GPP_Rx_Request_Type,
 	S6_3GPP_NIDD_Authorization_Response avp_S6_3GPP_NIDD_Authorization_Response,
+	DCC_NONE_Subscription_Id avp_DCC_NONE_Subscription_Id,
 	AAA_3GPP_VPLMN_CSG_Subscription_Data avp_AAA_3GPP_VPLMN_CSG_Subscription_Data,
 	PCC_3GPP_QoS_Rule_Remove avp_PCC_3GPP_QoS_Rule_Remove,
 	S6_3GPP_Communication_Duration_Time avp_S6_3GPP_Communication_Duration_Time,
@@ -4988,9 +6229,13 @@ type union AVP_Data {
 	PCC_3GPP_Usage_Monitoring_Level avp_PCC_3GPP_Usage_Monitoring_Level,
 	AAA_3GPP_Subscriber_Status avp_AAA_3GPP_Subscriber_Status,
 	PCC_3GPP_Extended_APN_AMBR_UL avp_PCC_3GPP_Extended_APN_AMBR_UL,
+	DCC_NONE_Tariff_Change_Usage avp_DCC_NONE_Tariff_Change_Usage,
 	AAA_3GPP_LCS_PrivacyException avp_AAA_3GPP_LCS_PrivacyException,
 	AAA_3GPP_QoS_Subscribed avp_AAA_3GPP_QoS_Subscribed,
+	DNAS_NONE_NAS_IP_Address avp_DNAS_NONE_NAS_IP_Address,
 	RX_3GPP_RR_Bandwidth avp_RX_3GPP_RR_Bandwidth,
+	DNAS_NONE_CHAP_Auth avp_DNAS_NONE_CHAP_Auth,
+	DCC_NONE_Service_Context_Id avp_DCC_NONE_Service_Context_Id,
 	PCC_3GPP_APN_Aggregate_Max_Bitrate_DL avp_PCC_3GPP_APN_Aggregate_Max_Bitrate_DL,
 	S6_3GPP_SCS_Identity avp_S6_3GPP_SCS_Identity,
 	RX_3GPP_Access_Network_Charging_Address avp_RX_3GPP_Access_Network_Charging_Address,
@@ -5003,17 +6248,24 @@ type union AVP_Data {
 	S6_3GPP_Enhanced_Coverage_Restriction avp_S6_3GPP_Enhanced_Coverage_Restriction,
 	AAA_3GPP_MME_Number_for_MT_SMS avp_AAA_3GPP_MME_Number_for_MT_SMS,
 	PCC_3GPP_Security_Parameter_Index avp_PCC_3GPP_Security_Parameter_Index,
+	DCC_NONE_CC_Correlation_Id avp_DCC_NONE_CC_Correlation_Id,
 	PCC_3GPP_Traffic_Steering_Policy_Identifier_UL avp_PCC_3GPP_Traffic_Steering_Policy_Identifier_UL,
 	BASE_NONE_Route_Record avp_BASE_NONE_Route_Record,
 	AAA_3GPP_Carrier_Frequency avp_AAA_3GPP_Carrier_Frequency,
 	AAA_3GPP_Trace_NE_Type_List avp_AAA_3GPP_Trace_NE_Type_List,
+	DNAS_NONE_Port_Limit avp_DNAS_NONE_Port_Limit,
+	DCC_NONE_Multiple_Services_Credit_Control avp_DCC_NONE_Multiple_Services_Credit_Control,
 	AAA_3GPP_All_APN_Configurations_Included_Indicator avp_AAA_3GPP_All_APN_Configurations_Included_Indicator,
 	AAA_3GPP_NOR_Flags avp_AAA_3GPP_NOR_Flags,
 	AAA_3GPP_External_Client avp_AAA_3GPP_External_Client,
 	BASE_NONE_Authorization_Lifetime avp_BASE_NONE_Authorization_Lifetime,
+	DNAS_NONE_ARAP_Features avp_DNAS_NONE_ARAP_Features,
+	DNAS_NONE_Framed_MTU avp_DNAS_NONE_Framed_MTU,
 	RX_3GPP_Extended_Min_Requested_BW_DL avp_RX_3GPP_Extended_Min_Requested_BW_DL,
+	DNAS_NONE_Accounting_Auth_Method avp_DNAS_NONE_Accounting_Auth_Method,
 	RX_3GPP_Service_URN avp_RX_3GPP_Service_URN,
 	S6_3GPP_Supported_Services avp_S6_3GPP_Supported_Services,
+	DNAS_NONE_Accounting_Output_Packets avp_DNAS_NONE_Accounting_Output_Packets,
 	AAA_3GPP_Relay_Node_Indicator avp_AAA_3GPP_Relay_Node_Indicator,
 	PCC_3GPP_Rule_DeActivation_Time avp_PCC_3GPP_Rule_DeActivation_Time,
 	S6_3GPP_T4_Data avp_S6_3GPP_T4_Data,
@@ -5022,13 +6274,18 @@ type union AVP_Data {
 	PCC_3GPP_ADC_Rule_Base_Name avp_PCC_3GPP_ADC_Rule_Base_Name,
 	AAA_3GPP_SCEF_Realm avp_AAA_3GPP_SCEF_Realm,
 	S6_3GPP_Requested_Validity_Time avp_S6_3GPP_Requested_Validity_Time,
+	DCC_NONE_CC_Request_Number avp_DCC_NONE_CC_Request_Number,
 	AAA_3GPP_Local_Time_Zone avp_AAA_3GPP_Local_Time_Zone,
 	AAA_3GPP_GERAN_Vector avp_AAA_3GPP_GERAN_Vector,
 	AAA_3GPP_EPS_Subscribed_QoS_Profile avp_AAA_3GPP_EPS_Subscribed_QoS_Profile,
 	AAA_3GPP_GPRS_Subscription_Data avp_AAA_3GPP_GPRS_Subscription_Data,
+	DNAS_NONE_Called_Station_Id avp_DNAS_NONE_Called_Station_Id,
+	DCC_NONE_Cost_Unit avp_DCC_NONE_Cost_Unit,
 	BASE_NONE_Accounting_Realtime_Required avp_BASE_NONE_Accounting_Realtime_Required,
 	BASE_NONE_Termination_Cause avp_BASE_NONE_Termination_Cause,
 	RX_3GPP_Specific_Action avp_RX_3GPP_Specific_Action,
+	DNAS_NONE_Login_TCP_Port avp_DNAS_NONE_Login_TCP_Port,
+	DNAS_NONE_Password_Retry avp_DNAS_NONE_Password_Retry,
 	S6_3GPP_Maximum_Detection_Time avp_S6_3GPP_Maximum_Detection_Time,
 	AAA_3GPP_Ext_PDP_Address avp_AAA_3GPP_Ext_PDP_Address,
 	PCC_3GPP_RAT_Type avp_PCC_3GPP_RAT_Type,
@@ -5039,7 +6296,9 @@ type union AVP_Data {
 	PCC_3GPP_Pre_emption_Vulnerability avp_PCC_3GPP_Pre_emption_Vulnerability,
 	AAA_3GPP_Equivalent_PLMN_List avp_AAA_3GPP_Equivalent_PLMN_List,
 	PCC_3GPP_Default_Access avp_PCC_3GPP_Default_Access,
+	DNAS_NONE_ARAP_Challenge_Response avp_DNAS_NONE_ARAP_Challenge_Response,
 	BASE_NONE_Class avp_BASE_NONE_Class,
+	DCC_NONE_CC_Sub_Session_Id avp_DCC_NONE_CC_Sub_Session_Id,
 	AAA_3GPP_IDR_Flags avp_AAA_3GPP_IDR_Flags,
 	AAA_3GPP_V2X_Subscription_Data avp_AAA_3GPP_V2X_Subscription_Data,
 	PCC_3GPP_PS_to_CS_Session_Continuity avp_PCC_3GPP_PS_to_CS_Session_Continuity,
@@ -5076,6 +6335,8 @@ type record AVP {
 	variant (avp_header) "LENGTHTO(avp_header, avp_data)"
 	variant (avp_header) "LENGTHINDEX(avp_length)"
 	variant (avp_data) "CROSSTAG(
+		avp_DNAS_NONE_Login_LAT_Service, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_LAT_Service;
+		avp_DCC_NONE_Direct_Debiting_Failure_Handling, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Direct_Debiting_Failure_Handling;
 		avp_MIPv6_NONE_MIP_Careof_Address, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_Careof_Address;
 		avp_PCC_3GPP_Bearer_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Bearer_Identifier;
 		avp_RX_3GPP_Content_Version, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Content_Version;
@@ -5087,15 +6348,21 @@ type record AVP {
 		avp_PCC_3GPP_Bearer_Usage, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Bearer_Usage;
 		avp_PCC_3GPP_Tunnel_Header_Filter, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Tunnel_Header_Filter;
 		avp_AAA_3GPP_List_Of_Measurements, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_List_Of_Measurements;
+		avp_DCC_NONE_Requested_Service_Unit, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Requested_Service_Unit;
 		avp_PCC_3GPP_Default_QoS_Name, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Default_QoS_Name;
 		avp_AAA_3GPP_UVA_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_UVA_Flags;
 		avp_AAA_3GPP_Group_Service_Id, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Group_Service_Id;
 		avp_PCC_3GPP_TDF_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_TDF_Information;
+		avp_DNAS_NONE_Framed_Pool, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Pool;
+		avp_DCC_NONE_CC_Time, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Time;
 		avp_AAA_3GPP_Requested_EUTRAN_Authentication_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Requested_EUTRAN_Authentication_Info;
 		avp_AAA_3GPP_Last_UE_Activity_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Last_UE_Activity_Time;
 		avp_AAA_3GPP_Context_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Context_Identifier;
+		avp_DCC_NONE_Used_Service_Unit, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Used_Service_Unit;
 		avp_BASE_NONE_Auth_Application_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Auth_Application_Id;
 		avp_AAA_3GPP_Trace_Reference, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Trace_Reference;
+		avp_DNAS_NONE_Framed_Appletalk_Network, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Appletalk_Network;
+		avp_DNAS_NONE_Framed_IPv6_Prefix, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_IPv6_Prefix;
 		avp_RX_3GPP_Sharing_Key_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Sharing_Key_UL;
 		avp_RX_3GPP_AF_Charging_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_AF_Charging_Identifier;
 		avp_S6_3GPP_Monitoring_Event_Report, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Monitoring_Event_Report;
@@ -5120,10 +6387,13 @@ type record AVP {
 		avp_AAA_3GPP_APN_OI_Replacement, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_APN_OI_Replacement;
 		avp_BASE_NONE_Re_Auth_Request_Type, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Re_Auth_Request_Type;
 		avp_S6_3GPP_External_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_External_Identifier;
+		avp_DCC_NONE_Redirect_Address_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Redirect_Address_Type;
 		avp_MIPv6_NONE_MIP_MN_HA_MSA, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_MN_HA_MSA;
 		avp_PCC_3GPP_TFT_Filter, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_TFT_Filter;
 		avp_RX_3GPP_Max_Supported_Bandwidth_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Max_Supported_Bandwidth_UL;
+		avp_DNAS_NONE_Tunnel_Medium_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Medium_Type;
 		avp_S6_3GPP_Loss_Of_Connectivity_Reason, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Loss_Of_Connectivity_Reason;
+		avp_DCC_NONE_User_Equipment_Info_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_User_Equipment_Info_Type;
 		avp_RX_3GPP_Flow_Number, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Flow_Number;
 		avp_PCC_3GPP_Resource_Allocation_Notification, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Resource_Allocation_Notification;
 		avp_S6_3GPP_Monitoring_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Monitoring_Type;
@@ -5133,21 +6403,26 @@ type record AVP {
 		avp_PCC_3GPP_Mute_Notification, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Mute_Notification;
 		avp_MIPv6_NONE_QoS_Resources, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_QoS_Resources;
 		avp_AAA_3GPP_Logging_Duration, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Logging_Duration;
+		avp_DCC_NONE_Service_Parameter_Value, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Service_Parameter_Value;
 		avp_AAA_3GPP_WLAN_offloadability_EUTRAN, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_WLAN_offloadability_EUTRAN;
 		avp_PCC_3GPP_Routing_IP_Address, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Routing_IP_Address;
 		avp_MIPv6_NONE_MIP_Session_Key, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_Session_Key;
 		avp_AAA_3GPP_KASME, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_KASME;
 		avp_AAA_3GPP_Teleservice_List, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Teleservice_List;
 		avp_AAA_3GPP_UTRAN_Vector, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_UTRAN_Vector;
+		avp_DCC_NONE_Tariff_Time_Change, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Tariff_Time_Change;
 		avp_RX_3GPP_Application_Service_Provider_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Application_Service_Provider_Identity;
 		avp_S6_3GPP_NIDD_Authorization_Request, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_NIDD_Authorization_Request;
 		avp_PCC_3GPP_QoS_Rule_Install, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_QoS_Rule_Install;
 		avp_S6_3GPP_Periodic_Communication_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Periodic_Communication_Indicator;
 		avp_RX_3GPP_Flow_Usage, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Flow_Usage;
 		avp_PCC_3GPP_RAN_Rule_Support, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_RAN_Rule_Support;
+		avp_DNAS_NONE_Tunnel_Password, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Password;
 		avp_S6_3GPP_Monitoring_Duration, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Monitoring_Duration;
 		avp_AAA_3GPP_Routing_Area_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Routing_Area_Identity;
 		avp_PCC_3GPP_QoS_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_QoS_Information;
+		avp_DNAS_NONE_Tunneling, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunneling;
+		avp_DCC_NONE_User_Equipment_Info_Value, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_User_Equipment_Info_Value;
 		avp_RX_3GPP_Service_Authorization_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Service_Authorization_Info;
 		avp_BASE_NONE_Multi_Round_Time_Out, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Multi_Round_Time_Out;
 		avp_AAA_3GPP_eDRX_Cycle_Length, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_eDRX_Cycle_Length;
@@ -5160,11 +6435,16 @@ type record AVP {
 		avp_BASE_NONE_Experimental_Result_Code, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Experimental_Result_Code;
 		avp_PCC_3GPP_Extended_APN_AMBR_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Extended_APN_AMBR_DL;
 		avp_AAA_3GPP_GMLC_Number, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_GMLC_Number;
+		avp_DNAS_NONE_Configuration_Token, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Configuration_Token;
+		avp_DNAS_NONE_Callback_Number, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Callback_Number;
 		avp_AAA_3GPP_Software_Version, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Software_Version;
 		avp_AAA_3GPP_Expiration_Date, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Expiration_Date;
 		avp_BASE_NONE_Error_Message, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Error_Message;
 		avp_AAA_3GPP_SRES, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_SRES;
+		avp_DNAS_NONE_NAS_Port_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_NAS_Port_Type;
 		avp_AAA_3GPP_Item_Number, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Item_Number;
+		avp_DCC_NONE_Multiple_Services_Indicator, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Multiple_Services_Indicator;
+		avp_DNAS_NONE_Framed_Protocol, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Protocol;
 		avp_S6_3GPP_Service_ID, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Service_ID;
 		avp_RX_3GPP_Abort_Cause, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Abort_Cause;
 		avp_PCC_3GPP_Charging_Rule_Base_Name, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Charging_Rule_Base_Name;
@@ -5172,19 +6452,26 @@ type record AVP {
 		avp_PCC_3GPP_TDF_Destination_Realm, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_TDF_Destination_Realm;
 		avp_S6_3GPP_S6t_HSS_Cause, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_S6t_HSS_Cause;
 		avp_RX_3GPP_AF_Requested_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_AF_Requested_Data;
+		avp_DNAS_NONE_Filter_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Filter_Id;
+		avp_DNAS_NONE_ARAP_Password, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_ARAP_Password;
 		avp_PCC_3GPP_QoS_Rule_Report, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_QoS_Rule_Report;
+		avp_DNAS_NONE_CHAP_Response, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_CHAP_Response;
 		avp_S6_3GPP_Stationary_Indication, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Stationary_Indication;
 		avp_PCC_3GPP_Traffic_Steering_Policy_Identifier_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Traffic_Steering_Policy_Identifier_DL;
 		avp_AAA_3GPP_Geodetic_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Geodetic_Information;
 		avp_PCC_3GPP_Extended_GBR_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Extended_GBR_UL;
 		avp_AAA_3GPP_MBSFN_Area_ID, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MBSFN_Area_ID;
 		avp_AAA_3GPP_Area_Scope, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Area_Scope;
+		avp_DNAS_NONE_Accounting_Input_Packets, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Accounting_Input_Packets;
 		avp_AAA_3GPP_PUA_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_PUA_Flags;
+		avp_DNAS_NONE_Callback_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Callback_Id;
+		avp_DCC_NONE_CC_Output_Octets, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Output_Octets;
 		avp_AAA_3GPP_Notification_To_UE_User, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Notification_To_UE_User;
 		avp_AAA_3GPP_Visited_PLMN_Id, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Visited_PLMN_Id;
 		avp_AAA_3GPP_Homogeneous_Support_of_IMS_Voice_Over_PS_Sessions, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Homogeneous_Support_of_IMS_Voice_Over_PS_Sessions;
 		avp_RX_3GPP_Codec_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Codec_Data;
 		avp_S6_3GPP_Monitoring_Event_Config_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Monitoring_Event_Config_Status;
+		avp_DCC_NONE_Cost_Information, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Cost_Information;
 		avp_BASE_NONE_Error_Reporting_Host, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Error_Reporting_Host;
 		avp_PCC_3GPP_Rule_Activation_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Rule_Activation_Time;
 		avp_S6_3GPP_Service_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Service_Data;
@@ -5192,6 +6479,8 @@ type record AVP {
 		avp_PCC_3GPP_NetLoc_Access_Support, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_NetLoc_Access_Support;
 		avp_S6_3GPP_Monitoring_Event_Configuration, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Monitoring_Event_Configuration;
 		avp_PCC_3GPP_Offline, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Offline;
+		avp_DNAS_NONE_Login_Service, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_Service;
+		avp_DNAS_NONE_ARAP_Security_Data, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_ARAP_Security_Data;
 		avp_AAA_3GPP_Additional_Context_ID, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Additional_Context_ID;
 		avp_PCC_3GPP_ADC_Rule_Definition, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_ADC_Rule_Definition;
 		avp_S6_3GPP_Allowed_PLMN_List, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Allowed_PLMN_List;
@@ -5203,8 +6492,12 @@ type record AVP {
 		avp_AAA_3GPP_APN_Configuration, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_APN_Configuration;
 		avp_AAA_3GPP_OMC_Id, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_OMC_Id;
 		avp_AAA_3GPP_GMLC_Restriction, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_GMLC_Restriction;
+		avp_DNAS_NONE_State, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_State;
+		avp_DNAS_NONE_Tunnel_Preference, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Preference;
+		avp_DCC_NONE_CC_Session_Failover, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Session_Failover;
 		avp_AAA_3GPP_Regional_Subscription_Zone_Code, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Regional_Subscription_Zone_Code;
 		avp_BASE_NONE_Proxy_State, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Proxy_State;
+		avp_DCC_NONE_Credit_Control_Failure_Handling, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Credit_Control_Failure_Handling;
 		avp_S6_3GPP_SIR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_SIR_Flags;
 		avp_RX_3GPP_MPS_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_MPS_Identifier;
 		avp_AAA_3GPP_MDT_Allowed_PLMN_Id, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MDT_Allowed_PLMN_Id;
@@ -5221,13 +6514,18 @@ type record AVP {
 		avp_PCC_3GPP_Application_Detection_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Application_Detection_Information;
 		avp_AAA_3GPP_Emergency_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Emergency_Info;
 		avp_AAA_3GPP_MPS_Priority, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MPS_Priority;
+		avp_DCC_NONE_Requested_Action, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Requested_Action;
 		avp_AAA_3GPP_Alert_Reason, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Alert_Reason;
+		avp_DNAS_NONE_Idle_Timeout, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Idle_Timeout;
+		avp_DNAS_NONE_NAS_Port_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_NAS_Port_Id;
 		avp_AAA_3GPP_MO_LR, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MO_LR;
 		avp_BASE_NONE_Host_IP_Address, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Host_IP_Address;
 		avp_RX_3GPP_Max_Requested_Bandwidth_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Max_Requested_Bandwidth_UL;
 		avp_PCC_3GPP_Usage_Monitoring_Support, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Usage_Monitoring_Support;
 		avp_S6_3GPP_Maximum_Response_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Maximum_Response_Time;
 		avp_RX_3GPP_Sponsor_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Sponsor_Identity;
+		avp_DNAS_NONE_Framed_Appletalk_Link, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Appletalk_Link;
+		avp_DNAS_NONE_Framed_Interface_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Interface_Id;
 		avp_PCC_3GPP_CoA_IP_Address, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_CoA_IP_Address;
 		avp_PCC_3GPP_Default_QoS_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Default_QoS_Information;
 		avp_PCC_3GPP_AN_GW_Address, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_AN_GW_Address;
@@ -5237,35 +6535,43 @@ type record AVP {
 		avp_AAA_3GPP_Cell_Global_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Cell_Global_Identity;
 		avp_BASE_NONE_Vendor_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Vendor_Id;
 		avp_AAA_3GPP_PDN_Connection_Continuity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_PDN_Connection_Continuity;
+		avp_DNAS_NONE_Acct_Session_Time, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Acct_Session_Time;
 		avp_AAA_3GPP_DSA_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_DSA_Flags;
 		avp_AAA_3GPP_Trace_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Trace_Data;
 		avp_AAA_3GPP_LCS_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_LCS_Info;
 		avp_AAA_3GPP_PDN_GW_Allocation_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_PDN_GW_Allocation_Type;
 		avp_BASE_NONE_Event_Timestamp, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Event_Timestamp;
+		avp_DCC_NONE_Final_Unit_Action, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Final_Unit_Action;
 		avp_RX_3GPP_Extended_Max_Requested_BW_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Extended_Max_Requested_BW_UL;
 		avp_S6_3GPP_User_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_User_Identifier;
+		avp_DNAS_NONE_Framed_IPv6_Pool, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_IPv6_Pool;
 		avp_PCC_3GPP_QoS_Rule_Base_Name, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_QoS_Rule_Base_Name;
 		avp_AAA_3GPP_Restoration_Priority, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Restoration_Priority;
+		avp_DCC_NONE_Rating_Group, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Rating_Group;
 		avp_MIPv6_NONE_MIP_MN_HA_SPI, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_MN_HA_SPI;
 		avp_S6_3GPP_Association_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Association_Type;
 		avp_PCC_3GPP_Charging_Rule_Definition, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Charging_Rule_Definition;
 		avp_RX_3GPP_Min_Requested_Bandwidth_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Min_Requested_Bandwidth_UL;
 		avp_AAA_3GPP_Report_Amount, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Report_Amount;
 		avp_PCC_3GPP_CoA_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_CoA_Information;
+		avp_DCC_NONE_User_Equipment_Info, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_User_Equipment_Info;
 		avp_AAA_3GPP_A_MSISDN, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_A_MSISDN;
 		avp_MIPv6_NONE_MIP_Mobile_Node_Address, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_Mobile_Node_Address;
 		avp_PCC_3GPP_Routing_Rule_Report, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Routing_Rule_Report;
 		avp_AAA_3GPP_Number_Of_Requested_Vectors, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Number_Of_Requested_Vectors;
 		avp_AAA_3GPP_AIR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_AIR_Flags;
 		avp_AAA_3GPP_Geographical_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Geographical_Information;
+		avp_DCC_NONE_Service_Parameter_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Service_Parameter_Type;
 		avp_AAA_3GPP_MME_User_State, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MME_User_State;
 		avp_AAA_3GPP_Access_Restriction_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Access_Restriction_Data;
 		avp_BASE_NONE_Failed_AVP, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Failed_AVP;
 		avp_AAA_3GPP_SS_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_SS_Status;
 		avp_S6_3GPP_NIDD_Authorization_Update, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_NIDD_Authorization_Update;
+		avp_DCC_NONE_Subscription_Id_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Subscription_Id_Type;
 		avp_PCC_3GPP_Packet_Filter_Operation, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Packet_Filter_Operation;
 		avp_S6_3GPP_SCEF_Reference_ID_for_Deletion, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_SCEF_Reference_ID_for_Deletion;
 		avp_RX_3GPP_SIP_Forking_Indication, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_SIP_Forking_Indication;
+		avp_DNAS_NONE_User_Password, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_User_Password;
 		avp_S6_3GPP_IMEI_Change, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_IMEI_Change;
 		avp_PCC_3GPP_IP_CAN_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_IP_CAN_Type;
 		avp_RX_3GPP_Extended_Min_Desired_BW_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Extended_Min_Desired_BW_UL;
@@ -5275,18 +6581,27 @@ type record AVP {
 		avp_AAA_3GPP_WLAN_offloadability, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_WLAN_offloadability;
 		avp_PCC_3GPP_Routing_Filter, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Routing_Filter;
 		avp_PCC_3GPP_Metering_Method, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Metering_Method;
+		avp_DNAS_NONE_Acct_Tunnel_Connection, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Acct_Tunnel_Connection;
 		avp_AAA_3GPP_Non_IP_Data_Delivery_Mechanism, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Non_IP_Data_Delivery_Mechanism;
+		avp_DNAS_NONE_NAS_Filter_Rule, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_NAS_Filter_Rule;
 		avp_BASE_NONE_Session_Server_Failover, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Session_Server_Failover;
 		avp_AAA_3GPP_E_UTRAN_Vector, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_E_UTRAN_Vector;
 		avp_BASE_NONE_Experimental_Result, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Experimental_Result;
+		avp_DNAS_NONE_Acct_Link_Count, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Acct_Link_Count;
+		avp_DCC_NONE_Unit_Value, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Unit_Value;
 		avp_AAA_3GPP_Trace_Event_List, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Trace_Event_List;
+		avp_DNAS_NONE_Reply_Message, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Reply_Message;
+		avp_DNAS_NONE_Connect_Info, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Connect_Info;
 		avp_MIPv6_NONE_MIP_Replay_Mode, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_Replay_Mode;
 		avp_BASE_NONE_Proxy_Host, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Proxy_Host;
 		avp_S6_3GPP_Communication_Pattern_Set, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Communication_Pattern_Set;
 		avp_RX_3GPP_Flow_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Flow_Status;
+		avp_DNAS_NONE_CHAP_Challenge, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_CHAP_Challenge;
+		avp_DCC_NONE_CC_Unit_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Unit_Type;
 		avp_RX_3GPP_MCPTT_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_MCPTT_Identifier;
 		avp_S6_3GPP_Group_Monitoring_Event_Report, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Group_Monitoring_Event_Report;
 		avp_PCC_3GPP_QoS_Upgrade, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_QoS_Upgrade;
+		avp_DNAS_NONE_Service_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Service_Type;
 		avp_PCC_3GPP_AN_GW_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_AN_GW_Status;
 		avp_AAA_3GPP_Measurement_Period_UMTS, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Measurement_Period_UMTS;
 		avp_PCC_3GPP_Monitoring_Key, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Monitoring_Key;
@@ -5294,15 +6609,19 @@ type record AVP {
 		avp_AAA_3GPP_Reset_ID, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Reset_ID;
 		avp_PCC_3GPP_Routing_Rule_Install, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Routing_Rule_Install;
 		avp_AAA_3GPP_PUR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_PUR_Flags;
+		avp_DNAS_NONE_Framed_Routing, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Routing;
 		avp_PCC_3GPP_IP_CAN_Session_Charging_Scope, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_IP_CAN_Session_Charging_Scope;
 		avp_AAA_3GPP_IMEI, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_IMEI;
+		avp_DNAS_NONE_CHAP_Ident, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_CHAP_Ident;
 		avp_AAA_3GPP_Kc, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Kc;
 		avp_AAA_3GPP_SGSN_Number, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_SGSN_Number;
 		avp_AAA_3GPP_HPLMN_ODB, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_HPLMN_ODB;
 		avp_AAA_3GPP_PDP_Context, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_PDP_Context;
+		avp_DCC_NONE_CC_Money, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Money;
 		avp_BASE_NONE_Proxy_Info, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Proxy_Info;
 		avp_S6_3GPP_Node_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Node_Type;
 		avp_RX_3GPP_Priority_Sharing_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Priority_Sharing_Indicator;
+		avp_DNAS_NONE_Tunnel_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Type;
 		avp_PCC_3GPP_QoS_Rule_Name, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_QoS_Rule_Name;
 		avp_S6_3GPP_Scheduled_Communication_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Scheduled_Communication_Time;
 		avp_RX_3GPP_Max_Requested_Bandwidth_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Max_Requested_Bandwidth_DL;
@@ -5310,16 +6629,23 @@ type record AVP {
 		avp_PCC_3GPP_PCC_Rule_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_PCC_Rule_Status;
 		avp_PCC_3GPP_Extended_GBR_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Extended_GBR_DL;
 		avp_AAA_3GPP_MBSFN_Area, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MBSFN_Area;
+		avp_DCC_NONE_Check_Balance_Result, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Check_Balance_Result;
 		avp_S6_3GPP_APN_Validity_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_APN_Validity_Time;
 		avp_AAA_3GPP_Job_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Job_Type;
 		avp_PCC_3GPP_Allocation_Retention_Priority, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Allocation_Retention_Priority;
 		avp_BASE_NONE_Destination_Host, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Destination_Host;
 		avp_AAA_3GPP_Positioning_Method, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Positioning_Method;
 		avp_AAA_3GPP_DL_Buffering_Suggested_Packet_Count, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_DL_Buffering_Suggested_Packet_Count;
+		avp_DNAS_NONE_Login_IP_Host, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_IP_Host;
+		avp_DNAS_NONE_ARAP_Security, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_ARAP_Security;
 		avp_AAA_3GPP_IDA_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_IDA_Flags;
+		avp_DNAS_NONE_Origin_AAA_Protocol, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Origin_AAA_Protocol;
 		avp_AAA_3GPP_ULA_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_ULA_Flags;
 		avp_AAA_3GPP_IMS_Voice_Over_PS_Sessions_Supported, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_IMS_Voice_Over_PS_Sessions_Supported;
 		avp_AAA_3GPP_Roaming_Restricted_Due_To_Unsupported_Feature, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Roaming_Restricted_Due_To_Unsupported_Feature;
+		avp_DNAS_NONE_Tunnel_Assignment_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Assignment_Id;
+		avp_DNAS_NONE_Framed_IPX_Network, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_IPX_Network;
+		avp_DCC_NONE_CC_Service_Specific_Units, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Service_Specific_Units;
 		avp_S6_3GPP_T4_Parameters, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_T4_Parameters;
 		avp_RX_3GPP_Access_Network_Charging_Identifier_Value, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Access_Network_Charging_Identifier_Value;
 		avp_S6_3GPP_AESE_Error_Report, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_AESE_Error_Report;
@@ -5330,7 +6656,10 @@ type record AVP {
 		avp_PCC_3GPP_Access_Network_Charging_Identifier_Gx, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Access_Network_Charging_Identifier_Gx;
 		avp_RX_3GPP_Extended_Max_Requested_BW_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Extended_Max_Requested_BW_DL;
 		avp_PCC_3GPP_Flow_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Flow_Information;
+		avp_DNAS_NONE_NAS_Identifier, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_NAS_Identifier;
+		avp_DNAS_NONE_Tunnel_Server_Auth_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Server_Auth_Id;
 		avp_PCC_3GPP_Execution_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Execution_Time;
+		avp_DCC_NONE_Credit_Control, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Credit_Control;
 		avp_BASE_NONE_Accounting_Record_Number, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Accounting_Record_Number;
 		avp_AAA_3GPP_Event_Threshold_Event_1I, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Event_Threshold_Event_1I;
 		avp_PCC_3GPP_Charging_Correlation_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Charging_Correlation_Indicator;
@@ -5339,8 +6668,10 @@ type record AVP {
 		avp_AAA_3GPP_Client_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Client_Identity;
 		avp_BASE_NONE_Redirect_Host_Usage, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Redirect_Host_Usage;
 		avp_AAA_3GPP_Equipment_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Equipment_Status;
+		avp_DCC_NONE_Redirect_Server_Address, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Redirect_Server_Address;
 		avp_MIPv6_NONE_MIP6_Auth_Mode, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP6_Auth_Mode;
 		avp_AAA_3GPP_EPS_Location_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_EPS_Location_Information;
+		avp_DNAS_NONE_Acct_Tunnel_Packets_Lost, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Acct_Tunnel_Packets_Lost;
 		avp_BASE_NONE_Session_Timeout, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Session_Timeout;
 		avp_RX_3GPP_Service_Info_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Service_Info_Status;
 		avp_S6_3GPP_CIR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_CIR_Flags;
@@ -5357,16 +6688,22 @@ type record AVP {
 		avp_PCC_3GPP_ADC_Rule_Report, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_ADC_Rule_Report;
 		avp_AAA_3GPP_UE_SRVCC_Capability, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_UE_SRVCC_Capability;
 		avp_PCC_3GPP_Guaranteed_Bitrate_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Guaranteed_Bitrate_UL;
+		avp_DNAS_NONE_NAS_IPv6_Address, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_NAS_IPv6_Address;
+		avp_DNAS_NONE_Login_LAT_Group, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_LAT_Group;
 		avp_MIPv6_NONE_MIP_MAC_Mobility_Data, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_MAC_Mobility_Data;
+		avp_DNAS_NONE_Accounting_Output_Octets, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Accounting_Output_Octets;
 		avp_AAA_3GPP_Coupled_Node_Diameter_ID, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Coupled_Node_Diameter_ID;
 		avp_AAA_3GPP_STN_SR, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_STN_SR;
 		avp_BASE_NONE_Supported_Vendor_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Supported_Vendor_Id;
 		avp_AAA_3GPP_ServiceTypeIdentity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_ServiceTypeIdentity;
+		avp_DNAS_NONE_Acct_Authentic, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Acct_Authentic;
+		avp_DCC_NONE_Service_Identifier, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Service_Identifier;
 		avp_AAA_3GPP_AUTN, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_AUTN;
 		avp_RX_3GPP_Sponsored_Connectivity_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Sponsored_Connectivity_Data;
 		avp_BASE_NONE_Auth_Request_Type, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Auth_Request_Type;
 		avp_S6_3GPP_AESE_Communication_Pattern, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_AESE_Communication_Pattern;
 		avp_PCC_3GPP_NBIFOM_Mode, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_NBIFOM_Mode;
+		avp_DCC_NONE_Validity_Time, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Validity_Time;
 		avp_PCC_3GPP_Redirect_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Redirect_Information;
 		avp_S6_3GPP_Event_Handling, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Event_Handling;
 		avp_AAA_3GPP_Tracking_Area_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Tracking_Area_Identity;
@@ -5375,15 +6712,19 @@ type record AVP {
 		avp_AAA_3GPP_UVR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_UVR_Flags;
 		avp_AAA_3GPP_Subscription_Data_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Subscription_Data_Flags;
 		avp_PCC_3GPP_PDN_Connection_ID, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_PDN_Connection_ID;
+		avp_DNAS_NONE_Framed_IPv6_Route, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_IPv6_Route;
 		avp_AAA_3GPP_DSR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_DSR_Flags;
 		avp_PCC_3GPP_PRA_Remove, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_PRA_Remove;
+		avp_DCC_NONE_Granted_Service_Unit, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Granted_Service_Unit;
 		avp_MIPv6_NONE_MIP_Timestamp, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_Timestamp;
 		avp_AAA_3GPP_Subscribed_Periodic_RAU_TAU_Timer, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Subscribed_Periodic_RAU_TAU_Timer;
 		avp_AAA_3GPP_Specific_APN_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Specific_APN_Info;
 		avp_AAA_3GPP_Terminal_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Terminal_Information;
 		avp_BASE_NONE_Product_Name, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Product_Name;
 		avp_AAA_3GPP_CSG_Id, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_CSG_Id;
+		avp_DNAS_NONE_Framed_IP_Netmask, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_IP_Netmask;
 		avp_AAA_3GPP_Call_Barring_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Call_Barring_Info;
+		avp_DCC_NONE_Service_Parameter_Info, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Service_Parameter_Info;
 		avp_BASE_NONE_Origin_State_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Origin_State_Id;
 		avp_S6_3GPP_IP_SM_GW_Name, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_IP_SM_GW_Name;
 		avp_RX_3GPP_Media_Sub_Component, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Media_Sub_Component;
@@ -5403,11 +6744,14 @@ type record AVP {
 		avp_BASE_NONE_User_Name, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_User_Name;
 		avp_AAA_3GPP_UE_PC5_AMBR, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_UE_PC5_AMBR;
 		avp_BASE_NONE_Accounting_Sub_Session_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Accounting_Sub_Session_Id;
+		avp_DNAS_NONE_Acct_Delay_Time, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Acct_Delay_Time;
 		avp_AAA_3GPP_Collection_Period_RRM_UMTS, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Collection_Period_RRM_UMTS;
 		avp_AAA_3GPP_Operator_Determined_Barring, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Operator_Determined_Barring;
+		avp_DNAS_NONE_Tunnel_Server_Endpoint, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Server_Endpoint;
 		avp_BASE_NONE_Session_Binding, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Session_Binding;
 		avp_AAA_3GPP_SS_Code, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_SS_Code;
 		avp_BASE_NONE_Acct_Multi_Session_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Acct_Multi_Session_Id;
+		avp_DCC_NONE_Subscription_Id_Data, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Subscription_Id_Data;
 		avp_RX_3GPP_RS_Bandwidth, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_RS_Bandwidth;
 		avp_MIPv6_NONE_MIP_Algorithm_Type, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_Algorithm_Type;
 		avp_S6_3GPP_Reachability_Information, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Reachability_Information;
@@ -5420,16 +6764,20 @@ type record AVP {
 		avp_PCC_3GPP_Event_Trigger, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Event_Trigger;
 		avp_RX_3GPP_GCS_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_GCS_Identifier;
 		avp_MIPv6_NONE_QoS_Capability, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_QoS_Capability;
+		avp_DCC_NONE_G_S_U_Pool_Identifier, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_G_S_U_Pool_Identifier;
 		avp_AAA_3GPP_Non_IP_PDN_Type_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Non_IP_PDN_Type_Indicator;
 		avp_PCC_3GPP_ADC_Rule_Install, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_ADC_Rule_Install;
 		avp_PCC_3GPP_Flow_Label, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Flow_Label;
+		avp_DNAS_NONE_NAS_Port, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_NAS_Port;
 		avp_AAA_3GPP_Authentication_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Authentication_Info;
 		avp_AAA_3GPP_Trace_Interface_List, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Trace_Interface_List;
+		avp_DNAS_NONE_CHAP_Algorithm, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_CHAP_Algorithm;
 		avp_AAA_3GPP_APN_Configuration_Profile, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_APN_Configuration_Profile;
 		avp_RX_3GPP_Flows, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Flows;
 		avp_S6_3GPP_CIA_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_CIA_Flags;
 		avp_RX_3GPP_Extended_Min_Requested_BW_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Extended_Min_Requested_BW_UL;
 		avp_PCC_3GPP_Monitoring_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Monitoring_Time;
+		avp_DCC_NONE_CC_Input_Octets, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Input_Octets;
 		avp_S6_3GPP_UE_Reachability_Configuration, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_UE_Reachability_Configuration;
 		avp_BASE_NONE_Destination_Realm, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Destination_Realm;
 		avp_RX_3GPP_Acceptable_Service_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Acceptable_Service_Info;
@@ -5437,17 +6785,25 @@ type record AVP {
 		avp_S6_3GPP_Supported_Monitoring_Events, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Supported_Monitoring_Events;
 		avp_PCC_3GPP_Session_Release_Cause, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Session_Release_Cause;
 		avp_AAA_3GPP_MDT_User_Consent, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MDT_User_Consent;
+		avp_DNAS_NONE_Login_LAT_Port, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_LAT_Port;
 		avp_S6_3GPP_HSS_Cause, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_HSS_Cause;
+		avp_DCC_NONE_G_S_U_Pool_Reference, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_G_S_U_Pool_Reference;
 		avp_PCC_3GPP_PCSCF_Restoration_Indication, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_PCSCF_Restoration_Indication;
 		avp_AAA_3GPP_Subscription_Data_Deletion, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Subscription_Data_Deletion;
 		avp_MIPv6_NONE_Chargable_User_Identity, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_Chargable_User_Identity;
 		avp_AAA_3GPP_Trace_Collection_Entity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Trace_Collection_Entity;
 		avp_BASE_NONE_Redirect_Host, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Redirect_Host;
 		avp_AAA_3GPP_Network_Access_Mode, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Network_Access_Mode;
+		avp_DNAS_NONE_ARAP_Zone_Access, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_ARAP_Zone_Access;
+		avp_DNAS_NONE_Framed_Compression, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Compression;
+		avp_DNAS_NONE_QoS_Filter_Rule, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_QoS_Filter_Rule;
 		avp_AAA_3GPP_Complete_Data_List_Included_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Complete_Data_List_Included_Indicator;
 		avp_MIPv6_NONE_MIP_MN_AAA_SPI, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_MN_AAA_SPI;
 		avp_MIPv6_NONE_MIP_MSA_Lifetime, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_MSA_Lifetime;
 		avp_S6_3GPP_Reachability_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Reachability_Type;
+		avp_DNAS_NONE_Tunnel_Private_Group_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Private_Group_Id;
+		avp_DNAS_NONE_Framed_Route, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Route;
+		avp_DCC_NONE_CC_Request_Type, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Request_Type;
 		avp_S6_3GPP_Type_Of_External_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Type_Of_External_Identifier;
 		avp_PCC_3GPP_Event_Report_Indication, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Event_Report_Indication;
 		avp_AAA_3GPP_MDT_Configuration, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MDT_Configuration;
@@ -5457,12 +6813,17 @@ type record AVP {
 		avp_AAA_3GPP_CLR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_CLR_Flags;
 		avp_PCC_3GPP_Default_EPS_Bearer_QoS, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Default_EPS_Bearer_QoS;
 		avp_AAA_3GPP_ULR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_ULR_Flags;
+		avp_DNAS_NONE_Tunnel_Client_Auth_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Client_Auth_Id;
+		avp_DNAS_NONE_Calling_Station_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Calling_Station_Id;
 		avp_AAA_3GPP_ICS_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_ICS_Indicator;
+		avp_DCC_NONE_Currency_Code, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Currency_Code;
 		avp_AAA_3GPP_Cancellation_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Cancellation_Type;
 		avp_BASE_NONE_E2E_Sequence, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_E2E_Sequence;
 		avp_BASE_NONE_Origin_Realm, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Origin_Realm;
 		avp_AAA_3GPP_PDN_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_PDN_Type;
+		avp_DNAS_NONE_Prompt, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Prompt;
 		avp_RX_3GPP_Access_Network_Charging_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Access_Network_Charging_Identifier;
+		avp_DCC_NONE_Redirect_Server, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Redirect_Server;
 		avp_S6_3GPP_AESE_Communication_Pattern_Config_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_AESE_Communication_Pattern_Config_Status;
 		avp_S6_3GPP_Enhanced_Coverage_Restriction_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Enhanced_Coverage_Restriction_Data;
 		avp_PCC_3GPP_Bearer_Operation, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Bearer_Operation;
@@ -5480,12 +6841,17 @@ type record AVP {
 		avp_PCC_3GPP_Conditional_APN_Aggregate_Max_Bitrate, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Conditional_APN_Aggregate_Max_Bitrate;
 		avp_AAA_3GPP_Group_PLMN_Id, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Group_PLMN_Id;
 		avp_AAA_3GPP_User_Id, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_User_Id;
+		avp_DNAS_NONE_Login_LAT_Node, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_LAT_Node;
+		avp_DNAS_NONE_Originating_Line_Info, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Originating_Line_Info;
+		avp_DCC_NONE_Exponent, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Exponent;
 		avp_MIPv6_NONE_MIP_Authenticator, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_MIP_Authenticator;
+		avp_DNAS_NONE_Accounting_Input_Octets, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Accounting_Input_Octets;
 		avp_AAA_3GPP_Requested_UTRAN_GERAN_Authentication_Info, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Requested_UTRAN_GERAN_Authentication_Info;
 		avp_AAA_3GPP_EPS_User_State, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_EPS_User_State;
 		avp_BASE_NONE_Origin_Host, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Origin_Host;
 		avp_RX_3GPP_Retry_Interval, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Retry_Interval;
 		avp_BASE_NONE_Accounting_Session_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Accounting_Session_Id;
+		avp_DCC_NONE_Restriction_Filter_Rule, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Restriction_Filter_Rule;
 		avp_PCC_3GPP_Packet_Filter_Identifier, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Packet_Filter_Identifier;
 		avp_S6_3GPP_SCEF_Reference_ID, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_SCEF_Reference_ID;
 		avp_PCC_3GPP_Resource_Release_Notification, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Resource_Release_Notification;
@@ -5494,17 +6860,23 @@ type record AVP {
 		avp_AAA_3GPP_Error_Diagnostic, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Error_Diagnostic;
 		avp_PCC_3GPP_Guaranteed_Bitrate_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Guaranteed_Bitrate_DL;
 		avp_RX_3GPP_Extended_Max_Supported_BW_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Extended_Max_Supported_BW_UL;
+		avp_DCC_NONE_CC_Total_Octets, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Total_Octets;
 		avp_PCC_3GPP_UDP_Source_Port, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_UDP_Source_Port;
 		avp_BASE_NONE_Accounting_Record_Type, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Accounting_Record_Type;
 		avp_AAA_3GPP_SIPTO_Local_Network_Permission, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_SIPTO_Local_Network_Permission;
 		avp_PCC_3GPP_Routing_Rule_Definition, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Routing_Rule_Definition;
+		avp_DCC_NONE_Value_Digits, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Value_Digits;
 		avp_AAA_3GPP_VPLMN_Dynamic_Address_Allowed, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_VPLMN_Dynamic_Address_Allowed;
 		avp_BASE_NONE_Acct_Application_Id, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Acct_Application_Id;
 		avp_AAA_3GPP_Service_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Service_Type;
 		avp_AAA_3GPP_Immediate_Response_Preferred, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Immediate_Response_Preferred;
+		avp_DNAS_NONE_Login_IPv6_Host, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_IPv6_Host;
+		avp_DNAS_NONE_Framed_Appletalk_Zone, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_Appletalk_Zone;
+		avp_DCC_NONE_Final_Unit_Indication, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Final_Unit_Indication;
 		avp_AAA_3GPP_XRES, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_XRES;
 		avp_AAA_3GPP_User_State, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_User_State;
 		avp_BASE_NONE_Result_Code, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Result_Code;
+		avp_DNAS_NONE_Framed_IP_Address, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_IP_Address;
 		avp_S6_3GPP_IP_SM_GW_Realm, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_IP_SM_GW_Realm;
 		avp_S6_3GPP_Reference_ID_Validity_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Reference_ID_Validity_Time;
 		avp_AAA_3GPP_E_UTRAN_Cell_Global_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_E_UTRAN_Cell_Global_Identity;
@@ -5525,10 +6897,12 @@ type record AVP {
 		avp_AAA_3GPP_CSG_Subscription_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_CSG_Subscription_Data;
 		avp_MIPv6_NONE_Service_Selection, avp_header.avp_code.vendor_id_NONE = avp_code_MIPv6_NONE_Service_Selection;
 		avp_AAA_3GPP_TS_Code, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_TS_Code;
+		avp_DNAS_NONE_Tunnel_Client_Endpoint, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Tunnel_Client_Endpoint;
 		avp_S6_3GPP_IP_SM_GW_Number, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_IP_SM_GW_Number;
 		avp_PCC_3GPP_Charging_Rule_Install, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Charging_Rule_Install;
 		avp_RX_3GPP_Rx_Request_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Rx_Request_Type;
 		avp_S6_3GPP_NIDD_Authorization_Response, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_NIDD_Authorization_Response;
+		avp_DCC_NONE_Subscription_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Subscription_Id;
 		avp_AAA_3GPP_VPLMN_CSG_Subscription_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_VPLMN_CSG_Subscription_Data;
 		avp_PCC_3GPP_QoS_Rule_Remove, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_QoS_Rule_Remove;
 		avp_S6_3GPP_Communication_Duration_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Communication_Duration_Time;
@@ -5542,9 +6916,13 @@ type record AVP {
 		avp_PCC_3GPP_Usage_Monitoring_Level, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Usage_Monitoring_Level;
 		avp_AAA_3GPP_Subscriber_Status, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Subscriber_Status;
 		avp_PCC_3GPP_Extended_APN_AMBR_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Extended_APN_AMBR_UL;
+		avp_DCC_NONE_Tariff_Change_Usage, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Tariff_Change_Usage;
 		avp_AAA_3GPP_LCS_PrivacyException, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_LCS_PrivacyException;
 		avp_AAA_3GPP_QoS_Subscribed, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_QoS_Subscribed;
+		avp_DNAS_NONE_NAS_IP_Address, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_NAS_IP_Address;
 		avp_RX_3GPP_RR_Bandwidth, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_RR_Bandwidth;
+		avp_DNAS_NONE_CHAP_Auth, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_CHAP_Auth;
+		avp_DCC_NONE_Service_Context_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Service_Context_Id;
 		avp_PCC_3GPP_APN_Aggregate_Max_Bitrate_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_APN_Aggregate_Max_Bitrate_DL;
 		avp_S6_3GPP_SCS_Identity, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_SCS_Identity;
 		avp_RX_3GPP_Access_Network_Charging_Address, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Access_Network_Charging_Address;
@@ -5557,17 +6935,24 @@ type record AVP {
 		avp_S6_3GPP_Enhanced_Coverage_Restriction, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Enhanced_Coverage_Restriction;
 		avp_AAA_3GPP_MME_Number_for_MT_SMS, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_MME_Number_for_MT_SMS;
 		avp_PCC_3GPP_Security_Parameter_Index, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Security_Parameter_Index;
+		avp_DCC_NONE_CC_Correlation_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Correlation_Id;
 		avp_PCC_3GPP_Traffic_Steering_Policy_Identifier_UL, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Traffic_Steering_Policy_Identifier_UL;
 		avp_BASE_NONE_Route_Record, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Route_Record;
 		avp_AAA_3GPP_Carrier_Frequency, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Carrier_Frequency;
 		avp_AAA_3GPP_Trace_NE_Type_List, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Trace_NE_Type_List;
+		avp_DNAS_NONE_Port_Limit, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Port_Limit;
+		avp_DCC_NONE_Multiple_Services_Credit_Control, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Multiple_Services_Credit_Control;
 		avp_AAA_3GPP_All_APN_Configurations_Included_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_All_APN_Configurations_Included_Indicator;
 		avp_AAA_3GPP_NOR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_NOR_Flags;
 		avp_AAA_3GPP_External_Client, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_External_Client;
 		avp_BASE_NONE_Authorization_Lifetime, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Authorization_Lifetime;
+		avp_DNAS_NONE_ARAP_Features, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_ARAP_Features;
+		avp_DNAS_NONE_Framed_MTU, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Framed_MTU;
 		avp_RX_3GPP_Extended_Min_Requested_BW_DL, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Extended_Min_Requested_BW_DL;
+		avp_DNAS_NONE_Accounting_Auth_Method, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Accounting_Auth_Method;
 		avp_RX_3GPP_Service_URN, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Service_URN;
 		avp_S6_3GPP_Supported_Services, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Supported_Services;
+		avp_DNAS_NONE_Accounting_Output_Packets, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Accounting_Output_Packets;
 		avp_AAA_3GPP_Relay_Node_Indicator, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Relay_Node_Indicator;
 		avp_PCC_3GPP_Rule_DeActivation_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Rule_DeActivation_Time;
 		avp_S6_3GPP_T4_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_T4_Data;
@@ -5576,13 +6961,18 @@ type record AVP {
 		avp_PCC_3GPP_ADC_Rule_Base_Name, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_ADC_Rule_Base_Name;
 		avp_AAA_3GPP_SCEF_Realm, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_SCEF_Realm;
 		avp_S6_3GPP_Requested_Validity_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Requested_Validity_Time;
+		avp_DCC_NONE_CC_Request_Number, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Request_Number;
 		avp_AAA_3GPP_Local_Time_Zone, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Local_Time_Zone;
 		avp_AAA_3GPP_GERAN_Vector, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_GERAN_Vector;
 		avp_AAA_3GPP_EPS_Subscribed_QoS_Profile, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_EPS_Subscribed_QoS_Profile;
 		avp_AAA_3GPP_GPRS_Subscription_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_GPRS_Subscription_Data;
+		avp_DNAS_NONE_Called_Station_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Called_Station_Id;
+		avp_DCC_NONE_Cost_Unit, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_Cost_Unit;
 		avp_BASE_NONE_Accounting_Realtime_Required, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Accounting_Realtime_Required;
 		avp_BASE_NONE_Termination_Cause, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Termination_Cause;
 		avp_RX_3GPP_Specific_Action, avp_header.avp_code.vendor_id_3GPP = avp_code_RX_3GPP_Specific_Action;
+		avp_DNAS_NONE_Login_TCP_Port, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Login_TCP_Port;
+		avp_DNAS_NONE_Password_Retry, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_Password_Retry;
 		avp_S6_3GPP_Maximum_Detection_Time, avp_header.avp_code.vendor_id_3GPP = avp_code_S6_3GPP_Maximum_Detection_Time;
 		avp_AAA_3GPP_Ext_PDP_Address, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Ext_PDP_Address;
 		avp_PCC_3GPP_RAT_Type, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_RAT_Type;
@@ -5593,7 +6983,9 @@ type record AVP {
 		avp_PCC_3GPP_Pre_emption_Vulnerability, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Pre_emption_Vulnerability;
 		avp_AAA_3GPP_Equivalent_PLMN_List, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_Equivalent_PLMN_List;
 		avp_PCC_3GPP_Default_Access, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_Default_Access;
+		avp_DNAS_NONE_ARAP_Challenge_Response, avp_header.avp_code.vendor_id_NONE = avp_code_DNAS_NONE_ARAP_Challenge_Response;
 		avp_BASE_NONE_Class, avp_header.avp_code.vendor_id_NONE = avp_code_BASE_NONE_Class;
+		avp_DCC_NONE_CC_Sub_Session_Id, avp_header.avp_code.vendor_id_NONE = avp_code_DCC_NONE_CC_Sub_Session_Id;
 		avp_AAA_3GPP_IDR_Flags, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_IDR_Flags;
 		avp_AAA_3GPP_V2X_Subscription_Data, avp_header.avp_code.vendor_id_3GPP = avp_code_AAA_3GPP_V2X_Subscription_Data;
 		avp_PCC_3GPP_PS_to_CS_Session_Continuity, avp_header.avp_code.vendor_id_3GPP = avp_code_PCC_3GPP_PS_to_CS_Session_Continuity;
@@ -5603,6 +6995,10 @@ type record AVP {
 	)"
 }
 type set of GenericAVP AVP_list;
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_LAT_Service := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_LAT_Service };
+const AVP_Code c_AVP_Code_DCC_NONE_Direct_Debiting_Failure_Handling := {
+	vendor_id_NONE := avp_code_DCC_NONE_Direct_Debiting_Failure_Handling };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_Careof_Address := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_Careof_Address };
 const AVP_Code c_AVP_Code_PCC_3GPP_Bearer_Identifier := {
@@ -5625,6 +7021,8 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Tunnel_Header_Filter := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Tunnel_Header_Filter };
 const AVP_Code c_AVP_Code_AAA_3GPP_List_Of_Measurements := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_List_Of_Measurements };
+const AVP_Code c_AVP_Code_DCC_NONE_Requested_Service_Unit := {
+	vendor_id_NONE := avp_code_DCC_NONE_Requested_Service_Unit };
 const AVP_Code c_AVP_Code_PCC_3GPP_Default_QoS_Name := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Default_QoS_Name };
 const AVP_Code c_AVP_Code_AAA_3GPP_UVA_Flags := {
@@ -5633,16 +7031,26 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Group_Service_Id := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Group_Service_Id };
 const AVP_Code c_AVP_Code_PCC_3GPP_TDF_Information := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_TDF_Information };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Pool := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Pool };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Time := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Time };
 const AVP_Code c_AVP_Code_AAA_3GPP_Requested_EUTRAN_Authentication_Info := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Requested_EUTRAN_Authentication_Info };
 const AVP_Code c_AVP_Code_AAA_3GPP_Last_UE_Activity_Time := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Last_UE_Activity_Time };
 const AVP_Code c_AVP_Code_AAA_3GPP_Context_Identifier := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Context_Identifier };
+const AVP_Code c_AVP_Code_DCC_NONE_Used_Service_Unit := {
+	vendor_id_NONE := avp_code_DCC_NONE_Used_Service_Unit };
 const AVP_Code c_AVP_Code_BASE_NONE_Auth_Application_Id := {
 	vendor_id_NONE := avp_code_BASE_NONE_Auth_Application_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_Trace_Reference := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Trace_Reference };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Appletalk_Network := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Appletalk_Network };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_IPv6_Prefix := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_IPv6_Prefix };
 const AVP_Code c_AVP_Code_RX_3GPP_Sharing_Key_UL := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Sharing_Key_UL };
 const AVP_Code c_AVP_Code_RX_3GPP_AF_Charging_Identifier := {
@@ -5691,14 +7099,20 @@ const AVP_Code c_AVP_Code_BASE_NONE_Re_Auth_Request_Type := {
 	vendor_id_NONE := avp_code_BASE_NONE_Re_Auth_Request_Type };
 const AVP_Code c_AVP_Code_S6_3GPP_External_Identifier := {
 	vendor_id_3GPP := avp_code_S6_3GPP_External_Identifier };
+const AVP_Code c_AVP_Code_DCC_NONE_Redirect_Address_Type := {
+	vendor_id_NONE := avp_code_DCC_NONE_Redirect_Address_Type };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_MN_HA_MSA := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_MN_HA_MSA };
 const AVP_Code c_AVP_Code_PCC_3GPP_TFT_Filter := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_TFT_Filter };
 const AVP_Code c_AVP_Code_RX_3GPP_Max_Supported_Bandwidth_UL := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Max_Supported_Bandwidth_UL };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Medium_Type := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Medium_Type };
 const AVP_Code c_AVP_Code_S6_3GPP_Loss_Of_Connectivity_Reason := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Loss_Of_Connectivity_Reason };
+const AVP_Code c_AVP_Code_DCC_NONE_User_Equipment_Info_Type := {
+	vendor_id_NONE := avp_code_DCC_NONE_User_Equipment_Info_Type };
 const AVP_Code c_AVP_Code_RX_3GPP_Flow_Number := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Flow_Number };
 const AVP_Code c_AVP_Code_PCC_3GPP_Resource_Allocation_Notification := {
@@ -5717,6 +7131,8 @@ const AVP_Code c_AVP_Code_MIPv6_NONE_QoS_Resources := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_QoS_Resources };
 const AVP_Code c_AVP_Code_AAA_3GPP_Logging_Duration := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Logging_Duration };
+const AVP_Code c_AVP_Code_DCC_NONE_Service_Parameter_Value := {
+	vendor_id_NONE := avp_code_DCC_NONE_Service_Parameter_Value };
 const AVP_Code c_AVP_Code_AAA_3GPP_WLAN_offloadability_EUTRAN := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_WLAN_offloadability_EUTRAN };
 const AVP_Code c_AVP_Code_PCC_3GPP_Routing_IP_Address := {
@@ -5729,6 +7145,8 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Teleservice_List := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Teleservice_List };
 const AVP_Code c_AVP_Code_AAA_3GPP_UTRAN_Vector := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_UTRAN_Vector };
+const AVP_Code c_AVP_Code_DCC_NONE_Tariff_Time_Change := {
+	vendor_id_NONE := avp_code_DCC_NONE_Tariff_Time_Change };
 const AVP_Code c_AVP_Code_RX_3GPP_Application_Service_Provider_Identity := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Application_Service_Provider_Identity };
 const AVP_Code c_AVP_Code_S6_3GPP_NIDD_Authorization_Request := {
@@ -5741,12 +7159,18 @@ const AVP_Code c_AVP_Code_RX_3GPP_Flow_Usage := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Flow_Usage };
 const AVP_Code c_AVP_Code_PCC_3GPP_RAN_Rule_Support := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_RAN_Rule_Support };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Password := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Password };
 const AVP_Code c_AVP_Code_S6_3GPP_Monitoring_Duration := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Monitoring_Duration };
 const AVP_Code c_AVP_Code_AAA_3GPP_Routing_Area_Identity := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Routing_Area_Identity };
 const AVP_Code c_AVP_Code_PCC_3GPP_QoS_Information := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_QoS_Information };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunneling := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunneling };
+const AVP_Code c_AVP_Code_DCC_NONE_User_Equipment_Info_Value := {
+	vendor_id_NONE := avp_code_DCC_NONE_User_Equipment_Info_Value };
 const AVP_Code c_AVP_Code_RX_3GPP_Service_Authorization_Info := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Service_Authorization_Info };
 const AVP_Code c_AVP_Code_BASE_NONE_Multi_Round_Time_Out := {
@@ -5771,6 +7195,10 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Extended_APN_AMBR_DL := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Extended_APN_AMBR_DL };
 const AVP_Code c_AVP_Code_AAA_3GPP_GMLC_Number := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_GMLC_Number };
+const AVP_Code c_AVP_Code_DNAS_NONE_Configuration_Token := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Configuration_Token };
+const AVP_Code c_AVP_Code_DNAS_NONE_Callback_Number := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Callback_Number };
 const AVP_Code c_AVP_Code_AAA_3GPP_Software_Version := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Software_Version };
 const AVP_Code c_AVP_Code_AAA_3GPP_Expiration_Date := {
@@ -5779,8 +7207,14 @@ const AVP_Code c_AVP_Code_BASE_NONE_Error_Message := {
 	vendor_id_NONE := avp_code_BASE_NONE_Error_Message };
 const AVP_Code c_AVP_Code_AAA_3GPP_SRES := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_SRES };
+const AVP_Code c_AVP_Code_DNAS_NONE_NAS_Port_Type := {
+	vendor_id_NONE := avp_code_DNAS_NONE_NAS_Port_Type };
 const AVP_Code c_AVP_Code_AAA_3GPP_Item_Number := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Item_Number };
+const AVP_Code c_AVP_Code_DCC_NONE_Multiple_Services_Indicator := {
+	vendor_id_NONE := avp_code_DCC_NONE_Multiple_Services_Indicator };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Protocol := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Protocol };
 const AVP_Code c_AVP_Code_S6_3GPP_Service_ID := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Service_ID };
 const AVP_Code c_AVP_Code_RX_3GPP_Abort_Cause := {
@@ -5795,8 +7229,14 @@ const AVP_Code c_AVP_Code_S6_3GPP_S6t_HSS_Cause := {
 	vendor_id_3GPP := avp_code_S6_3GPP_S6t_HSS_Cause };
 const AVP_Code c_AVP_Code_RX_3GPP_AF_Requested_Data := {
 	vendor_id_3GPP := avp_code_RX_3GPP_AF_Requested_Data };
+const AVP_Code c_AVP_Code_DNAS_NONE_Filter_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Filter_Id };
+const AVP_Code c_AVP_Code_DNAS_NONE_ARAP_Password := {
+	vendor_id_NONE := avp_code_DNAS_NONE_ARAP_Password };
 const AVP_Code c_AVP_Code_PCC_3GPP_QoS_Rule_Report := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_QoS_Rule_Report };
+const AVP_Code c_AVP_Code_DNAS_NONE_CHAP_Response := {
+	vendor_id_NONE := avp_code_DNAS_NONE_CHAP_Response };
 const AVP_Code c_AVP_Code_S6_3GPP_Stationary_Indication := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Stationary_Indication };
 const AVP_Code c_AVP_Code_PCC_3GPP_Traffic_Steering_Policy_Identifier_DL := {
@@ -5809,8 +7249,14 @@ const AVP_Code c_AVP_Code_AAA_3GPP_MBSFN_Area_ID := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_MBSFN_Area_ID };
 const AVP_Code c_AVP_Code_AAA_3GPP_Area_Scope := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Area_Scope };
+const AVP_Code c_AVP_Code_DNAS_NONE_Accounting_Input_Packets := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Accounting_Input_Packets };
 const AVP_Code c_AVP_Code_AAA_3GPP_PUA_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_PUA_Flags };
+const AVP_Code c_AVP_Code_DNAS_NONE_Callback_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Callback_Id };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Output_Octets := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Output_Octets };
 const AVP_Code c_AVP_Code_AAA_3GPP_Notification_To_UE_User := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Notification_To_UE_User };
 const AVP_Code c_AVP_Code_AAA_3GPP_Visited_PLMN_Id := {
@@ -5821,6 +7267,8 @@ const AVP_Code c_AVP_Code_RX_3GPP_Codec_Data := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Codec_Data };
 const AVP_Code c_AVP_Code_S6_3GPP_Monitoring_Event_Config_Status := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Monitoring_Event_Config_Status };
+const AVP_Code c_AVP_Code_DCC_NONE_Cost_Information := {
+	vendor_id_NONE := avp_code_DCC_NONE_Cost_Information };
 const AVP_Code c_AVP_Code_BASE_NONE_Error_Reporting_Host := {
 	vendor_id_NONE := avp_code_BASE_NONE_Error_Reporting_Host };
 const AVP_Code c_AVP_Code_PCC_3GPP_Rule_Activation_Time := {
@@ -5835,6 +7283,10 @@ const AVP_Code c_AVP_Code_S6_3GPP_Monitoring_Event_Configuration := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Monitoring_Event_Configuration };
 const AVP_Code c_AVP_Code_PCC_3GPP_Offline := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Offline };
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_Service := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_Service };
+const AVP_Code c_AVP_Code_DNAS_NONE_ARAP_Security_Data := {
+	vendor_id_NONE := avp_code_DNAS_NONE_ARAP_Security_Data };
 const AVP_Code c_AVP_Code_AAA_3GPP_Additional_Context_ID := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Additional_Context_ID };
 const AVP_Code c_AVP_Code_PCC_3GPP_ADC_Rule_Definition := {
@@ -5857,10 +7309,18 @@ const AVP_Code c_AVP_Code_AAA_3GPP_OMC_Id := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_OMC_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_GMLC_Restriction := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_GMLC_Restriction };
+const AVP_Code c_AVP_Code_DNAS_NONE_State := {
+	vendor_id_NONE := avp_code_DNAS_NONE_State };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Preference := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Preference };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Session_Failover := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Session_Failover };
 const AVP_Code c_AVP_Code_AAA_3GPP_Regional_Subscription_Zone_Code := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Regional_Subscription_Zone_Code };
 const AVP_Code c_AVP_Code_BASE_NONE_Proxy_State := {
 	vendor_id_NONE := avp_code_BASE_NONE_Proxy_State };
+const AVP_Code c_AVP_Code_DCC_NONE_Credit_Control_Failure_Handling := {
+	vendor_id_NONE := avp_code_DCC_NONE_Credit_Control_Failure_Handling };
 const AVP_Code c_AVP_Code_S6_3GPP_SIR_Flags := {
 	vendor_id_3GPP := avp_code_S6_3GPP_SIR_Flags };
 const AVP_Code c_AVP_Code_RX_3GPP_MPS_Identifier := {
@@ -5893,8 +7353,14 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Emergency_Info := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Emergency_Info };
 const AVP_Code c_AVP_Code_AAA_3GPP_MPS_Priority := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_MPS_Priority };
+const AVP_Code c_AVP_Code_DCC_NONE_Requested_Action := {
+	vendor_id_NONE := avp_code_DCC_NONE_Requested_Action };
 const AVP_Code c_AVP_Code_AAA_3GPP_Alert_Reason := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Alert_Reason };
+const AVP_Code c_AVP_Code_DNAS_NONE_Idle_Timeout := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Idle_Timeout };
+const AVP_Code c_AVP_Code_DNAS_NONE_NAS_Port_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_NAS_Port_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_MO_LR := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_MO_LR };
 const AVP_Code c_AVP_Code_BASE_NONE_Host_IP_Address := {
@@ -5907,6 +7373,10 @@ const AVP_Code c_AVP_Code_S6_3GPP_Maximum_Response_Time := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Maximum_Response_Time };
 const AVP_Code c_AVP_Code_RX_3GPP_Sponsor_Identity := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Sponsor_Identity };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Appletalk_Link := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Appletalk_Link };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Interface_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Interface_Id };
 const AVP_Code c_AVP_Code_PCC_3GPP_CoA_IP_Address := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_CoA_IP_Address };
 const AVP_Code c_AVP_Code_PCC_3GPP_Default_QoS_Information := {
@@ -5925,6 +7395,8 @@ const AVP_Code c_AVP_Code_BASE_NONE_Vendor_Id := {
 	vendor_id_NONE := avp_code_BASE_NONE_Vendor_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_PDN_Connection_Continuity := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_PDN_Connection_Continuity };
+const AVP_Code c_AVP_Code_DNAS_NONE_Acct_Session_Time := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Acct_Session_Time };
 const AVP_Code c_AVP_Code_AAA_3GPP_DSA_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_DSA_Flags };
 const AVP_Code c_AVP_Code_AAA_3GPP_Trace_Data := {
@@ -5935,14 +7407,20 @@ const AVP_Code c_AVP_Code_AAA_3GPP_PDN_GW_Allocation_Type := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_PDN_GW_Allocation_Type };
 const AVP_Code c_AVP_Code_BASE_NONE_Event_Timestamp := {
 	vendor_id_NONE := avp_code_BASE_NONE_Event_Timestamp };
+const AVP_Code c_AVP_Code_DCC_NONE_Final_Unit_Action := {
+	vendor_id_NONE := avp_code_DCC_NONE_Final_Unit_Action };
 const AVP_Code c_AVP_Code_RX_3GPP_Extended_Max_Requested_BW_UL := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Extended_Max_Requested_BW_UL };
 const AVP_Code c_AVP_Code_S6_3GPP_User_Identifier := {
 	vendor_id_3GPP := avp_code_S6_3GPP_User_Identifier };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_IPv6_Pool := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_IPv6_Pool };
 const AVP_Code c_AVP_Code_PCC_3GPP_QoS_Rule_Base_Name := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_QoS_Rule_Base_Name };
 const AVP_Code c_AVP_Code_AAA_3GPP_Restoration_Priority := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Restoration_Priority };
+const AVP_Code c_AVP_Code_DCC_NONE_Rating_Group := {
+	vendor_id_NONE := avp_code_DCC_NONE_Rating_Group };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_MN_HA_SPI := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_MN_HA_SPI };
 const AVP_Code c_AVP_Code_S6_3GPP_Association_Type := {
@@ -5955,6 +7433,8 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Report_Amount := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Report_Amount };
 const AVP_Code c_AVP_Code_PCC_3GPP_CoA_Information := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_CoA_Information };
+const AVP_Code c_AVP_Code_DCC_NONE_User_Equipment_Info := {
+	vendor_id_NONE := avp_code_DCC_NONE_User_Equipment_Info };
 const AVP_Code c_AVP_Code_AAA_3GPP_A_MSISDN := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_A_MSISDN };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_Mobile_Node_Address := {
@@ -5967,6 +7447,8 @@ const AVP_Code c_AVP_Code_AAA_3GPP_AIR_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_AIR_Flags };
 const AVP_Code c_AVP_Code_AAA_3GPP_Geographical_Information := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Geographical_Information };
+const AVP_Code c_AVP_Code_DCC_NONE_Service_Parameter_Type := {
+	vendor_id_NONE := avp_code_DCC_NONE_Service_Parameter_Type };
 const AVP_Code c_AVP_Code_AAA_3GPP_MME_User_State := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_MME_User_State };
 const AVP_Code c_AVP_Code_AAA_3GPP_Access_Restriction_Data := {
@@ -5977,12 +7459,16 @@ const AVP_Code c_AVP_Code_AAA_3GPP_SS_Status := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_SS_Status };
 const AVP_Code c_AVP_Code_S6_3GPP_NIDD_Authorization_Update := {
 	vendor_id_3GPP := avp_code_S6_3GPP_NIDD_Authorization_Update };
+const AVP_Code c_AVP_Code_DCC_NONE_Subscription_Id_Type := {
+	vendor_id_NONE := avp_code_DCC_NONE_Subscription_Id_Type };
 const AVP_Code c_AVP_Code_PCC_3GPP_Packet_Filter_Operation := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Packet_Filter_Operation };
 const AVP_Code c_AVP_Code_S6_3GPP_SCEF_Reference_ID_for_Deletion := {
 	vendor_id_3GPP := avp_code_S6_3GPP_SCEF_Reference_ID_for_Deletion };
 const AVP_Code c_AVP_Code_RX_3GPP_SIP_Forking_Indication := {
 	vendor_id_3GPP := avp_code_RX_3GPP_SIP_Forking_Indication };
+const AVP_Code c_AVP_Code_DNAS_NONE_User_Password := {
+	vendor_id_NONE := avp_code_DNAS_NONE_User_Password };
 const AVP_Code c_AVP_Code_S6_3GPP_IMEI_Change := {
 	vendor_id_3GPP := avp_code_S6_3GPP_IMEI_Change };
 const AVP_Code c_AVP_Code_PCC_3GPP_IP_CAN_Type := {
@@ -6001,16 +7487,28 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Routing_Filter := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Routing_Filter };
 const AVP_Code c_AVP_Code_PCC_3GPP_Metering_Method := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Metering_Method };
+const AVP_Code c_AVP_Code_DNAS_NONE_Acct_Tunnel_Connection := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Acct_Tunnel_Connection };
 const AVP_Code c_AVP_Code_AAA_3GPP_Non_IP_Data_Delivery_Mechanism := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Non_IP_Data_Delivery_Mechanism };
+const AVP_Code c_AVP_Code_DNAS_NONE_NAS_Filter_Rule := {
+	vendor_id_NONE := avp_code_DNAS_NONE_NAS_Filter_Rule };
 const AVP_Code c_AVP_Code_BASE_NONE_Session_Server_Failover := {
 	vendor_id_NONE := avp_code_BASE_NONE_Session_Server_Failover };
 const AVP_Code c_AVP_Code_AAA_3GPP_E_UTRAN_Vector := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_E_UTRAN_Vector };
 const AVP_Code c_AVP_Code_BASE_NONE_Experimental_Result := {
 	vendor_id_NONE := avp_code_BASE_NONE_Experimental_Result };
+const AVP_Code c_AVP_Code_DNAS_NONE_Acct_Link_Count := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Acct_Link_Count };
+const AVP_Code c_AVP_Code_DCC_NONE_Unit_Value := {
+	vendor_id_NONE := avp_code_DCC_NONE_Unit_Value };
 const AVP_Code c_AVP_Code_AAA_3GPP_Trace_Event_List := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Trace_Event_List };
+const AVP_Code c_AVP_Code_DNAS_NONE_Reply_Message := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Reply_Message };
+const AVP_Code c_AVP_Code_DNAS_NONE_Connect_Info := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Connect_Info };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_Replay_Mode := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_Replay_Mode };
 const AVP_Code c_AVP_Code_BASE_NONE_Proxy_Host := {
@@ -6019,12 +7517,18 @@ const AVP_Code c_AVP_Code_S6_3GPP_Communication_Pattern_Set := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Communication_Pattern_Set };
 const AVP_Code c_AVP_Code_RX_3GPP_Flow_Status := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Flow_Status };
+const AVP_Code c_AVP_Code_DNAS_NONE_CHAP_Challenge := {
+	vendor_id_NONE := avp_code_DNAS_NONE_CHAP_Challenge };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Unit_Type := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Unit_Type };
 const AVP_Code c_AVP_Code_RX_3GPP_MCPTT_Identifier := {
 	vendor_id_3GPP := avp_code_RX_3GPP_MCPTT_Identifier };
 const AVP_Code c_AVP_Code_S6_3GPP_Group_Monitoring_Event_Report := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Group_Monitoring_Event_Report };
 const AVP_Code c_AVP_Code_PCC_3GPP_QoS_Upgrade := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_QoS_Upgrade };
+const AVP_Code c_AVP_Code_DNAS_NONE_Service_Type := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Service_Type };
 const AVP_Code c_AVP_Code_PCC_3GPP_AN_GW_Status := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_AN_GW_Status };
 const AVP_Code c_AVP_Code_AAA_3GPP_Measurement_Period_UMTS := {
@@ -6039,10 +7543,14 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Routing_Rule_Install := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Routing_Rule_Install };
 const AVP_Code c_AVP_Code_AAA_3GPP_PUR_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_PUR_Flags };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Routing := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Routing };
 const AVP_Code c_AVP_Code_PCC_3GPP_IP_CAN_Session_Charging_Scope := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_IP_CAN_Session_Charging_Scope };
 const AVP_Code c_AVP_Code_AAA_3GPP_IMEI := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_IMEI };
+const AVP_Code c_AVP_Code_DNAS_NONE_CHAP_Ident := {
+	vendor_id_NONE := avp_code_DNAS_NONE_CHAP_Ident };
 const AVP_Code c_AVP_Code_AAA_3GPP_Kc := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Kc };
 const AVP_Code c_AVP_Code_AAA_3GPP_SGSN_Number := {
@@ -6051,12 +7559,16 @@ const AVP_Code c_AVP_Code_AAA_3GPP_HPLMN_ODB := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_HPLMN_ODB };
 const AVP_Code c_AVP_Code_AAA_3GPP_PDP_Context := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_PDP_Context };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Money := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Money };
 const AVP_Code c_AVP_Code_BASE_NONE_Proxy_Info := {
 	vendor_id_NONE := avp_code_BASE_NONE_Proxy_Info };
 const AVP_Code c_AVP_Code_S6_3GPP_Node_Type := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Node_Type };
 const AVP_Code c_AVP_Code_RX_3GPP_Priority_Sharing_Indicator := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Priority_Sharing_Indicator };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Type := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Type };
 const AVP_Code c_AVP_Code_PCC_3GPP_QoS_Rule_Name := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_QoS_Rule_Name };
 const AVP_Code c_AVP_Code_S6_3GPP_Scheduled_Communication_Time := {
@@ -6071,6 +7583,8 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Extended_GBR_DL := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Extended_GBR_DL };
 const AVP_Code c_AVP_Code_AAA_3GPP_MBSFN_Area := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_MBSFN_Area };
+const AVP_Code c_AVP_Code_DCC_NONE_Check_Balance_Result := {
+	vendor_id_NONE := avp_code_DCC_NONE_Check_Balance_Result };
 const AVP_Code c_AVP_Code_S6_3GPP_APN_Validity_Time := {
 	vendor_id_3GPP := avp_code_S6_3GPP_APN_Validity_Time };
 const AVP_Code c_AVP_Code_AAA_3GPP_Job_Type := {
@@ -6083,14 +7597,26 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Positioning_Method := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Positioning_Method };
 const AVP_Code c_AVP_Code_AAA_3GPP_DL_Buffering_Suggested_Packet_Count := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_DL_Buffering_Suggested_Packet_Count };
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_IP_Host := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_IP_Host };
+const AVP_Code c_AVP_Code_DNAS_NONE_ARAP_Security := {
+	vendor_id_NONE := avp_code_DNAS_NONE_ARAP_Security };
 const AVP_Code c_AVP_Code_AAA_3GPP_IDA_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_IDA_Flags };
+const AVP_Code c_AVP_Code_DNAS_NONE_Origin_AAA_Protocol := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Origin_AAA_Protocol };
 const AVP_Code c_AVP_Code_AAA_3GPP_ULA_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_ULA_Flags };
 const AVP_Code c_AVP_Code_AAA_3GPP_IMS_Voice_Over_PS_Sessions_Supported := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_IMS_Voice_Over_PS_Sessions_Supported };
 const AVP_Code c_AVP_Code_AAA_3GPP_Roaming_Restricted_Due_To_Unsupported_Feature := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Roaming_Restricted_Due_To_Unsupported_Feature };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Assignment_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Assignment_Id };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_IPX_Network := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_IPX_Network };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Service_Specific_Units := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Service_Specific_Units };
 const AVP_Code c_AVP_Code_S6_3GPP_T4_Parameters := {
 	vendor_id_3GPP := avp_code_S6_3GPP_T4_Parameters };
 const AVP_Code c_AVP_Code_RX_3GPP_Access_Network_Charging_Identifier_Value := {
@@ -6111,8 +7637,14 @@ const AVP_Code c_AVP_Code_RX_3GPP_Extended_Max_Requested_BW_DL := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Extended_Max_Requested_BW_DL };
 const AVP_Code c_AVP_Code_PCC_3GPP_Flow_Information := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Flow_Information };
+const AVP_Code c_AVP_Code_DNAS_NONE_NAS_Identifier := {
+	vendor_id_NONE := avp_code_DNAS_NONE_NAS_Identifier };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Server_Auth_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Server_Auth_Id };
 const AVP_Code c_AVP_Code_PCC_3GPP_Execution_Time := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Execution_Time };
+const AVP_Code c_AVP_Code_DCC_NONE_Credit_Control := {
+	vendor_id_NONE := avp_code_DCC_NONE_Credit_Control };
 const AVP_Code c_AVP_Code_BASE_NONE_Accounting_Record_Number := {
 	vendor_id_NONE := avp_code_BASE_NONE_Accounting_Record_Number };
 const AVP_Code c_AVP_Code_AAA_3GPP_Event_Threshold_Event_1I := {
@@ -6129,10 +7661,14 @@ const AVP_Code c_AVP_Code_BASE_NONE_Redirect_Host_Usage := {
 	vendor_id_NONE := avp_code_BASE_NONE_Redirect_Host_Usage };
 const AVP_Code c_AVP_Code_AAA_3GPP_Equipment_Status := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Equipment_Status };
+const AVP_Code c_AVP_Code_DCC_NONE_Redirect_Server_Address := {
+	vendor_id_NONE := avp_code_DCC_NONE_Redirect_Server_Address };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP6_Auth_Mode := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP6_Auth_Mode };
 const AVP_Code c_AVP_Code_AAA_3GPP_EPS_Location_Information := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_EPS_Location_Information };
+const AVP_Code c_AVP_Code_DNAS_NONE_Acct_Tunnel_Packets_Lost := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Acct_Tunnel_Packets_Lost };
 const AVP_Code c_AVP_Code_BASE_NONE_Session_Timeout := {
 	vendor_id_NONE := avp_code_BASE_NONE_Session_Timeout };
 const AVP_Code c_AVP_Code_RX_3GPP_Service_Info_Status := {
@@ -6165,8 +7701,14 @@ const AVP_Code c_AVP_Code_AAA_3GPP_UE_SRVCC_Capability := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_UE_SRVCC_Capability };
 const AVP_Code c_AVP_Code_PCC_3GPP_Guaranteed_Bitrate_UL := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Guaranteed_Bitrate_UL };
+const AVP_Code c_AVP_Code_DNAS_NONE_NAS_IPv6_Address := {
+	vendor_id_NONE := avp_code_DNAS_NONE_NAS_IPv6_Address };
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_LAT_Group := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_LAT_Group };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_MAC_Mobility_Data := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_MAC_Mobility_Data };
+const AVP_Code c_AVP_Code_DNAS_NONE_Accounting_Output_Octets := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Accounting_Output_Octets };
 const AVP_Code c_AVP_Code_AAA_3GPP_Coupled_Node_Diameter_ID := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Coupled_Node_Diameter_ID };
 const AVP_Code c_AVP_Code_AAA_3GPP_STN_SR := {
@@ -6175,6 +7717,10 @@ const AVP_Code c_AVP_Code_BASE_NONE_Supported_Vendor_Id := {
 	vendor_id_NONE := avp_code_BASE_NONE_Supported_Vendor_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_ServiceTypeIdentity := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_ServiceTypeIdentity };
+const AVP_Code c_AVP_Code_DNAS_NONE_Acct_Authentic := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Acct_Authentic };
+const AVP_Code c_AVP_Code_DCC_NONE_Service_Identifier := {
+	vendor_id_NONE := avp_code_DCC_NONE_Service_Identifier };
 const AVP_Code c_AVP_Code_AAA_3GPP_AUTN := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_AUTN };
 const AVP_Code c_AVP_Code_RX_3GPP_Sponsored_Connectivity_Data := {
@@ -6185,6 +7731,8 @@ const AVP_Code c_AVP_Code_S6_3GPP_AESE_Communication_Pattern := {
 	vendor_id_3GPP := avp_code_S6_3GPP_AESE_Communication_Pattern };
 const AVP_Code c_AVP_Code_PCC_3GPP_NBIFOM_Mode := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_NBIFOM_Mode };
+const AVP_Code c_AVP_Code_DCC_NONE_Validity_Time := {
+	vendor_id_NONE := avp_code_DCC_NONE_Validity_Time };
 const AVP_Code c_AVP_Code_PCC_3GPP_Redirect_Information := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Redirect_Information };
 const AVP_Code c_AVP_Code_S6_3GPP_Event_Handling := {
@@ -6201,10 +7749,14 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Subscription_Data_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Subscription_Data_Flags };
 const AVP_Code c_AVP_Code_PCC_3GPP_PDN_Connection_ID := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_PDN_Connection_ID };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_IPv6_Route := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_IPv6_Route };
 const AVP_Code c_AVP_Code_AAA_3GPP_DSR_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_DSR_Flags };
 const AVP_Code c_AVP_Code_PCC_3GPP_PRA_Remove := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_PRA_Remove };
+const AVP_Code c_AVP_Code_DCC_NONE_Granted_Service_Unit := {
+	vendor_id_NONE := avp_code_DCC_NONE_Granted_Service_Unit };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_Timestamp := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_Timestamp };
 const AVP_Code c_AVP_Code_AAA_3GPP_Subscribed_Periodic_RAU_TAU_Timer := {
@@ -6217,8 +7769,12 @@ const AVP_Code c_AVP_Code_BASE_NONE_Product_Name := {
 	vendor_id_NONE := avp_code_BASE_NONE_Product_Name };
 const AVP_Code c_AVP_Code_AAA_3GPP_CSG_Id := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_CSG_Id };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_IP_Netmask := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_IP_Netmask };
 const AVP_Code c_AVP_Code_AAA_3GPP_Call_Barring_Info := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Call_Barring_Info };
+const AVP_Code c_AVP_Code_DCC_NONE_Service_Parameter_Info := {
+	vendor_id_NONE := avp_code_DCC_NONE_Service_Parameter_Info };
 const AVP_Code c_AVP_Code_BASE_NONE_Origin_State_Id := {
 	vendor_id_NONE := avp_code_BASE_NONE_Origin_State_Id };
 const AVP_Code c_AVP_Code_S6_3GPP_IP_SM_GW_Name := {
@@ -6257,16 +7813,22 @@ const AVP_Code c_AVP_Code_AAA_3GPP_UE_PC5_AMBR := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_UE_PC5_AMBR };
 const AVP_Code c_AVP_Code_BASE_NONE_Accounting_Sub_Session_Id := {
 	vendor_id_NONE := avp_code_BASE_NONE_Accounting_Sub_Session_Id };
+const AVP_Code c_AVP_Code_DNAS_NONE_Acct_Delay_Time := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Acct_Delay_Time };
 const AVP_Code c_AVP_Code_AAA_3GPP_Collection_Period_RRM_UMTS := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Collection_Period_RRM_UMTS };
 const AVP_Code c_AVP_Code_AAA_3GPP_Operator_Determined_Barring := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Operator_Determined_Barring };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Server_Endpoint := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Server_Endpoint };
 const AVP_Code c_AVP_Code_BASE_NONE_Session_Binding := {
 	vendor_id_NONE := avp_code_BASE_NONE_Session_Binding };
 const AVP_Code c_AVP_Code_AAA_3GPP_SS_Code := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_SS_Code };
 const AVP_Code c_AVP_Code_BASE_NONE_Acct_Multi_Session_Id := {
 	vendor_id_NONE := avp_code_BASE_NONE_Acct_Multi_Session_Id };
+const AVP_Code c_AVP_Code_DCC_NONE_Subscription_Id_Data := {
+	vendor_id_NONE := avp_code_DCC_NONE_Subscription_Id_Data };
 const AVP_Code c_AVP_Code_RX_3GPP_RS_Bandwidth := {
 	vendor_id_3GPP := avp_code_RX_3GPP_RS_Bandwidth };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_Algorithm_Type := {
@@ -6291,16 +7853,22 @@ const AVP_Code c_AVP_Code_RX_3GPP_GCS_Identifier := {
 	vendor_id_3GPP := avp_code_RX_3GPP_GCS_Identifier };
 const AVP_Code c_AVP_Code_MIPv6_NONE_QoS_Capability := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_QoS_Capability };
+const AVP_Code c_AVP_Code_DCC_NONE_G_S_U_Pool_Identifier := {
+	vendor_id_NONE := avp_code_DCC_NONE_G_S_U_Pool_Identifier };
 const AVP_Code c_AVP_Code_AAA_3GPP_Non_IP_PDN_Type_Indicator := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Non_IP_PDN_Type_Indicator };
 const AVP_Code c_AVP_Code_PCC_3GPP_ADC_Rule_Install := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_ADC_Rule_Install };
 const AVP_Code c_AVP_Code_PCC_3GPP_Flow_Label := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Flow_Label };
+const AVP_Code c_AVP_Code_DNAS_NONE_NAS_Port := {
+	vendor_id_NONE := avp_code_DNAS_NONE_NAS_Port };
 const AVP_Code c_AVP_Code_AAA_3GPP_Authentication_Info := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Authentication_Info };
 const AVP_Code c_AVP_Code_AAA_3GPP_Trace_Interface_List := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Trace_Interface_List };
+const AVP_Code c_AVP_Code_DNAS_NONE_CHAP_Algorithm := {
+	vendor_id_NONE := avp_code_DNAS_NONE_CHAP_Algorithm };
 const AVP_Code c_AVP_Code_AAA_3GPP_APN_Configuration_Profile := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_APN_Configuration_Profile };
 const AVP_Code c_AVP_Code_RX_3GPP_Flows := {
@@ -6311,6 +7879,8 @@ const AVP_Code c_AVP_Code_RX_3GPP_Extended_Min_Requested_BW_UL := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Extended_Min_Requested_BW_UL };
 const AVP_Code c_AVP_Code_PCC_3GPP_Monitoring_Time := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Monitoring_Time };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Input_Octets := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Input_Octets };
 const AVP_Code c_AVP_Code_S6_3GPP_UE_Reachability_Configuration := {
 	vendor_id_3GPP := avp_code_S6_3GPP_UE_Reachability_Configuration };
 const AVP_Code c_AVP_Code_BASE_NONE_Destination_Realm := {
@@ -6325,8 +7895,12 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Session_Release_Cause := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Session_Release_Cause };
 const AVP_Code c_AVP_Code_AAA_3GPP_MDT_User_Consent := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_MDT_User_Consent };
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_LAT_Port := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_LAT_Port };
 const AVP_Code c_AVP_Code_S6_3GPP_HSS_Cause := {
 	vendor_id_3GPP := avp_code_S6_3GPP_HSS_Cause };
+const AVP_Code c_AVP_Code_DCC_NONE_G_S_U_Pool_Reference := {
+	vendor_id_NONE := avp_code_DCC_NONE_G_S_U_Pool_Reference };
 const AVP_Code c_AVP_Code_PCC_3GPP_PCSCF_Restoration_Indication := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_PCSCF_Restoration_Indication };
 const AVP_Code c_AVP_Code_AAA_3GPP_Subscription_Data_Deletion := {
@@ -6339,6 +7913,12 @@ const AVP_Code c_AVP_Code_BASE_NONE_Redirect_Host := {
 	vendor_id_NONE := avp_code_BASE_NONE_Redirect_Host };
 const AVP_Code c_AVP_Code_AAA_3GPP_Network_Access_Mode := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Network_Access_Mode };
+const AVP_Code c_AVP_Code_DNAS_NONE_ARAP_Zone_Access := {
+	vendor_id_NONE := avp_code_DNAS_NONE_ARAP_Zone_Access };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Compression := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Compression };
+const AVP_Code c_AVP_Code_DNAS_NONE_QoS_Filter_Rule := {
+	vendor_id_NONE := avp_code_DNAS_NONE_QoS_Filter_Rule };
 const AVP_Code c_AVP_Code_AAA_3GPP_Complete_Data_List_Included_Indicator := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Complete_Data_List_Included_Indicator };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_MN_AAA_SPI := {
@@ -6347,6 +7927,12 @@ const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_MSA_Lifetime := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_MSA_Lifetime };
 const AVP_Code c_AVP_Code_S6_3GPP_Reachability_Type := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Reachability_Type };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Private_Group_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Private_Group_Id };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Route := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Route };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Request_Type := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Request_Type };
 const AVP_Code c_AVP_Code_S6_3GPP_Type_Of_External_Identifier := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Type_Of_External_Identifier };
 const AVP_Code c_AVP_Code_PCC_3GPP_Event_Report_Indication := {
@@ -6365,8 +7951,14 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Default_EPS_Bearer_QoS := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Default_EPS_Bearer_QoS };
 const AVP_Code c_AVP_Code_AAA_3GPP_ULR_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_ULR_Flags };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Client_Auth_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Client_Auth_Id };
+const AVP_Code c_AVP_Code_DNAS_NONE_Calling_Station_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Calling_Station_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_ICS_Indicator := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_ICS_Indicator };
+const AVP_Code c_AVP_Code_DCC_NONE_Currency_Code := {
+	vendor_id_NONE := avp_code_DCC_NONE_Currency_Code };
 const AVP_Code c_AVP_Code_AAA_3GPP_Cancellation_Type := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Cancellation_Type };
 const AVP_Code c_AVP_Code_BASE_NONE_E2E_Sequence := {
@@ -6375,8 +7967,12 @@ const AVP_Code c_AVP_Code_BASE_NONE_Origin_Realm := {
 	vendor_id_NONE := avp_code_BASE_NONE_Origin_Realm };
 const AVP_Code c_AVP_Code_AAA_3GPP_PDN_Type := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_PDN_Type };
+const AVP_Code c_AVP_Code_DNAS_NONE_Prompt := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Prompt };
 const AVP_Code c_AVP_Code_RX_3GPP_Access_Network_Charging_Identifier := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Access_Network_Charging_Identifier };
+const AVP_Code c_AVP_Code_DCC_NONE_Redirect_Server := {
+	vendor_id_NONE := avp_code_DCC_NONE_Redirect_Server };
 const AVP_Code c_AVP_Code_S6_3GPP_AESE_Communication_Pattern_Config_Status := {
 	vendor_id_3GPP := avp_code_S6_3GPP_AESE_Communication_Pattern_Config_Status };
 const AVP_Code c_AVP_Code_S6_3GPP_Enhanced_Coverage_Restriction_Data := {
@@ -6411,8 +8007,16 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Group_PLMN_Id := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Group_PLMN_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_User_Id := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_User_Id };
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_LAT_Node := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_LAT_Node };
+const AVP_Code c_AVP_Code_DNAS_NONE_Originating_Line_Info := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Originating_Line_Info };
+const AVP_Code c_AVP_Code_DCC_NONE_Exponent := {
+	vendor_id_NONE := avp_code_DCC_NONE_Exponent };
 const AVP_Code c_AVP_Code_MIPv6_NONE_MIP_Authenticator := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_MIP_Authenticator };
+const AVP_Code c_AVP_Code_DNAS_NONE_Accounting_Input_Octets := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Accounting_Input_Octets };
 const AVP_Code c_AVP_Code_AAA_3GPP_Requested_UTRAN_GERAN_Authentication_Info := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Requested_UTRAN_GERAN_Authentication_Info };
 const AVP_Code c_AVP_Code_AAA_3GPP_EPS_User_State := {
@@ -6423,6 +8027,8 @@ const AVP_Code c_AVP_Code_RX_3GPP_Retry_Interval := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Retry_Interval };
 const AVP_Code c_AVP_Code_BASE_NONE_Accounting_Session_Id := {
 	vendor_id_NONE := avp_code_BASE_NONE_Accounting_Session_Id };
+const AVP_Code c_AVP_Code_DCC_NONE_Restriction_Filter_Rule := {
+	vendor_id_NONE := avp_code_DCC_NONE_Restriction_Filter_Rule };
 const AVP_Code c_AVP_Code_PCC_3GPP_Packet_Filter_Identifier := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Packet_Filter_Identifier };
 const AVP_Code c_AVP_Code_S6_3GPP_SCEF_Reference_ID := {
@@ -6439,6 +8045,8 @@ const AVP_Code c_AVP_Code_PCC_3GPP_Guaranteed_Bitrate_DL := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Guaranteed_Bitrate_DL };
 const AVP_Code c_AVP_Code_RX_3GPP_Extended_Max_Supported_BW_UL := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Extended_Max_Supported_BW_UL };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Total_Octets := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Total_Octets };
 const AVP_Code c_AVP_Code_PCC_3GPP_UDP_Source_Port := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_UDP_Source_Port };
 const AVP_Code c_AVP_Code_BASE_NONE_Accounting_Record_Type := {
@@ -6447,6 +8055,8 @@ const AVP_Code c_AVP_Code_AAA_3GPP_SIPTO_Local_Network_Permission := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_SIPTO_Local_Network_Permission };
 const AVP_Code c_AVP_Code_PCC_3GPP_Routing_Rule_Definition := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Routing_Rule_Definition };
+const AVP_Code c_AVP_Code_DCC_NONE_Value_Digits := {
+	vendor_id_NONE := avp_code_DCC_NONE_Value_Digits };
 const AVP_Code c_AVP_Code_AAA_3GPP_VPLMN_Dynamic_Address_Allowed := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_VPLMN_Dynamic_Address_Allowed };
 const AVP_Code c_AVP_Code_BASE_NONE_Acct_Application_Id := {
@@ -6455,12 +8065,20 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Service_Type := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Service_Type };
 const AVP_Code c_AVP_Code_AAA_3GPP_Immediate_Response_Preferred := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Immediate_Response_Preferred };
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_IPv6_Host := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_IPv6_Host };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_Appletalk_Zone := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_Appletalk_Zone };
+const AVP_Code c_AVP_Code_DCC_NONE_Final_Unit_Indication := {
+	vendor_id_NONE := avp_code_DCC_NONE_Final_Unit_Indication };
 const AVP_Code c_AVP_Code_AAA_3GPP_XRES := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_XRES };
 const AVP_Code c_AVP_Code_AAA_3GPP_User_State := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_User_State };
 const AVP_Code c_AVP_Code_BASE_NONE_Result_Code := {
 	vendor_id_NONE := avp_code_BASE_NONE_Result_Code };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_IP_Address := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_IP_Address };
 const AVP_Code c_AVP_Code_S6_3GPP_IP_SM_GW_Realm := {
 	vendor_id_3GPP := avp_code_S6_3GPP_IP_SM_GW_Realm };
 const AVP_Code c_AVP_Code_S6_3GPP_Reference_ID_Validity_Time := {
@@ -6501,6 +8119,8 @@ const AVP_Code c_AVP_Code_MIPv6_NONE_Service_Selection := {
 	vendor_id_NONE := avp_code_MIPv6_NONE_Service_Selection };
 const AVP_Code c_AVP_Code_AAA_3GPP_TS_Code := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_TS_Code };
+const AVP_Code c_AVP_Code_DNAS_NONE_Tunnel_Client_Endpoint := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Tunnel_Client_Endpoint };
 const AVP_Code c_AVP_Code_S6_3GPP_IP_SM_GW_Number := {
 	vendor_id_3GPP := avp_code_S6_3GPP_IP_SM_GW_Number };
 const AVP_Code c_AVP_Code_PCC_3GPP_Charging_Rule_Install := {
@@ -6509,6 +8129,8 @@ const AVP_Code c_AVP_Code_RX_3GPP_Rx_Request_Type := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Rx_Request_Type };
 const AVP_Code c_AVP_Code_S6_3GPP_NIDD_Authorization_Response := {
 	vendor_id_3GPP := avp_code_S6_3GPP_NIDD_Authorization_Response };
+const AVP_Code c_AVP_Code_DCC_NONE_Subscription_Id := {
+	vendor_id_NONE := avp_code_DCC_NONE_Subscription_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_VPLMN_CSG_Subscription_Data := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_VPLMN_CSG_Subscription_Data };
 const AVP_Code c_AVP_Code_PCC_3GPP_QoS_Rule_Remove := {
@@ -6535,12 +8157,20 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Subscriber_Status := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Subscriber_Status };
 const AVP_Code c_AVP_Code_PCC_3GPP_Extended_APN_AMBR_UL := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Extended_APN_AMBR_UL };
+const AVP_Code c_AVP_Code_DCC_NONE_Tariff_Change_Usage := {
+	vendor_id_NONE := avp_code_DCC_NONE_Tariff_Change_Usage };
 const AVP_Code c_AVP_Code_AAA_3GPP_LCS_PrivacyException := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_LCS_PrivacyException };
 const AVP_Code c_AVP_Code_AAA_3GPP_QoS_Subscribed := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_QoS_Subscribed };
+const AVP_Code c_AVP_Code_DNAS_NONE_NAS_IP_Address := {
+	vendor_id_NONE := avp_code_DNAS_NONE_NAS_IP_Address };
 const AVP_Code c_AVP_Code_RX_3GPP_RR_Bandwidth := {
 	vendor_id_3GPP := avp_code_RX_3GPP_RR_Bandwidth };
+const AVP_Code c_AVP_Code_DNAS_NONE_CHAP_Auth := {
+	vendor_id_NONE := avp_code_DNAS_NONE_CHAP_Auth };
+const AVP_Code c_AVP_Code_DCC_NONE_Service_Context_Id := {
+	vendor_id_NONE := avp_code_DCC_NONE_Service_Context_Id };
 const AVP_Code c_AVP_Code_PCC_3GPP_APN_Aggregate_Max_Bitrate_DL := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_APN_Aggregate_Max_Bitrate_DL };
 const AVP_Code c_AVP_Code_S6_3GPP_SCS_Identity := {
@@ -6565,6 +8195,8 @@ const AVP_Code c_AVP_Code_AAA_3GPP_MME_Number_for_MT_SMS := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_MME_Number_for_MT_SMS };
 const AVP_Code c_AVP_Code_PCC_3GPP_Security_Parameter_Index := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Security_Parameter_Index };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Correlation_Id := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Correlation_Id };
 const AVP_Code c_AVP_Code_PCC_3GPP_Traffic_Steering_Policy_Identifier_UL := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Traffic_Steering_Policy_Identifier_UL };
 const AVP_Code c_AVP_Code_BASE_NONE_Route_Record := {
@@ -6573,6 +8205,10 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Carrier_Frequency := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Carrier_Frequency };
 const AVP_Code c_AVP_Code_AAA_3GPP_Trace_NE_Type_List := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Trace_NE_Type_List };
+const AVP_Code c_AVP_Code_DNAS_NONE_Port_Limit := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Port_Limit };
+const AVP_Code c_AVP_Code_DCC_NONE_Multiple_Services_Credit_Control := {
+	vendor_id_NONE := avp_code_DCC_NONE_Multiple_Services_Credit_Control };
 const AVP_Code c_AVP_Code_AAA_3GPP_All_APN_Configurations_Included_Indicator := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_All_APN_Configurations_Included_Indicator };
 const AVP_Code c_AVP_Code_AAA_3GPP_NOR_Flags := {
@@ -6581,12 +8217,20 @@ const AVP_Code c_AVP_Code_AAA_3GPP_External_Client := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_External_Client };
 const AVP_Code c_AVP_Code_BASE_NONE_Authorization_Lifetime := {
 	vendor_id_NONE := avp_code_BASE_NONE_Authorization_Lifetime };
+const AVP_Code c_AVP_Code_DNAS_NONE_ARAP_Features := {
+	vendor_id_NONE := avp_code_DNAS_NONE_ARAP_Features };
+const AVP_Code c_AVP_Code_DNAS_NONE_Framed_MTU := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Framed_MTU };
 const AVP_Code c_AVP_Code_RX_3GPP_Extended_Min_Requested_BW_DL := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Extended_Min_Requested_BW_DL };
+const AVP_Code c_AVP_Code_DNAS_NONE_Accounting_Auth_Method := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Accounting_Auth_Method };
 const AVP_Code c_AVP_Code_RX_3GPP_Service_URN := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Service_URN };
 const AVP_Code c_AVP_Code_S6_3GPP_Supported_Services := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Supported_Services };
+const AVP_Code c_AVP_Code_DNAS_NONE_Accounting_Output_Packets := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Accounting_Output_Packets };
 const AVP_Code c_AVP_Code_AAA_3GPP_Relay_Node_Indicator := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Relay_Node_Indicator };
 const AVP_Code c_AVP_Code_PCC_3GPP_Rule_DeActivation_Time := {
@@ -6603,6 +8247,8 @@ const AVP_Code c_AVP_Code_AAA_3GPP_SCEF_Realm := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_SCEF_Realm };
 const AVP_Code c_AVP_Code_S6_3GPP_Requested_Validity_Time := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Requested_Validity_Time };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Request_Number := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Request_Number };
 const AVP_Code c_AVP_Code_AAA_3GPP_Local_Time_Zone := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Local_Time_Zone };
 const AVP_Code c_AVP_Code_AAA_3GPP_GERAN_Vector := {
@@ -6611,12 +8257,20 @@ const AVP_Code c_AVP_Code_AAA_3GPP_EPS_Subscribed_QoS_Profile := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_EPS_Subscribed_QoS_Profile };
 const AVP_Code c_AVP_Code_AAA_3GPP_GPRS_Subscription_Data := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_GPRS_Subscription_Data };
+const AVP_Code c_AVP_Code_DNAS_NONE_Called_Station_Id := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Called_Station_Id };
+const AVP_Code c_AVP_Code_DCC_NONE_Cost_Unit := {
+	vendor_id_NONE := avp_code_DCC_NONE_Cost_Unit };
 const AVP_Code c_AVP_Code_BASE_NONE_Accounting_Realtime_Required := {
 	vendor_id_NONE := avp_code_BASE_NONE_Accounting_Realtime_Required };
 const AVP_Code c_AVP_Code_BASE_NONE_Termination_Cause := {
 	vendor_id_NONE := avp_code_BASE_NONE_Termination_Cause };
 const AVP_Code c_AVP_Code_RX_3GPP_Specific_Action := {
 	vendor_id_3GPP := avp_code_RX_3GPP_Specific_Action };
+const AVP_Code c_AVP_Code_DNAS_NONE_Login_TCP_Port := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Login_TCP_Port };
+const AVP_Code c_AVP_Code_DNAS_NONE_Password_Retry := {
+	vendor_id_NONE := avp_code_DNAS_NONE_Password_Retry };
 const AVP_Code c_AVP_Code_S6_3GPP_Maximum_Detection_Time := {
 	vendor_id_3GPP := avp_code_S6_3GPP_Maximum_Detection_Time };
 const AVP_Code c_AVP_Code_AAA_3GPP_Ext_PDP_Address := {
@@ -6637,8 +8291,12 @@ const AVP_Code c_AVP_Code_AAA_3GPP_Equivalent_PLMN_List := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_Equivalent_PLMN_List };
 const AVP_Code c_AVP_Code_PCC_3GPP_Default_Access := {
 	vendor_id_3GPP := avp_code_PCC_3GPP_Default_Access };
+const AVP_Code c_AVP_Code_DNAS_NONE_ARAP_Challenge_Response := {
+	vendor_id_NONE := avp_code_DNAS_NONE_ARAP_Challenge_Response };
 const AVP_Code c_AVP_Code_BASE_NONE_Class := {
 	vendor_id_NONE := avp_code_BASE_NONE_Class };
+const AVP_Code c_AVP_Code_DCC_NONE_CC_Sub_Session_Id := {
+	vendor_id_NONE := avp_code_DCC_NONE_CC_Sub_Session_Id };
 const AVP_Code c_AVP_Code_AAA_3GPP_IDR_Flags := {
 	vendor_id_3GPP := avp_code_AAA_3GPP_IDR_Flags };
 const AVP_Code c_AVP_Code_AAA_3GPP_V2X_Subscription_Data := {
