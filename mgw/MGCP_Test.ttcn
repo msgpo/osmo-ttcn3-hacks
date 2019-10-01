@@ -1601,10 +1601,10 @@ module MGCP_Test {
 
 		stats := f_rtpem_stats_get(RTPEM[0]);
 
-		if (stats.num_pkts_tx < 40) {
+		if (stats.num_pkts_tx < 24) {
 			setverdict(fail);
 		}
-		if (stats.bytes_payload_tx < 190) {
+		if (stats.bytes_payload_tx < 96) {
 			setverdict(fail);
 		}
 
