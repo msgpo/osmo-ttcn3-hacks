@@ -255,6 +255,7 @@ testcase TC_selftest_rlcmac() runs on dummy_CT {
 
 testcase TC_selftest_rlcmac_egprs() runs on RAW_PCU_Test_CT
 {
+	var GprsMS ms;
 	var octetstring data;
 	var CodingSchemeArray schemes := {
 		//MCS_0,
@@ -268,6 +269,10 @@ testcase TC_selftest_rlcmac_egprs() runs on RAW_PCU_Test_CT
 		MCS_8,
 		MCS_9
 		};
+
+	/* Initialize GPRS MS side */
+	f_init_gprs_ms();
+	ms := g_ms[0]; /* We only use first MS in this test */
 
 	/* Initialize the PCU interface abstraction */
 	f_init_raw(testcasename());
@@ -291,7 +296,7 @@ testcase TC_selftest_rlcmac_egprs() runs on RAW_PCU_Test_CT
 		data := f_pad_oct(data, f_rlcmac_cs_mcs2block_len(schemes[i]), '00'O);
 
 		/* Send to PCU so that we get gsmtap traces to verify with wireshark */
-		f_pcuif_tx_data_ind(data, 0, 0);
+		f_ms_tx_data_ind(ms, data, 0);
 
 		log("Decoding ", schemes[i]);
 		ul_data := dec_RlcmacUlBlock(data);
