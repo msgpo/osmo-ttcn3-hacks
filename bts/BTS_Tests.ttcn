@@ -64,6 +64,10 @@ import from Osmocom_VTY_Functions all;
 import from TELNETasp_PortType all;
 import from BTS_Tests_LAPDm all;
 
+import from RTP_CodecPort all;
+import from RTP_CodecPort_CtrlFunct all;
+import from RTP_Emulation all;
+
 friend module BTS_Tests_SMSCB;
 friend module BTS_Tests_virtphy;
 friend module BTS_Tests_LAPDm;
@@ -165,6 +169,14 @@ type component test_CT extends CTRL_Adapter_CT {
 	var ChannelNrs g_AllChanTypes;
 }
 
+private function f_rtpem_init(inout RTP_Emulation_CT comp_ref, integer i)
+runs on ConnHdlr {
+	comp_ref := RTP_Emulation_CT.create("RTPEM" & int2str(i));
+	map(comp_ref:RTP, system:RTP);
+	map(comp_ref:RTCP, system:RTCP);
+	comp_ref.start(RTP_Emulation.f_main());
+}
+
 /* an individual call / channel */
 type component ConnHdlr extends RSL_DchanHdlr, lapdm_test_CT {
 	port L1CTL_PT L1CTL;
@@ -185,6 +197,11 @@ type component ConnHdlr extends RSL_DchanHdlr, lapdm_test_CT {
 
 	/* PCU Interface of BTS */
 	port PCUIF_CODEC_PT PCU;
+
+	/* RTP channels for audio payload testing, the maximum number of
+	 * available channels is 14 (7 HR-TS => max. 14 concurrent calls) */
+	var RTP_Emulation_CT vc_RTPEM[14];
+	port RTPEM_CTRL_PT RTPEM[14];
 }
 
 function f_init_rsl(charstring id) runs on test_CT {
@@ -240,6 +257,7 @@ type record ConnHdlrPars {
 	TestSpecUnion spec optional,
 	RSL_IE_EncryptionInfo encr optional,
 	BtsBand bts0_band optional,
+	integer num_rtpem_chans optional,
 
 	/* Frequency hopping parameters (disabled if absent) */
 	MaioHsn maio_hsn optional,
@@ -577,6 +595,23 @@ runs on ConnHdlr {
 
 	f_rslem_register(0, pars.chan_nr);
 
+	/* Setup RTP emulation so that it is available if needed by the
+	 * the testcase. */
+
+	if (isbound(pars.num_rtpem_chans)) {
+		if (pars.num_rtpem_chans > sizeof(vc_RTPEM)) {
+			/* Note: The maximum number of RTPEM ports is fixed, see
+			 * component ConnHdlr and increase if necessary. */
+			setverdict(fail, "pars.num_rtpem_chans exceeds number of possible RTPEM channels (",
+				   sizeof(vc_RTPEM), ")");
+		}
+
+		for (var integer i := 0; i < pars.num_rtpem_chans; i := i+1) {
+			f_rtpem_init(vc_RTPEM[i], i);
+			connect(vc_RTPEM[i]:CTRL, self:RTPEM[i]);
+		}
+	}
+
 	/* call the user-supplied test case function */
 	fn.apply(id);
 }
@@ -664,6 +699,7 @@ friend template ConnHdlrPars t_Pars(template RslChannelNr chan_nr,
 	spec := omit,
 	encr := omit,
 	bts0_band := omit,
+	num_rtpem_chans := 0,
 	maio_hsn := maio_hsn,
 	ma_map := c_MA_null,
 	ma := l1ctl_ma_def

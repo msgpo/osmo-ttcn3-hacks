@@ -32,23 +32,184 @@ import from Osmocom_VTY_Functions all;
 
 import from BTS_Tests all;
 
+import from RTP_CodecPort all;
+import from RTP_CodecPort_CtrlFunct all;
+import from RTP_Emulation all;
+
+import from IPL4asp_Types all;
+import from IPL4asp_Functions all;
+
 /***********************************************************************
  * Performance tests. Expect osmo-bts to be configured with all TRX as TCH/H.
  ***********************************************************************/
 
 modulepar {
 	float mp_wait_time := 10.0;
+	charstring mp_rtpem_ip := "127.0.0.2";
+	integer mp_num_chans := 1;
+	octetstring mp_voice_payload := '000371af61c8f2802531c000000000'O;
+	integer mp_min_um_blocks := 300;
+	integer mp_min_rtp_pkts_tx := 300;
+	integer mp_min_rtp_pkts_rx := 300;
+	integer mp_min_rtp_pkts_err := 100;
 }
 
+/* Establish the channel on the RTP and UM side of the BTS */
+function f_est_chan(RslChannelNr chan_nr, integer rtpem) runs on ConnHdlr {
 
-/* This test requires BTS with 1 TRX to be configured with following timeslots: TS[0]=CCCH+SDCCH4, TS[1..7]: TCH/H
- * One can simply take the osmo-bsc.cfg in the same dir and change TS1..7, that's all needed.
- * It will activate TS1..7 TCH/Hchannels (2 TCH/H per TS, that's 14 channels)
- * and wait for requested time. This test is useful to bring the BTS (+BTS-TRX)
- * into a high channel load state to check that the system it runs on can keep
- * on with full load.
- */
-function f_TC_highchanload_tchh(charstring id) runs on ConnHdlr {
+	var uint32_t bts_rtp_ip;
+	var uint16_t bts_rtp_port;
+	var uint16_t bts_ipa_conn_id;
+	var RSL_Message rx;
+	var RtpemConfig rtp_cfg := c_RtpemDefaultCfg;
+	var RSL_SpeechAlgo rsl_cmod_sp;
+	var charstring id := log2str(chan_nr.tn, ":", chan_nr.u.lm.sub_chan);
+
+	/* Set up a fixed, but realistic speech config */
+	rtp_cfg.tx_fixed_payload := mp_voice_payload;
+	rtp_cfg.rx_fixed_payload := rtp_cfg.tx_fixed_payload; /* Same as TX */
+	rtp_cfg.tx_payload_type := 96; /* GSM HR */
+	rsl_cmod_sp := RSL_CMOD_SP_GSM1 /* GSM HR */
+
+	/* Activate and assign channel */
+	f_rsl_transceive(ts_RSL_CHAN_ACT(chan_nr,
+			 ts_RSL_ChanMode(RSL_CHRT_TCH_H, rsl_cmod_sp)),
+			 tr_RSL_CHAN_ACT_ACK(chan_nr),
+			 log2str("RSL CHAN ACT [", id, "]"));
+
+	/* Negotiate RTP RX (BTS) port for activated channel */
+	rx := f_rsl_transceive_ret(ts_RSL_IPA_CRCX(chan_nr),
+				   tr_RSL_IPA_CRCX_ACK(chan_nr, *, *, *),
+				   log2str("RSL IPA CRCX [", id, "]"));
+	bts_ipa_conn_id := rx.ies[1].body.ipa_conn_id;
+	bts_rtp_ip := rx.ies[2].body.ipa_local_ip;
+	bts_rtp_port := rx.ies[3].body.ipa_local_port;
+
+	/* Negotiate RTP TX (BTS) port for activated channel */
+	f_rsl_transceive(ts_RSL_IPA_MDCX(chan_nr, bts_ipa_conn_id, f_ip2uint32t(mp_rtpem_ip),
+					 bts_rtp_port, rtp_cfg.tx_payload_type),
+			 tr_RSL_IPA_MDCX_ACK(chan_nr, *, *, *, *),
+			 log2str("RSL IPA MDCX [", id, "]"));
+
+	/* Start local RTP emulation (transmit packets to BTS, receive
+	 * packets from BTS) */
+	f_rtpem_bind(RTPEM[rtpem], mp_rtpem_ip, bts_rtp_port);
+	f_rtpem_configure(RTPEM[rtpem], rtp_cfg);
+	f_rtpem_connect(RTPEM[rtpem], f_uint32t2ip(bts_rtp_ip), bts_rtp_port);
+	f_rtpem_mode(RTPEM[rtpem], RTPEM_MODE_BIDIR);
+
+	/* Establish channel on UM side */
+	L1CTL.send(ts_L1CTL_DM_EST_REQ_H0(chan_nr, 7, mp_trx0_arfcn));
+}
+
+/* Receive traffic on the UM interface, check that it matches what we expect
+ * and then loop it back to the BTS */
+function f_loopback() runs on ConnHdlr {
+	var L1ctlDlMessage rx;
+	timer T := mp_wait_time;
+	T.start;
+
+	var integer ts;
+	var integer ss;
+
+	var integer ch[8][2] := { {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} };
+	var integer ch_count := 0;
+	var charstring ch_usage[2];
+	var boolean ch_silence := false;
+
+	log("looping back voice UM voice traffic for ", mp_wait_time, " seconds");
+	alt {
+	[] L1CTL.receive(tr_L1CTL_TRAFFIC_IND(?)) -> value rx {
+		/* Make sure that the payload that we see on the UM side
+		 * matches the payload we send to the BTS via RTP */
+
+		ts:=rx.dl_info.chan_nr.tn;
+		ss:=rx.dl_info.chan_nr.u.lm.sub_chan;
+
+		/* Make sure that all payload that is passed along the UM
+		 * interface matches the expected payload */
+		if (rx.payload.traffic_ind.data != mp_voice_payload) {
+			setverdict(fail, "payload (", rx.payload.traffic_ind.data ,")
+				   on UM channel (ts=", ts, ", ss=", ss, ")
+				   does not match, expecting: ", mp_voice_payload);
+		}
+
+		/* Count activity */
+		ch[ts][ss] := ch[ts][ss] + 1;
+
+		L1CTL.send(ts_L1CTL_TRAFFIC_REQ(rx.dl_info.chan_nr, rx.dl_info.link_id, rx.payload.traffic_ind.data));
+		repeat;
+		}
+	[] L1CTL.receive {
+		log("tossing non-voice frame\n");
+		repeat;
+		}
+	[] T.timeout {
+		log("loopback stopped");
+		}
+	}
+
+	/* Check for silent channels and log some statistics */
+	log("-- UM STATISTICS --");
+	log("ts:   ss0/ss1:");
+	for (var integer i := 0; i < 8; i := i+1) {
+		ch_usage[0] := "unused";
+		ch_usage[1] := "unused";
+		if (i > 0) {
+			if (ch_count < mp_num_chans) {
+				ch_usage[0] := "in-use"
+				if (ch[i][0] < mp_min_um_blocks) {
+					ch_usage[0] := "silent"
+					ch_silence := true;
+				}
+				ch_count := ch_count + 1;
+			}
+
+			if (ch_count < mp_num_chans) {
+				ch_usage[1] := "in-use"
+				if (ch[i][1] < mp_min_um_blocks) {
+					ch_usage[1] := "silent"
+					ch_silence := true;
+				}
+				ch_count := ch_count + 1;
+			}
+		}
+
+		log(i, "     ", ch[i][0], "(", ch_usage[0], ")/", ch[i][1], "(", ch_usage[1], ")");
+	}
+	if (ch_silence == true) {
+		setverdict(fail, "silent channel(s) detected!")
+	}
+}
+
+/* Check RTPEM statistics for suspicious behaviour */
+function f_check_rtpem() runs on ConnHdlr {
+	var RtpemStats stats_rtp[16];
+	var charstring ch_diag;
+	var boolean ch_err := false;
+	for (var integer i := 0; i < mp_num_chans; i := i+1) {
+		stats_rtp[i] := f_rtpem_stats_get(RTPEM[i]);
+	}
+	log("-- RTP STATISTICS --");
+	log("RTPEM:  tx/rx/err:");
+	for (var integer i := 0; i < mp_num_chans; i := i+1) {
+		ch_diag := "ok"
+		if (stats_rtp[i].num_pkts_tx < mp_min_rtp_pkts_tx or
+		    stats_rtp[i].num_pkts_rx < mp_min_rtp_pkts_rx or
+		    stats_rtp[i].num_pkts_rx_err_payload > mp_min_rtp_pkts_err ) {
+			ch_diag := "problematic"
+			ch_err := true;
+		}
+		log(i, "       ", stats_rtp[i].num_pkts_tx, "/", stats_rtp[i].num_pkts_rx, "/", stats_rtp[i].num_pkts_rx_err_payload, " ", ch_diag);
+	}
+	if (ch_err == true) {
+		setverdict(fail, "errornous RTPEM channel(s) detected!")
+	}
+}
+
+/* Setup channels on UM and RTP interface so that they are ready to transmit
+ * and receive voice data */
+function f_setup_chans() runs on ConnHdlr {
 	var ChannelNrs chan_nr := { /* TS 1..7: TCH/H */
 		valueof(ts_RslChanNr_Lm(1,0)), valueof(ts_RslChanNr_Lm(1,1)),
 		valueof(ts_RslChanNr_Lm(2,0)), valueof(ts_RslChanNr_Lm(2,1)),
@@ -60,34 +221,67 @@ function f_TC_highchanload_tchh(charstring id) runs on ConnHdlr {
 		};
 
 	log("Started");
-	for (var integer i := 0; i < sizeof(chan_nr); i := i+1) {
+	for (var integer i := 0; i < mp_num_chans; i := i+1) {
 		log("Registering ", chan_nr[i]);
 		f_rslem_register(0, chan_nr[i]);
 	}
+	f_l1_tune(L1CTL);
+
 	log("Registered");
-	for (var integer i := 0; i < sizeof(chan_nr); i := i+1) {
-		f_rsl_transceive(ts_RSL_CHAN_ACT(chan_nr[i],
-				 ts_RSL_ChanMode(RSL_CHRT_TCH_H, RSL_CMOD_SP_GSM3 /* AMR*/)),
-				 tr_RSL_CHAN_ACT_ACK(chan_nr[i]),
-				 log2str("RSL CHAN ACT [", i, "]"));
+	for (var integer i := 0; i < mp_num_chans; i := i+1) {
+		f_est_chan(chan_nr[i], i);
 	}
-	log("Activated, now waiting ", mp_wait_time, " seconds");
+}
 
-	f_sleep(mp_wait_time);
-	log("sleep done, deactivating");
+/* Remove all channels from the UM and RTP interface again */
+function f_remove_chans() runs on ConnHdlr {
+	var ChannelNrs chan_nr := { /* TS 1..7: TCH/H */
+		valueof(ts_RslChanNr_Lm(1,0)), valueof(ts_RslChanNr_Lm(1,1)),
+		valueof(ts_RslChanNr_Lm(2,0)), valueof(ts_RslChanNr_Lm(2,1)),
+		valueof(ts_RslChanNr_Lm(3,0)), valueof(ts_RslChanNr_Lm(3,1)),
+		valueof(ts_RslChanNr_Lm(4,0)), valueof(ts_RslChanNr_Lm(4,1)),
+		valueof(ts_RslChanNr_Lm(5,0)), valueof(ts_RslChanNr_Lm(5,1)),
+		valueof(ts_RslChanNr_Lm(6,0)), valueof(ts_RslChanNr_Lm(6,1)),
+		valueof(ts_RslChanNr_Lm(7,0)), valueof(ts_RslChanNr_Lm(7,1))
+		};
 
-	for (var integer i := 0; i < sizeof(chan_nr); i := i+1) {
+	/* Tear down channels */
+	log("done, deactivating");
+	/* Tear down channels and RTP traffic */
+	for (var integer i := 0; i < mp_num_chans; i := i+1) {
+		/* Remove RTP traffic and wait some time before removing the
+		 * the channel to make sure all remaining packets reach
+		 * their destination */
+		f_rtpem_mode(RTPEM[i], RTPEM_MODE_NONE);
+	}
+	f_sleep(1.0);
+	for (var integer i := 0; i < mp_num_chans; i := i+1) {
+		/* Remove channels */
 		f_rsl_transceive(ts_RSL_RF_CHAN_REL(chan_nr[i]),
 				 tr_RSL_RF_CHAN_REL_ACK(chan_nr[i]),
 				 log2str("RF CHAN REL [", i, "]"),
 				 true);
 	}
+}
+
+/* This test requires BTS with 1 TRX to be configured with following timeslots: TS[0]=CCCH+SDCCH4, TS[1..7]: TCH/H
+ * One can simply take the osmo-bsc.cfg in the same dir and change TS1..7, that's all needed.
+ * It will activate TS1..7 TCH/Hchannels (2 TCH/H per TS, that's 14 channels)
+ * and wait for requested time. This test is useful to bring the BTS (+BTS-TRX)
+ * into a high channel load state to check that the system it runs on can keep
+ * on with full load.
+ */
+function f_TC_highchanload_tchh(charstring id) runs on ConnHdlr {
+	f_setup_chans();
+	f_loopback();
+	f_remove_chans();
+	f_check_rtpem();
 	setverdict(pass);
 }
 testcase TC_highchanload_tchh() runs on test_CT {
 	var ConnHdlr vc_conn; /* 1..7 * 2 */
-	var ConnHdlrPars pars := valueof(t_Pars(t_RslChanNr_Bm(1), ts_RSL_ChanMode_SIGN,
-						t_guard := 60.0 + mp_wait_time));
+	var ConnHdlrPars pars := valueof(t_Pars(t_RslChanNr_Bm(1), ts_RSL_ChanMode_SIGN, omit, 60.0 + mp_wait_time));
+	pars.num_rtpem_chans := 14; /* 7x HR-Timeslot => 14 concurrent calls */
 
 	f_init();
 

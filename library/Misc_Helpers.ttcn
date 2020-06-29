@@ -1,5 +1,9 @@
 module Misc_Helpers {
 
+import from IPL4asp_Types all;
+import from IPL4asp_Functions all;
+import from Osmocom_Types all;
+
 /* Try to properly shutdown a testcase.
  * The reliable method to stop a testcase without running into dynamic
  * testcase errors due to unconnected ports receiving messages is to call
@@ -23,6 +27,36 @@ function f_shutdown(charstring file, integer line, verdicttype verdict := none,
 		all component.stop;
 	}
 	mtc.stop
+}
+
+/* Convert an IP address from its 32-Bit integer representation into a string
+ * representation */
+function f_uint32t2ip(uint32_t addr) return charstring
+{
+	var integer octet_1;
+	var integer octet_2;
+	var integer octet_3;
+	var integer octet_4;
+
+	octet_1 := addr / 16777216;
+	octet_2 := (addr - octet_1 * 16777216) / 65536;
+	octet_3 := (addr - octet_1 * 16777216 - octet_2 * 65536) / 256;
+	octet_4 := (addr - octet_1 * 16777216 - octet_2 * 65536 - octet_3 * 256);
+
+	return int2str(octet_1) & "." & int2str(octet_2) & "." & int2str(octet_3) & "." & int2str(octet_4);
+}
+
+/* Convert an IP address from its string representation into a 32-Bit integer
+ * representation */
+function f_ip2uint32t(charstring ip) return uint32_t
+{
+	var ro_integer segAddr := {};
+	var uint32_t addr;
+
+	segAddr := f_splitIpAddress(ip);
+	addr := segAddr[0] * 16777216 + segAddr[1] * 65536 + segAddr[2] * 256 + segAddr[3];
+
+	return addr;
 }
 
 }
