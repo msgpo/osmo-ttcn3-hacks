@@ -6273,6 +6273,9 @@ testcase TC_assignment_emerg_setup_deny_bts() runs on test_CT {
  */
 
 control {
+   if (true) {
+	execute( TC_ctrl_msc_connection_status() );
+   } else {
 	/* CTRL interface testing */
 	execute( TC_ctrl_msc_connection_status() );
 	execute( TC_ctrl_msc0_connection_status() );
@@ -6485,6 +6488,7 @@ control {
 	execute( TC_assignment_emerg_setup_allow() );
 	execute( TC_assignment_emerg_setup_deny_msc() );
 	execute( TC_assignment_emerg_setup_deny_bts() );
+   }
 }
 
 }
