@@ -29,9 +29,9 @@ type record SI3RestOctets {
 	SI21IndicatorOpt	si21_ind optional
 	/* ... spare padding ... */
 } with {
-	variant (si_2ter_ind) "CSN.1 L/H"
-	variant (early_cm_ind) "CSN.1 L/H"
-	variant (umts_early_cm_ind) "CSN.1 L/H"
+//	variant (si_2ter_ind) "CSN.1 L/H"
+//	variant (early_cm_ind) "CSN.1 L/H"
+//	variant (umts_early_cm_ind) "CSN.1 L/H"
 
 	/* If Iu mode is not supported in the cell, the Iu Indicator is not sent
 	 * within this cell. Iu Indicator is included if and only if GPRS is
@@ -54,7 +54,7 @@ type record SI4RestOctets {
 	/* TODO: optional "Rest Octets S" part */
 	bitstring		s optional
 } with {
-	variant (s_presence) "CSN.1 L/H"
+//	variant (s_presence) "CSN.1 L/H"
 	variant (s) "PRESENCE(s_presence = '1'B)"
 
 	/* The TITAN's RAW encoder generates an octet-aligned octetstring,
@@ -77,7 +77,7 @@ type record SelectionParamsOpt {
 	BIT1			presence, // L/H
 	SelectionParams		params optional
 } with {
-	variant (presence) "CSN.1 L/H"
+//	variant (presence) "CSN.1 L/H"
 	variant (params) "PRESENCE(presence = '1'B)"
 };
 
@@ -86,7 +86,7 @@ type record PowerOffsetOpt {
 	BIT1			presence, // L/H
 	uint2_t			offset optional
 } with {
-	variant (presence) "CSN.1 L/H"
+//	variant (presence) "CSN.1 L/H"
 	variant (offset) "PRESENCE(presence = '1'B)"
 };
 
@@ -95,7 +95,7 @@ type record SchedIfAndWhere {
 	BIT1			presence, // L/H
 	uint3_t			where optional
 } with {
-	variant (presence) "CSN.1 L/H"
+//	variant (presence) "CSN.1 L/H"
 	variant (where) "PRESENCE(presence = '1'B)"
 };
 
@@ -109,7 +109,7 @@ type record GPRSIndicatorOpt {
 	BIT1			presence, // L/H
 	GPRSIndicator		ind optional
 } with {
-	variant (presence) "CSN.1 L/H"
+//	variant (presence) "CSN.1 L/H"
 	variant (ind) "PRESENCE(presence = '1'B)"
 };
 
@@ -118,7 +118,7 @@ type record SI2quaterIndicatorOpt {
 	BIT1			presence, // L/H
 	BIT1			ind optional
 } with {
-	variant (presence) "CSN.1 L/H"
+//	variant (presence) "CSN.1 L/H"
 	variant (ind) "PRESENCE(presence = '1'B)"
 };
 
@@ -127,7 +127,7 @@ type record SI21IndicatorOpt {
 	BIT1			presence, // L/H
 	BIT1			pos optional
 } with {
-	variant (presence) "CSN.1 L/H"
+//	variant (presence) "CSN.1 L/H"
 	variant (pos) "PRESENCE(presence = '1'B)"
 };
 

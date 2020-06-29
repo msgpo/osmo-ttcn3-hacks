@@ -182,8 +182,8 @@ module GSM_RR_Types {
 	};
 
 	type record MaioHsn {
-		uint6_t		maio,
-		uint6_t		hsn
+//		uint6_t		maio,
+//		uint6_t		hsn
 	} with { variant "" };
 
 	/* TS 24.008 10.5.1.1 */
@@ -411,7 +411,7 @@ module GSM_RR_Types {
 		BIT1		presence optional,
 		BIT5		ext_ra optional
 	} with {
-		variant (r99) "CSN.1 L/H"
+//		variant (r99) "CSN.1 L/H"
 		variant (presence) "PRESENCE(r99 = '1'B)" /* H */
 		variant (ext_ra) "PRESENCE(presence = '1'B)"
 		/* See https://bugs.eclipse.org/bugs/show_bug.cgi?id=562488 */
@@ -514,9 +514,10 @@ module GSM_RR_Types {
 	};
 	type record IaRestOctLL {
 		BIT1		compressed_irat_ho_info_ind
-	} with {
-		variant (compressed_irat_ho_info_ind) "CSN.1 L/H"
-	};
+	}
+	//with {
+//		variant (compressed_irat_ho_info_ind) "CSN.1 L/H"
+//	};
 	type record EgprsUlAssignDyn {
 		uint5_t		tfi_assignment,
 		BIT1		polling,
@@ -597,7 +598,7 @@ module GSM_RR_Types {
 		IaRestOctHL	hl optional,
 		IaRestOctHH	hh optional
 	} with {
-		variant (presence) "CSN.1 L/H"
+//		variant (presence) "CSN.1 L/H"
 		variant (ll) "PRESENCE(presence = '00'B)"
 		variant (lh) "PRESENCE(presence = '01'B)"
 		variant (hl) "PRESENCE(presence = '10'B)"
@@ -665,7 +666,7 @@ module GSM_RR_Types {
 		uint3_t			rcc optional
 		/* Addition in Rel-15: PEO IMM Cell Group Details struct */
 	} with {
-		variant (rel13_ind) "CSN.1 L/H"
+//		variant (rel13_ind) "CSN.1 L/H"
 		variant (rcc) "PRESENCE(rel13_ind = '1'B)"
 
 		/* The TITAN's RAW encoder generates an octet-aligned octetstring,
@@ -678,7 +679,7 @@ module GSM_RR_Types {
 		BIT1			presence, // L/H
 		BIT5			ext_ra optional
 	} with {
-		variant (presence) "CSN.1 L/H"
+//		variant (presence) "CSN.1 L/H"
 		variant (ext_ra) "PRESENCE(presence = '1'B)"
 		/* See https://bugs.eclipse.org/bugs/show_bug.cgi?id=562488 */
 		variant (ext_ra) "BYTEORDER(last)"

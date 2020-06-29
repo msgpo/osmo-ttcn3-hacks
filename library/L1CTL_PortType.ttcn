@@ -218,11 +218,12 @@ module L1CTL_PortType {
 		} else {
 			/* TODO: we probably want to apply a bitmask from imm_ass.mobile_allocation
 			 * on the list of channels, if it's present. Use all channels for now. */
-			pt.send(ts_L1CTL_DM_EST_REQ_H1(imm_ass.chan_desc.chan_nr,
-						       imm_ass.chan_desc.tsc,
-						       imm_ass.chan_desc.maio_hsn.hsn,
-						       imm_ass.chan_desc.maio_hsn.maio,
-						       ma));
+//			pt.send(ts_L1CTL_DM_EST_REQ_H1(imm_ass.chan_desc.chan_nr,
+//						       imm_ass.chan_desc.tsc,
+//						       imm_ass.chan_desc.maio_hsn.hsn,
+//						       imm_ass.chan_desc.maio_hsn.maio,
+//						       ma));
+log("======================> OOPS!");
 		}
 	}
 
