@@ -523,7 +523,7 @@ function f_init() runs on test_CT {
 /* Attach L1CTL to master test_CT (classic tests, non-handler mode) */
 function f_init_l1ctl() runs on test_CT {
 	map(self:L1CTL, system:L1CTL);
-	f_connect_reset(L1CTL);
+	f_connect_reset(L1CTL, "/home/owner/osmocom_l2_0");
 }
 
 type function void_fn(charstring id) runs on ConnHdlr;
@@ -584,7 +584,7 @@ runs on ConnHdlr {
 	g_chan_nr := pars.chan_nr;
 
 	map(self:L1CTL, system:L1CTL);
-	f_connect_reset(L1CTL);
+	f_connect_reset(L1CTL, "/home/owner/osmocom_l2_0");
 
 	if (mp_bts_trxc_port != -1 and BTS_TRXC.checkstate("Mapped")) {
 		f_init_trxc(BTS_TRXC, id, g_bts_trxc_conn_id);
