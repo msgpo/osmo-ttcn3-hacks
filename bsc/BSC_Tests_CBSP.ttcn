@@ -730,7 +730,9 @@ testcase TC_cbsp_emerg_write_bts_cgi_cchan_disable() runs on cbsp_test_CT {
 
 
 control {
-if (false) {
+if (true) {
+	execute( TC_cbsp_emerg_write_bts_cgi_cchan() );
+} else {
 	execute( TC_cbsp_bsc_server() );
 	execute( TC_cbsp_bsc_client() );
 	execute( TC_cbsp_reset_bss() );
